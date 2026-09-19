@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EDUC.nc - Apprenons, comprenons et bâtissons</title>
+
+    <!-- PWA Meta tags & Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0056b3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- FontAwesome & Style Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ========================================== -->
+    <!-- ÉCRAN D'ACCUEIL / ONBOARDING (SLIDER)      -->
+    <!-- ========================================== -->
+    <section id="onboarding-screen" class="onboarding-container">
+        <div class="slides-wrapper">
+            
+            <!-- Slide 1 : Bienvenue EDUC.nc -->
+            <div class="slide active" id="slide-1">
+                <div class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('file_000000003a80820eac24bb81772048a3.png');">
+                    <div class="flag-stripe"></div>
+                    <div class="hero-content">
+                        <h1>Bienvenue sur EDUC.nc</h1>
+                        <p>Apprenez partout et à tout moment grâce à une plateforme accessible et intuitive.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 : Quiz & Évaluation -->
+            <div class="slide" id="slide-2">
+                <div class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('file_00000000550820e9501e448746b074a.png');">
+                    <div class="hero-content">
+                        <h1>Apprenez avec des Quiz</h1>
+                        <p>Évaluez vos connaissances et progressez à votre rythme.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 : Progression & Citoyenneté -->
+            <div class="slide" id="slide-3">
+                <div class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('file_000000007e5c820ea20863b778ee0a24.png');">
+                    <div class="hero-content">
+                        <h1>Progresser chaque jour</h1>
+                        <p>Devenir un bon citoyen informé et engagé.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Contrôles du Slider & Bouton Commencer -->
+        <div class="onboarding-footer">
+            <div class="slider-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <button id="btn-start" class="btn-primary">Accéder à l'application</button>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- INTERFACE PRINCIPALE DE L'APPLICATION PWA  -->
+    <!-- ========================================== -->
+    <div id="app-content" class="app-container hidden">
+
+        <!-- En-tête Institutionnel -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="brand-title">EDUC National</h1>
+                <p class="brand-subtitle">Apprenons, comprenons et bâtissons avec EDUC</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+
+            <!-- Note Institutionnelle -->
+            <section class="card note-card">
+                <div class="note-icon">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <div class="note-text">
+                    <p><strong>Note institutionnelle :</strong> Plateforme officielle de suivi pédagogique, d'apprentissage et d'évaluation interactive placée sous le haut patronage du Ministère de l'Éducation Nationale et Nouvelle Citoyenneté de la RDC.</p>
+                </div>
+            </section>
+
+            <!-- Barre de Recherche & Filtrage -->
+            <section class="search-section">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="courseSearch" placeholder="Rechercher un cours...">
+                </div>
+                <button class="filter-btn" title="Filtrer les cours">
+                    <i class="fa-solid fa-sliders"></i>
+                </button>
+            </section>
+
+            <!-- Section Progression & XP (Gamification) -->
+            <section class="card progress-card">
+                <div class="progress-header">
+                    <span class="level-title">Niveau 1</span>
+                    <span class="level-percentage">30%</span>
+                </div>
+                <div class="xp-subtext">300 / 1000 XP</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: 30%;"></div>
+                </div>
+                <div class="xp-hint">
+                    <i class="fa-solid fa-star star-icon"></i>
+                    <span>Gagnez de l'XP avec les quiz de Manassé IA</span>
+                </div>
+            </section>
+
+            <!-- ONGLET : ACTUALITÉS -->
+            <section id="view-actualites" class="view-section active">
+                <h2 class="section-title">Actualités en RDC</h2>
+
+                <article class="card news-card">
+                    <span class="badge">Actualité RDC</span>
+                    <h3 class="news-title">En RDC, la guerre prive près d'un demi-million d'enfants d'école – RFI</h3>
+                    <p class="news-excerpt">En RDC, la guerre prive près d'un demi-million d'enfants d'école RFI...</p>
+                    <div class="news-footer">
+                        <span class="news-date"><i class="fa-regular fa-clock"></i> 10/09/2026</span>
+                        <a href="#" class="read-more">Lire l'article &rarr;</a>
+                    </div>
+                </article>
+
+                <article class="card news-card">
+                    <span class="badge">Actualité RDC</span>
+                    <h3 class="news-title">Réouverture et réhabilitation des infrastructures scolaires</h3>
+                    <p class="news-excerpt">Le Ministère de l'Éducation Nationale annonce de nouvelles mesures...</p>
+                    <div class="news-footer">
+                        <span class="news-date"><i class="fa-regular fa-clock"></i> 08/09/2026</span>
+                        <a href="#" class="read-more">Lire l'article &rarr;</a>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ONGLET : QUIZ INTERACTIFS (Manassé IA) -->
+            <section id="view-quiz" class="view-section hidden">
+                <h2 class="section-title">Quiz de Civisme</h2>
+                
+                <div class="card quiz-card">
+                    <div class="quiz-question-box">
+                        <span class="question-number">Question 1 sur 5</span>
+                        <h3 class="question-text">Quelle est la capitale de la République Démocratique du Congo ?</h3>
+                    </div>
+                    
+                    <div class="quiz-options">
+                        <button class="option-btn active"><span class="opt-letter">A</span> Kinshasa</button>
+                        <button class="option-btn"><span class="opt-letter">B</span> Lubumbashi</button>
+                        <button class="option-btn"><span class="opt-letter">C</span> Goma</button>
+                        <button class="option-btn"><span class="opt-letter">D</span> Kisangani</button>
+                    </div>
+
+                    <button class="btn-primary btn-next-quiz">Valider la réponse</button>
+                </div>
+            </section>
+
+            <!-- ONGLET : PROFIL APPRENANT -->
+            <section id="view-profil" class="view-section hidden">
+                <h2 class="section-title">Mon Profil Apprenant</h2>
+                
+                <div class="card profile-card">
+                    <div class="avatar-container">
+                        <i class="fa-solid fa-user avatar-icon"></i>
+                    </div>
+                    <h3 class="profile-name">Manasse Ntambwa Lushiku</h3>
+                    <p class="profile-school">Écoles: Ig2 | Kinshasa-Lukunga, Kinshasa</p>
+                    
+                    <button class="btn-logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Se déconnecter
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Barre de Navigation Inférieure (Bottom Nav Fixe) -->
+        <nav class="bottom-nav">
+            <a href="#accueil" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Accueil</span>
+            </a>
+            <a href="#cours" class="nav-item">
+                <i class="fa-solid fa-book-open"></i>
+                <span>Cours</span>
+            </a>
+            <a href="#quiz" class="nav-item">
+                <i class="fa-solid fa-circle-question"></i>
+                <span>Quiz</span>
+            </a>
+            <a href="#actualites" class="nav-item active">
+                <i class="fa-solid fa-newspaper"></i>
+                <span>Actualités</span>
+            </a>
+            <a href="#profil" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>Profil</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <!-- Script JavaScript principal -->
+    <script src="script.js"></script>
+</body>
+                  </html>
+
