@@ -10,63 +10,63 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
       :root {
-        --primary-blue: #0066cc;
-        --primary-light-blue: #1a8cff;
+        --primary-blue: #0056b3;
+        --primary-light-blue: #0066cc;
         --accent-yellow: #ffc107;
-        --bg-light: #f4f7fa;
+        --bg-light: #f8fafc;
         --card-bg: #ffffff;
         --text-dark: #1e293b;
         --text-muted: #64748b;
-        --border-color: #e2e8f0;
-        --radius-lg: 20px;
-        --radius-md: 16px;
+        --border-color: #cbd5e1;
+        --radius-lg: 16px;
+        --radius-md: 12px;
         --success-green: #10b981;
         --error-red: #ef4444;
       }
+
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         -webkit-tap-highlight-color: transparent;
       }
+
       body, html {
         width: 100%;
         height: 100%;
         background-color: var(--bg-light);
         color: var(--text-dark);
-        overflow-x: hidden;
       }
-      .screen {
-        display: none;
-        width: 100%;
-        min-height: 100vh;
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: var(--bg-light);
-        flex-direction: column;
+
+      .hidden {
+        display: none !important;
       }
-      .screen.active {
-        display: flex;
-      }
-      /* 1. SPLASH SCREEN */
+
+      /* ==========================================
+         1. SPLASH SCREEN (ÉCRAN DE CHARGEMENT)
+         ========================================== */
       #splash-screen {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
         background: #ffffff;
+        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center;
-        padding: 20px;
-        z-index: 999;
+        z-index: 9999;
       }
+
       .splash-logo {
-        width: 180px;
-        height: 180px;
+        width: 160px;
+        height: 160px;
         object-fit: contain;
         margin-bottom: 24px;
       }
+
       .spinner {
         width: 36px;
         height: 36px;
@@ -75,447 +75,556 @@
         border-radius: 50%;
         animation: spin 1s linear infinite;
       }
+
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
-      /* 2. ONBOARDING */
-      .onboarding-container {
+
+      /* ==========================================
+         2. ONBOARDING / SLIDER
+         ========================================== */
+      #onboarding-screen {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: #ffffff;
+        padding: 20px 20px 40px 20px;
+      }
+
+      .slides-wrapper {
         flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
-        padding: 30px 20px;
-        background-size: cover;
-        background-position: center;
-        position: relative;
-        color: #ffffff;
-        transition: background-image 0.4s ease-in-out;
-      }
-      .onboarding-overlay {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,20,50,0.75) 100%);
-        z-index: 1;
-      }
-      .dots-container {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 20px;
-        position: relative;
-        z-index: 2;
-      }
-      .dot {
-        width: 10px;
-        height: 6px;
-        border-radius: 4px;
-        background: rgba(255, 255, 255, 0.4);
-        transition: all 0.3s;
-      }
-      .dot.active {
-        width: 24px;
-        background: #ffffff;
-      }
-      .btn-primary {
-        position: relative;
-        z-index: 2;
-        width: 100%;
-        background: var(--primary-light-blue);
-        color: #ffffff;
-        border: none;
-        padding: 18px;
-        border-radius: var(--radius-md);
-        font-size: 1.05rem;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 4px 14px rgba(26, 140, 255, 0.4);
-      }
-      /* 3. AUTH SCREEN */
-      #auth-screen {
-        background: #ffffff;
-        padding: 40px 24px;
         justify-content: center;
         align-items: center;
+      }
+
+      .slide-card {
+        display: none;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         text-align: center;
       }
-      .auth-icon {
-        width: 80px;
-        height: 80px;
-        background: #e8f2ff;
-        color: var(--primary-blue);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.2rem;
-        margin-bottom: 24px;
+
+      .slide-card.active {
+        display: block;
       }
-      .btn-phone {
-        background: var(--primary-light-blue);
+
+      .slide-box {
+        padding: 40px 20px;
         color: #ffffff;
-        border: none;
-        padding: 16px;
-        border-radius: var(--radius-md);
-        font-weight: 700;
-        font-size: 1rem;
+        border-radius: 16px;
+      }
+
+      .slide-box.bg-blue1 {
+        background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+      }
+
+      .slide-box.bg-grey {
+        background: linear-gradient(135deg, #475569 0%, #94a3b8 100%);
+      }
+
+      .slide-box.bg-blue2 {
+        background: linear-gradient(135deg, #002244 0%, #004488 100%);
+      }
+
+      .slide-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 12px;
+      }
+
+      .slide-desc {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        line-height: 1.4;
+      }
+
+      .onboarding-controls {
         width: 100%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-      }
-      .phone-input-wrapper {
-        display: flex;
-        align-items: center;
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        background: #f8fafc;
-        overflow: hidden;
-        margin-bottom: 16px;
-      }
-      .phone-prefix {
-        padding: 16px;
-        background: #e2e8f0;
-        font-weight: 700;
-        color: var(--text-dark);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .phone-input-wrapper input {
-        border: none;
-        outline: none;
-        padding: 16px;
-        width: 100%;
-        background: transparent;
-        font-size: 1rem;
-        font-weight: 600;
-      }
-      /* 4. PROFILE SCREEN */
-      #profile-screen {
-        background: #ffffff;
-        padding: 30px 24px;
-        overflow-y: auto;
-      }
-      .avatar-picker-container {
+        max-width: 400px;
+        margin: 0 auto;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-bottom: 20px;
-        cursor: pointer;
+        gap: 20px;
       }
-      .avatar-preview-wrapper {
-        position: relative;
-        width: 90px;
-        height: 90px;
+
+      .dots-container {
+        display: flex;
+        gap: 8px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
-        border: 3px solid var(--primary-blue);
-        overflow: hidden;
-        background: #e2e8f0;
+        background-color: #cbd5e1;
+        transition: all 0.3s ease;
+      }
+
+      .dot.active {
+        width: 26px;
+        border-radius: 6px;
+        background-color: var(--primary-blue);
+      }
+
+      .btn-onboarding {
+        width: 100%;
+        background-color: var(--primary-light-blue);
+        color: #ffffff;
+        border: none;
+        padding: 16px;
+        border-radius: 28px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(0, 102, 204, 0.3);
+      }
+
+      /* ==========================================
+         3. APPLICATION PRINCIPALE
+         ========================================== */
+      #main-app {
+        padding-bottom: 80px;
+      }
+
+      .app-header {
+        background-color: var(--primary-blue);
+        color: #ffffff;
+        padding: 24px 20px 32px 20px;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+      }
+
+      .brand-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+
+      .brand-subtitle {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .main-container {
+        padding: 16px;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        margin-bottom: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      }
+
+      /* Note Institutionnelle */
+      .note-card {
+        display: flex;
+        gap: 12px;
+        background-color: #f0f7ff;
+        border-left: 4px solid var(--primary-blue);
+      }
+
+      .note-icon {
+        color: var(--primary-blue);
+        font-size: 1.2rem;
+        margin-top: 2px;
+      }
+
+      .note-text p {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        color: #1e3a8a;
+      }
+
+      /* Barre de Recherche */
+      .search-section {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .search-bar {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 0 12px;
+        border: 1px solid var(--border-color);
+      }
+
+      .search-icon {
+        color: var(--text-muted);
+        margin-right: 8px;
+      }
+
+      .search-bar input {
+        border: none;
+        outline: none;
+        width: 100%;
+        padding: 12px 0;
+        font-size: 0.9rem;
+      }
+
+      .filter-btn {
+        background-color: var(--primary-blue);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        width: 48px;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 1.1rem;
+        cursor: pointer;
       }
-      .avatar-preview-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      .form-group {
-        margin-bottom: 14px;
-      }
-      .form-label {
-        display: block;
-        font-size: 0.85rem;
+
+      /* Carte XP & Niveau */
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
         font-weight: 700;
-        margin-bottom: 6px;
+        color: var(--primary-blue);
+      }
+
+      .xp-subtext {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin: 2px 0 8px 0;
+      }
+
+      .progress-bar-container {
+        height: 10px;
+        background-color: #e2e8f0;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        background-color: var(--accent-yellow);
+      }
+
+      .xp-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      .star-icon {
+        color: var(--accent-yellow);
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin: 20px 0 12px 0;
         color: var(--text-dark);
       }
-      .form-control {
-        width: 100%;
-        padding: 14px;
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        font-size: 0.95rem;
-        outline: none;
-        background: #f8fafc;
-      }
-      /* 5. MAIN DASHBOARD */
-      #main-app { padding-bottom: 90px; overflow-y: auto; }
-      .app-header {
-        background: var(--primary-blue);
-        color: #ffffff;
-        padding: 24px 20px 36px 20px;
-        border-bottom-left-radius: 28px;
-        border-bottom-right-radius: 28px;
-      }
-      .user-info-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-      .header-user-avatar {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #ffffff;
-      }
-      .search-bar-container { display: flex; gap: 10px; margin: -22px 20px 16px 20px; }
-      .search-input-wrapper { flex: 1; background: #ffffff; border-radius: var(--radius-md); display: flex; align-items: center; padding: 0 16px; border: 1px solid var(--border-color); }
-      .search-input-wrapper input { border: none; outline: none; width: 100%; padding: 16px 10px; }
-      .filter-btn { background: var(--primary-blue); color: #ffffff; width: 52px; height: 52px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
-      .xp-card {
-        background: #ffffff;
-        border-radius: var(--radius-md);
-        padding: 20px;
-        margin: 0 20px 16px 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        border: 1px solid var(--border-color);
-      }
-      .progress-bar {
-        height: 10px;
-        background: #e2e8f0;
-        border-radius: 6px;
-        overflow: hidden;
-        margin: 12px 0;
-      }
-      .progress-fill {
-        height: 100%;
-        background: var(--accent-yellow);
-        width: 30%;
-        transition: width 0.6s ease;
-      }
-      .section-title { font-size: 1.25rem; font-weight: 800; margin: 24px 20px 14px 20px; }
-      .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
-      .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600; cursor: pointer; text-decoration: none; }
-      .nav-item.active { color: var(--primary-blue); }
-      .tab-content { display: none; }
-      .tab-content.active { display: block; }
-      .btn-logout {
-        width: 100%;
-        background: #fef2f2;
-        color: var(--error-red);
-        border: 1px solid #fecaca;
-        padding: 14px;
-        border-radius: var(--radius-md);
-        font-weight: 700;
-        font-size: 0.95rem;
-        cursor: pointer;
+
+      /* Quiz */
+      .quiz-options {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-wrap: wrap;
         gap: 8px;
-        margin-top: 20px;
+        margin: 16px 0;
       }
-      #lightbox-modal {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.85);
-        z-index: 9999;
+
+      .option-btn {
+        padding: 8px 12px;
+        background: #f1f5f9;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .btn-validate {
+        width: 100%;
+        padding: 12px;
+        background-color: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      /* Profil */
+      .profile-card {
+        text-align: center;
+        padding: 20px 16px;
+      }
+
+      .avatar-icon {
+        font-size: 2rem;
+        color: #64748b;
+        margin-bottom: 8px;
+      }
+
+      .profile-name {
+        font-size: 1.1rem;
+        font-weight: 800;
+      }
+
+      .profile-school {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin: 4px 0 16px 0;
+      }
+
+      .btn-logout {
+        padding: 8px 16px;
+        background: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        padding: 20px;
+        gap: 6px;
       }
-      #lightbox-modal.active { display: flex; }
-      #lightbox-img { max-width: 100%; max-height: 85vh; border-radius: var(--radius-md); object-fit: contain; }
-      .lightbox-close { position: absolute; top: 20px; right: 25px; color: #ffffff; font-size: 2.2rem; cursor: pointer; }
+
+      /* Bottom Navigation */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        height: 60px;
+        background: #ffffff;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-top: 1px solid #e2e8f0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .nav-item.active {
+        color: var(--primary-blue);
+      }
     </style>
   </head>
   <body>
-    <div id="lightbox-modal" onclick="closeLightbox()">
-      <span class="lightbox-close">&times;</span>
-      <img id="lightbox-img" src="" alt="Agrandissement">
-    </div>
 
-    <!-- SPLASH SCREEN -->
-    <div id="splash-screen" class="screen active">
-      <img src="logoo.png" alt="Logo" class="splash-logo">
+    <!-- 1. SPLASH SCREEN -->
+    <div id="splash-screen">
+      <img src="logoo.png" alt="Logo EDUC" class="splash-logo">
       <div class="spinner"></div>
     </div>
 
-    <!-- ONBOARDING SCREEN -->
-    <div id="onboarding-screen" class="screen">
-      <div class="onboarding-container" id="onboarding-bg" style="background-image: url('file_000000003a80820eac24bb81772048a3.png');">
-        <div class="onboarding-overlay"></div>
-        <div class="dots-container">
-          <div class="dot active" id="dot-0"></div>
-          <div class="dot" id="dot-1"></div>
-          <div class="dot" id="dot-2"></div>
-        </div>
-        <button class="btn-primary" id="onb-btn" onclick="nextOnboarding()">Suivant</button>
-      </div>
-    </div>
-
-    <!-- AUTH SCREEN -->
-    <div id="auth-screen" class="screen">
-      <div class="auth-icon">
-        <i class="fa-solid fa-mobile-screen-button"></i>
-      </div>
-      <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 8px;">Connexion / Inscription</h2>
-      <p style="color: var(--text-muted); margin-bottom: 24px;">Entrez votre numéro de téléphone pour commencer.</p>
-      <div style="width: 100%; text-align: left; margin-bottom: 12px;">
-        <label class="form-label">Numéro de téléphone (RDC)</label>
-        <div class="phone-input-wrapper">
-          <span class="phone-prefix">🇨🇩 +243</span>
-          <input type="tel" id="rdc-phone" placeholder="81 234 56 78" maxlength="9">
-        </div>
-        <button class="btn-phone" onclick="verifyPhoneRDC()">
-          <i class="fa-solid fa-arrow-right"></i> Continuer
-        </button>
-      </div>
-    </div>
-
-    <!-- PROFILE SCREEN -->
-    <div id="profile-screen" class="screen">
-      <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 14px; text-align: center;">Informations de l'Apprenant</h2>
-      <div class="avatar-picker-container" onclick="document.getElementById('file-avatar-input').click()">
-        <div class="avatar-preview-wrapper">
-          <img id="profile-avatar-img" src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png" alt="Avatar">
-        </div>
-        <span style="font-size: 0.75rem; color: var(--primary-blue); font-weight: 700; margin-top: 6px;">
-          <i class="fa-solid fa-camera"></i> Ajouter / Modifier photo
-        </span>
-        <input type="file" id="file-avatar-input" accept="image/*" style="display: none;" onchange="previewAvatar(event)">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Nom complet</label>
-        <input type="text" id="user-fullname" class="form-control" placeholder="Manasse Ntambwa Lushiku">
-      </div>
-      <div class="form-group">
-        <label class="form-label">École / Option</label>
-        <input type="text" id="user-school" class="form-control" placeholder="Ig2 | Kinshasa-Lukunga">
-      </div>
-      <button class="btn-primary" onclick="saveProfileAndStart()">Accéder à l'application</button>
-    </div>
-
-    <!-- MAIN APPLICATION SCREEN -->
-    <div id="main-app" class="screen">
-      <header class="app-header">
-        <div class="user-info-bar">
-          <div>
-            <h2 id="display-user-name" style="font-size: 1.2rem; font-weight: 800;">Manasse Ntambwa</h2>
-            <p id="display-user-school" style="font-size: 0.8rem; opacity: 0.8;">Kinshasa, RDC</p>
+    <!-- 2. ONBOARDING / SLIDER INTERACTIF -->
+    <div id="onboarding-screen" class="hidden">
+      <div class="slides-wrapper">
+        
+        <!-- Slide 1 -->
+        <div class="slide-card active">
+          <div class="slide-box bg-blue1">
+            <h2 class="slide-title">Bienvenue sur EDUC.nc</h2>
+            <p class="slide-desc">Apprenez partout et à tout moment grâce à une plateforme accessible et intuitive.</p>
           </div>
-          <img id="header-avatar" class="header-user-avatar" src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png" alt="User">
         </div>
+
+        <!-- Slide 2 -->
+        <div class="slide-card">
+          <div class="slide-box bg-grey">
+            <h2 class="slide-title">Apprenez avec des Quiz</h2>
+            <p class="slide-desc">Évaluez vos connaissances et progressez à votre rythme.</p>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide-card">
+          <div class="slide-box bg-blue2">
+            <h2 class="slide-title">Progresser chaque jour</h2>
+            <p class="slide-desc">Devenir un bon citoyen informé et engagé.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="onboarding-controls">
+        <div class="dots-container">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <button id="next-btn" class="btn-onboarding" onclick="handleNextSlide()">Suivant</button>
+      </div>
+    </div>
+
+    <!-- 3. MAIN APPLICATION SCREEN -->
+    <div id="main-app" class="hidden">
+      
+      <header class="app-header">
+        <h1 class="brand-title">EDUC National</h1>
+        <p class="brand-subtitle">Apprenons, comprenons et bâtissons avec EDUC</p>
       </header>
 
-      <div class="search-bar-container">
-        <div class="search-input-wrapper">
-          <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
-          <input type="text" placeholder="Rechercher un cours, un sujet...">
-        </div>
-        <div class="filter-btn">
-          <i class="fa-solid fa-sliders"></i>
-        </div>
-      </div>
+      <main class="main-container">
 
-      <!-- XP CARD -->
-      <div class="xp-card">
-        <div style="display: flex; justify-content: space-between; font-weight: 800;">
-          <span>Niveau 1</span>
-          <span style="color: var(--primary-blue);">30%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill"></div>
-        </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">300 / 1000 XP — Gagnez de l'XP avec les quiz !</p>
-      </div>
+        <!-- Note Institutionnelle -->
+        <section class="card note-card">
+          <div class="note-icon">
+            <i class="fa-solid fa-circle-info"></i>
+          </div>
+          <div class="note-text">
+            <p><strong>Note institutionnelle :</strong> Plateforme officielle de suivi pédagogique, d'apprentissage et d'évaluation interactive placée sous le haut patronage du Ministère de l'Éducation Nationale et Nouvelle Citoyenneté de la RDC.</p>
+          </div>
+        </section>
 
-      <!-- MAIN TABS -->
-      <div id="tab-accueil" class="tab-content active">
-        <h3 class="section-title">Actualités en RDC</h3>
-        <div style="padding: 0 20px;">
-          <p style="font-size: 0.9rem; color: var(--text-muted);">Bienvenue sur EDUC National, votre plateforme éducative de suivi pédagogique.</p>
-        </div>
-      </div>
+        <!-- Recherche -->
+        <section class="search-section">
+          <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" placeholder="Rechercher un cours...">
+          </div>
+          <button class="filter-btn">
+            <i class="fa-solid fa-sliders"></i>
+          </button>
+        </section>
 
-      <!-- BOTTOM NAVIGATION -->
+        <!-- Progression / XP -->
+        <section class="card">
+          <div class="progress-header">
+            <span>Niveau 1</span>
+            <span>30%</span>
+          </div>
+          <div class="xp-subtext">300 / 1000 XP</div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: 30%;"></div>
+          </div>
+          <div class="xp-hint">
+            <i class="fa-solid fa-star star-icon"></i>
+            <span>Gagnez de l'XP avec les quiz de Manassé IA</span>
+          </div>
+        </section>
+
+        <!-- Section Actualités -->
+        <h2 class="section-title">Actualités en RDC</h2>
+
+        <article class="card">
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Actualité RDC</p>
+          <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;">En RDC, la guerre prive près d'un demi-million d'enfants d'école – RFI</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">En RDC, la guerre prive près d'un demi-million d'enfants d'école RFI...</p>
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+            <span><i class="fa-regular fa-clock"></i> 10/09/2026</span>
+            <a href="#" style="color: var(--primary-blue); text-decoration: none; font-weight: 600;">Lire l'article &rarr;</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Actualité RDC</p>
+          <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;">Réouverture et réhabilitation des infrastructures scolaires</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Le Ministère de l'Éducation Nationale annonce de nouvelles mesures...</p>
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+            <span><i class="fa-regular fa-clock"></i> 08/09/2026</span>
+            <a href="#" style="color: var(--primary-blue); text-decoration: none; font-weight: 600;">Lire l'article &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Section Quiz -->
+        <h2 class="section-title">Quiz de Civisme</h2>
+
+        <div class="card">
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Question 1 sur 5</p>
+          <h3 style="font-size: 0.95rem; font-weight: 700;">Quelle est la capitale de la République Démocratique du Congo ?</h3>
+          
+          <div class="quiz-options">
+            <button class="option-btn">A Kinshasa</button>
+            <button class="option-btn">B Lubumbashi</button>
+            <button class="option-btn">C Goma</button>
+            <button class="option-btn">D Kisangani</button>
+          </div>
+
+          <button class="btn-validate">Valider la réponse</button>
+        </div>
+
+        <!-- Section Profil -->
+        <h2 class="section-title">Mon Profil Apprenant</h2>
+
+        <div class="card profile-card">
+          <div class="avatar-icon">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <h3 class="profile-name">Manasse Ntambwa Lushiku</h3>
+          <p class="profile-school">Écoles: Ig2 | Kinshasa-Lukunga, Kinshasa</p>
+          <button class="btn-logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Se déconnecter
+          </button>
+        </div>
+
+      </main>
+
+      <!-- Bottom Navigation -->
       <nav class="bottom-nav">
-        <a class="nav-item active" onclick="switchTab('accueil', this)">
-          <i class="fa-solid fa-house" style="font-size: 1.2rem; margin-bottom: 4px;"></i>
-          <span>Accueil</span>
-        </a>
-        <a class="nav-item" onclick="switchTab('cours', this)">
-          <i class="fa-solid fa-book-open" style="font-size: 1.2rem; margin-bottom: 4px;"></i>
-          <span>Cours</span>
-        </a>
-        <a class="nav-item" onclick="switchTab('quiz', this)">
-          <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; margin-bottom: 4px;"></i>
-          <span>Quiz</span>
-        </a>
-        <a class="nav-item" onclick="switchTab('profil', this)">
-          <i class="fa-solid fa-user" style="font-size: 1.2rem; margin-bottom: 4px;"></i>
-          <span>Profil</span>
-        </a>
+        <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i><span>Accueil</span></a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-book-open"></i><span>Cours</span></a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-circle-question"></i><span>Quiz</span></a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-newspaper"></i><span>Actualités</span></a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-user"></i><span>Profil</span></a>
       </nav>
+
     </div>
 
-    <!-- SCRIPT DE NAVIGATION & LOGIQUE -->
+    <!-- LOGIQUE JAVASCRIPT -->
     <script>
-      let onboardingIndex = 0;
-      const onboardingBgImages = [
-        "file_000000003a80820eac24bb81772048a3.png",
-        "file_00000000550820e9501e448746b074a.png",
-        "file_000000007e5c820ea20863b778ee0a24.png"
-      ];
+      let currentSlide = 0;
+      const slides = document.querySelectorAll('.slide-card');
+      const dots = document.querySelectorAll('.dot');
+      const nextBtn = document.getElementById('next-btn');
 
+      // 1. Splash Screen pendant 2 secondes
       setTimeout(() => {
-        document.getElementById('splash-screen').classList.remove('active');
-        document.getElementById('onboarding-screen').classList.add('active');
+        document.getElementById('splash-screen').classList.add('hidden');
+        document.getElementById('onboarding-screen').classList.remove('hidden');
       }, 2000);
 
-      function nextOnboarding() {
-        onboardingIndex++;
-        if (onboardingIndex < 3) {
-          document.getElementById('onboarding-bg').style.backgroundImage = `url('${onboardingBgImages[onboardingIndex]}')`;
-          document.querySelectorAll('.dots-container .dot').forEach((dot, idx) => {
-            dot.classList.toggle('active', idx === onboardingIndex);
-          });
-          if (onboardingIndex === 2) {
-            document.getElementById('onb-btn').innerText = "Accéder à l'application";
+      // 2. Navigation pas à pas dans l'Onboarding
+      function handleNextSlide() {
+        if (currentSlide < slides.length - 1) {
+          slides[currentSlide].classList.remove('active');
+          dots[currentSlide].classList.remove('active');
+          
+          currentSlide++;
+          
+          slides[currentSlide].classList.add('active');
+          dots[currentSlide].classList.add('active');
+
+          if (currentSlide === slides.length - 1) {
+            nextBtn.textContent = "Accéder à l'application";
           }
         } else {
-          document.getElementById('onboarding-screen').classList.remove('active');
-          document.getElementById('auth-screen').classList.add('active');
+          // Masquer le slider et afficher l'application
+          document.getElementById('onboarding-screen').classList.add('hidden');
+          document.getElementById('main-app').classList.remove('hidden');
         }
-      }
-
-      function verifyPhoneRDC() {
-        const phone = document.getElementById('rdc-phone').value;
-        if (phone.length >= 8) {
-          document.getElementById('auth-screen').classList.remove('active');
-          document.getElementById('profile-screen').classList.add('active');
-        } else {
-          alert("Veuillez entrer un numéro valide.");
-        }
-      }
-
-      function previewAvatar(event) {
-        const reader = new FileReader();
-        reader.onload = function() {
-          document.getElementById('profile-avatar-img').src = reader.result;
-          document.getElementById('header-avatar').src = reader.result;
-        }
-        reader.readAsDataURL(event.target.files[0]);
-      }
-
-      function saveProfileAndStart() {
-        const name = document.getElementById('user-fullname').value || "Manasse Ntambwa";
-        const school = document.getElementById('user-school').value || "Kinshasa, RDC";
-        document.getElementById('display-user-name').innerText = name;
-        document.getElementById('display-user-school').innerText = school;
-        document.getElementById('profile-screen').classList.remove('active');
-        document.getElementById('main-app').classList.add('active');
-      }
-
-      function switchTab(tabId, element) {
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        element.classList.add('active');
-      }
-
-      function closeLightbox() {
-        document.getElementById('lightbox-modal').classList.remove('active');
       }
     </script>
   </body>
