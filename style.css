@@ -1,0 +1,357 @@
+/* ==========================================
+   1. RESET & VARIABLES GLOBALES
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+:root {
+    --primary-color: #0056b3;
+    --primary-dark: #003d80;
+    --accent-yellow: #ffc107;
+    --bg-light: #f4f6f9;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --text-muted: #666666;
+    --border-radius: 14px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-color);
+    padding-bottom: 70px; /* Espace pour la bottom nav */
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ==========================================
+   2. HEADER INSTITUTIONNEL
+   ========================================== */
+.app-header {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 20px 16px 25px 16px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    text-align: left;
+}
+
+.brand-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.brand-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+/* ==========================================
+   3. CONTENEUR PRINCIPAL & CARTES
+   ========================================== */
+.main-content {
+    padding: 16px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+}
+
+/* Note Institutionnelle */
+.note-card {
+    display: flex;
+    gap: 12px;
+    background-color: #eef5ff;
+    border-left: 4px solid var(--primary-color);
+}
+
+.note-icon {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    margin-top: 2px;
+}
+
+.note-text p {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: #1a365d;
+}
+
+/* Barre de Recherche */
+.search-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.search-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 0 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.search-icon {
+    color: var(--text-muted);
+    margin-right: 8px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 12px 0;
+    font-size: 0.9rem;
+}
+
+.filter-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    width: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+/* Progression & XP */
+.progress-card {
+    background: #ffffff;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.xp-subtext {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+    margin-bottom: 8px;
+}
+
+.progress-bar-container {
+    height: 10px;
+    background-color: #e2e8f0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--accent-yellow);
+    border-radius: 5px;
+}
+
+.xp-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.star-icon {
+    color: var(--accent-yellow);
+}
+
+/* Section Titres */
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 20px 0 12px 0;
+    color: #1a202c;
+}
+
+/* Cartes Actualités */
+.news-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.badge {
+    align-self: flex-start;
+    background-color: #ebf8ff;
+    color: var(--primary-color);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.news-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.news-excerpt {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.news-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.read-more {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Cartes Quiz */
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0;
+}
+
+.option-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.option-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.opt-letter {
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Carte Profil */
+.profile-card {
+    text-align: center;
+    padding: 24px 16px;
+}
+
+.avatar-container {
+    width: 70px;
+    height: 70px;
+    background-color: #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px auto;
+}
+
+.avatar-icon {
+    font-size: 2rem;
+    color: #94a3b8;
+}
+
+.profile-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.profile-school {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 4px 0 16px 0;
+}
+
+.btn-logout {
+    width: 100%;
+    padding: 12px;
+    background-color: #fff5f5;
+    color: #e53e3e;
+    border: 1px solid #fed7d7;
+    border-radius: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* ==========================================
+   4. BOTTOM NAVIGATION BAR
+   ========================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #e2e8f0;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.nav-item i {
+    font-size: 1.2rem;
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+    font-weight: 600;
+  }
