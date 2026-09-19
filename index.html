@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EDUC.nc - Apprenons, comprenons et bâtissons</title>
 
-    <!-- PWA Meta tags & Manifest -->
+    <!-- PWA Web App Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0056b3">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- FontAwesome & Style Google Fonts -->
+    <!-- FontAwesome & Style -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,52 +20,54 @@
     <!-- ========================================== -->
     <!-- ÉCRAN D'ACCUEIL / ONBOARDING (SLIDER)      -->
     <!-- ========================================== -->
-    <section id="onboarding-screen" class="onboarding-container">
-        <div class="slides-wrapper">
+    <div id="onboarding-screen" class="onboarding-wrapper">
+        <div class="slider-container">
             
-            <!-- Slide 1 : Bienvenue EDUC.nc -->
-            <div class="slide active" id="slide-1">
-                <div class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('file_000000003a80820eac24bb81772048a3.png');">
-                    <div class="flag-stripe"></div>
-                    <div class="hero-content">
-                        <h1>Bienvenue sur EDUC.nc</h1>
-                        <p>Apprenez partout et à tout moment grâce à une plateforme accessible et intuitive.</p>
-                    </div>
+            <!-- Slide 1 -->
+            <div class="slide active">
+                <div class="slide-image-wrapper">
+                    <img src="file_000000003a80820eac24bb81772048a3.png" alt="Bienvenue sur EDUC.nc">
+                </div>
+                <div class="slide-content">
+                    <h2>Bienvenue sur EDUC.nc</h2>
+                    <p>Apprenez partout et à tout moment grâce à une plateforme accessible et intuitive.</p>
                 </div>
             </div>
 
-            <!-- Slide 2 : Quiz & Évaluation -->
-            <div class="slide" id="slide-2">
-                <div class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('file_00000000550820e9501e448746b074a.png');">
-                    <div class="hero-content">
-                        <h1>Apprenez avec des Quiz</h1>
-                        <p>Évaluez vos connaissances et progressez à votre rythme.</p>
-                    </div>
+            <!-- Slide 2 -->
+            <div class="slide">
+                <div class="slide-image-wrapper">
+                    <img src="file_00000000550820e9501e448746b074a.png" alt="Apprenez avec des Quiz">
+                </div>
+                <div class="slide-content">
+                    <h2>Apprenez avec des Quiz</h2>
+                    <p>Évaluez vos connaissances et progressez à votre rythme.</p>
                 </div>
             </div>
 
-            <!-- Slide 3 : Progression & Citoyenneté -->
-            <div class="slide" id="slide-3">
-                <div class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('file_000000007e5c820ea20863b778ee0a24.png');">
-                    <div class="hero-content">
-                        <h1>Progresser chaque jour</h1>
-                        <p>Devenir un bon citoyen informé et engagé.</p>
-                    </div>
+            <!-- Slide 3 -->
+            <div class="slide">
+                <div class="slide-image-wrapper">
+                    <img src="file_000000007e5c820ea20863b778ee0a24.png" alt="Progresser chaque jour">
+                </div>
+                <div class="slide-content">
+                    <h2>Progresser chaque jour</h2>
+                    <p>Devenir un bon citoyen informé et engagé.</p>
                 </div>
             </div>
 
         </div>
 
-        <!-- Contrôles du Slider & Bouton Commencer -->
-        <div class="onboarding-footer">
-            <div class="slider-dots">
+        <!-- Indicateurs (Points) & Bouton d'action -->
+        <div class="onboarding-controls">
+            <div class="dots-container">
                 <span class="dot active"></span>
                 <span class="dot"></span>
                 <span class="dot"></span>
             </div>
-            <button id="btn-start" class="btn-primary">Accéder à l'application</button>
+            <button id="next-btn" class="btn-action">Suivant</button>
         </div>
-    </section>
+    </div>
 
     <!-- ========================================== -->
     <!-- INTERFACE PRINCIPALE DE L'APPLICATION PWA  -->
@@ -92,18 +94,18 @@
                 </div>
             </section>
 
-            <!-- Barre de Recherche & Filtrage -->
+            <!-- Recherche & Filtre -->
             <section class="search-section">
                 <div class="search-bar">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     <input type="text" id="courseSearch" placeholder="Rechercher un cours...">
                 </div>
-                <button class="filter-btn" title="Filtrer les cours">
+                <button class="filter-btn" title="Filtrer">
                     <i class="fa-solid fa-sliders"></i>
                 </button>
             </section>
 
-            <!-- Section Progression & XP (Gamification) -->
+            <!-- Barre XP & Progression -->
             <section class="card progress-card">
                 <div class="progress-header">
                     <span class="level-title">Niveau 1</span>
@@ -161,7 +163,7 @@
                         <button class="option-btn"><span class="opt-letter">D</span> Kisangani</button>
                     </div>
 
-                    <button class="btn-primary btn-next-quiz">Valider la réponse</button>
+                    <button class="btn-action">Valider la réponse</button>
                 </div>
             </section>
 
@@ -185,7 +187,7 @@
 
         </main>
 
-        <!-- Barre de Navigation Inférieure (Bottom Nav Fixe) -->
+        <!-- Barre de Navigation Inférieure (Bottom Nav) -->
         <nav class="bottom-nav">
             <a href="#accueil" class="nav-item">
                 <i class="fa-solid fa-house"></i>
@@ -211,8 +213,7 @@
 
     </div>
 
-    <!-- Script JavaScript principal -->
+    <!-- Fichier JS pour la logique du carrousel et des onglets -->
     <script src="script.js"></script>
 </body>
-                  </html>
-
+</html>
