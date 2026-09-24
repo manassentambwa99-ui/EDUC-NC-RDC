@@ -1,631 +1,562 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EDUC National - République Démocratique du Congo</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="logoo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-      :root {
-        --primary-blue: #0056b3;
-        --primary-light-blue: #0066cc;
-        --accent-yellow: #ffc107;
-        --bg-light: #f8fafc;
-        --card-bg: #ffffff;
-        --text-dark: #1e293b;
-        --text-muted: #64748b;
-        --border-color: #cbd5e1;
-        --radius-lg: 16px;
-        --radius-md: 12px;
-        --success-green: #10b981;
-        --error-red: #ef4444;
-      }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a56db">
+<title>EDUC National</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+  :root{
+    --blue:#1a56db;
+    --blue-dark:#123f9e;
+    --green:#159a5a;
+    --bg:#f4f6fb;
+    --card:#ffffff;
+    --ink:#12172b;
+    --muted:#6b7280;
+    --line:#e7eaf1;
+    --note-bg:#eaf1fd;
+    --note-border:#1a56db;
+    --radius:18px;
+    box-sizing:border-box;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-tap-highlight-color:transparent;}
+  body{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
 
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-        -webkit-tap-highlight-color: transparent;
-      }
+  /* ---------- Header ---------- */
+  .header{
+    background:linear-gradient(180deg,var(--blue) 0%,var(--blue-dark) 100%);
+    color:#fff;
+    padding:calc(18px + env(safe-area-inset-top,0px)) 20px 34px;
+    border-radius:0 0 28px 28px;
+    position:relative;
+  }
+  .header-top{display:flex;align-items:center;justify-content:space-between;}
+  .header-user{display:flex;align-items:center;gap:12px;}
+  .avatar{
+    width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.25);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;
+  }
+  .avatar svg{width:28px;height:28px;opacity:.85;}
+  .welcome{font-size:14px;opacity:.9;}
+  .username{font-size:19px;font-weight:700;margin-top:2px;}
+  .bell{
+    width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.18);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .app-title{font-size:28px;font-weight:800;margin:18px 0 4px;}
+  .app-tagline{font-size:14px;opacity:.9;}
 
-      body, html {
-        width: 100%;
-        height: 100%;
-        background-color: var(--bg-light);
-        color: var(--text-dark);
-      }
+  /* ---------- Body wrapper ---------- */
+  .content{padding:18px 20px 8px;}
 
-      .hidden {
-        display: none !important;
-      }
+  .note{
+    background:var(--note-bg);border-left:4px solid var(--note-border);
+    border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.5;color:#26314f;
+    margin-bottom:16px;
+  }
+  .note b{white-space:nowrap;}
 
-      /* ==========================================
-         1. SPLASH SCREEN (ÉCRAN DE CHARGEMENT)
-         ========================================== */
-      #splash-screen {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-      }
+  .search-row{display:flex;gap:10px;margin-bottom:16px;}
+  .search{
+    flex:1;display:flex;align-items:center;gap:10px;background:var(--card);
+    border-radius:14px;padding:14px 16px;border:1px solid var(--line);color:var(--muted);
+    font-size:15px;
+  }
+  .filter-btn{
+    width:52px;height:52px;border-radius:14px;background:var(--blue);color:#fff;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
 
-      .splash-logo {
-        width: 160px;
-        height: 160px;
-        object-fit: contain;
-        margin-bottom: 24px;
-      }
+  .level-card{
+    background:var(--card);border-radius:var(--radius);padding:18px 18px 16px;
+    border:1px solid var(--line);margin-bottom:22px;
+  }
+  .level-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+  .level-title{font-weight:700;font-size:16px;}
+  .level-pct{color:var(--blue);font-weight:700;font-size:16px;}
+  .level-sub{color:var(--muted);font-size:13px;margin-bottom:10px;}
+  .bar{height:8px;background:#e7ebf3;border-radius:6px;overflow:hidden;margin-bottom:10px;}
+  .bar-fill{height:100%;background:#f5a623;border-radius:6px;}
+  .level-note{font-size:13px;color:#3a4257;}
 
-      .spinner {
-        width: 36px;
-        height: 36px;
-        border: 4px solid #e0e8f0;
-        border-top: 4px solid var(--primary-blue);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
+  h2.section-title{font-size:22px;font-weight:800;margin:6px 0 14px;}
 
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
+  /* ---------- Grid cards (Programme National / Accès rapide) ---------- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+  .prog-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 14px;text-align:left;
+  }
+  .prog-icon{
+    width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    margin-bottom:12px;color:#fff;
+  }
+  .prog-name{font-weight:700;font-size:15px;line-height:1.25;margin-bottom:4px;}
+  .prog-sub{color:var(--muted);font-size:13px;}
+  .prog-sub.link{color:var(--blue);font-weight:600;}
 
-      /* ==========================================
-         2. ONBOARDING / SLIDER
-         ========================================== */
-      #onboarding-screen {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        background: #ffffff;
-        padding: 20px 20px 40px 20px;
-      }
+  /* ---------- Featured course card ---------- */
+  .feature-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;margin-bottom:26px;
+  }
+  .feature-img{
+    height:170px;background:linear-gradient(135deg,#e4652c,#f0975a);
+    display:flex;align-items:center;justify-content:center;color:#fff;
+  }
+  .feature-img svg{width:64px;height:64px;opacity:.9;}
+  .feature-body{padding:18px;}
+  .tag{
+    display:inline-flex;align-items:center;gap:6px;background:#eaf1fd;color:var(--blue);
+    font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:20px;margin-bottom:10px;
+  }
+  .feature-title{font-size:19px;font-weight:800;margin-bottom:6px;}
+  .feature-desc{color:var(--muted);font-size:14px;line-height:1.4;margin-bottom:16px;}
+  .btn-primary{
+    display:block;width:100%;text-align:center;background:var(--blue);color:#fff;
+    font-weight:700;font-size:15.5px;padding:15px;border-radius:14px;border:none;
+  }
 
-      .slides-wrapper {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
+  /* ---------- Timeline card ---------- */
+  .timeline-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;margin-bottom:26px;
+  }
+  .timeline-collage{display:grid;grid-template-columns:1fr 1fr;height:170px;}
+  .collage-cell{
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;
+    background-size:cover;background-position:center;
+  }
+  .timeline-body{padding:18px;}
+  .timeline-title{font-size:19px;font-weight:800;margin:2px 0 8px;}
+  .timeline-desc{color:var(--muted);font-size:14px;line-height:1.4;}
 
-      .slide-card {
-        display: none;
-        width: 100%;
-        max-width: 400px;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        text-align: center;
-      }
+  /* ---------- Authority blocks ---------- */
+  .authority-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;margin-bottom:20px;
+  }
+  .authority-photo{
+    height:220px;display:flex;align-items:center;justify-content:center;color:#fff;
+  }
+  .authority-body{padding:16px 18px 20px;}
+  .authority-name{font-size:19px;font-weight:800;margin:4px 0 2px;}
+  .authority-role{color:var(--muted);font-size:14px;}
+  .primature-banner{
+    background:var(--note-bg);border-radius:14px;padding:14px 16px;margin-bottom:14px;
+  }
+  .primature-banner .tag{background:transparent;color:var(--blue);padding:0;margin-bottom:6px;font-size:13px;}
+  .primature-banner .authority-name{font-size:17px;margin:0 0 2px;}
+  .primature-banner .authority-role{font-size:13.5px;}
 
-      .slide-card.active {
-        display: block;
-      }
+  /* ---------- News ---------- */
+  .news-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px;margin-bottom:16px;
+  }
+  .news-tag{color:var(--blue);font-weight:700;font-size:13.5px;margin-bottom:8px;}
+  .news-title{font-weight:800;font-size:17px;line-height:1.3;margin-bottom:8px;}
+  .news-excerpt{color:var(--muted);font-size:14px;line-height:1.4;margin-bottom:14px;}
+  .news-foot{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;color:var(--muted);}
+  .news-foot .read{color:var(--blue);font-weight:700;}
 
-      .slide-box {
-        padding: 40px 20px;
-        color: #ffffff;
-        border-radius: 16px;
-      }
+  /* ---------- Quiz ---------- */
+  .quiz-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px;margin-bottom:20px;
+  }
+  .quiz-badge{
+    display:inline-block;background:#fde3e3;color:#e0384c;font-weight:700;font-size:12.5px;
+    padding:6px 12px;border-radius:20px;margin-bottom:14px;
+  }
+  .quiz-q{font-size:18px;font-weight:800;line-height:1.35;margin-bottom:16px;}
+  .quiz-opt{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:12px;
+    font-size:14.5px;line-height:1.35;cursor:pointer;
+  }
+  .quiz-opt.selected{border-color:var(--blue);background:#f3f7ff;}
+  .radio{width:20px;height:20px;border-radius:50%;border:2px solid #c6cbd8;flex-shrink:0;}
+  .quiz-opt.selected .radio{border-color:var(--blue);background:radial-gradient(circle,var(--blue) 0 45%,transparent 46%);}
 
-      .slide-box.bg-blue1 {
-        background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
-      }
+  /* ---------- Profile ---------- */
+  .profile-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px 20px;text-align:center;margin-bottom:20px;
+  }
+  .profile-avatar{
+    width:96px;height:96px;border-radius:50%;background:#e7ebf3;border:3px solid var(--blue);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
+  }
+  .profile-avatar svg{width:54px;height:54px;color:#9aa2b1;}
+  .profile-name{font-size:19px;font-weight:800;margin-bottom:4px;}
+  .profile-sub{color:var(--muted);font-size:14px;margin-bottom:22px;}
+  .btn-danger{
+    display:block;width:100%;text-align:center;background:#fdeaea;color:#e0384c;
+    font-weight:700;font-size:15px;padding:15px;border-radius:14px;border:none;
+  }
 
-      .slide-box.bg-grey {
-        background: linear-gradient(135deg, #475569 0%, #94a3b8 100%);
-      }
+  /* ---------- Bottom nav ---------- */
+  .tabbar{
+    position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);
+    display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));z-index:20;
+  }
+  .tab-btn{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+    background:none;border:none;color:#9aa2b1;font-size:11.5px;font-weight:600;padding:6px 0;
+  }
+  .tab-btn svg{width:22px;height:22px;}
+  .tab-btn.active{color:var(--blue);}
 
-      .slide-box.bg-blue2 {
-        background: linear-gradient(135deg, #002244 0%, #004488 100%);
-      }
+  .view{display:none;}
+  .view.active{display:block;}
 
-      .slide-title {
-        font-size: 1.5rem;
-        font-weight: 800;
-        margin-bottom: 12px;
-      }
+  .install-banner{
+    display:none;position:fixed;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));
+    background:var(--ink);color:#fff;border-radius:14px;padding:12px 16px;font-size:13.5px;
+    align-items:center;justify-content:space-between;gap:10px;z-index:30;
+  }
+  .install-banner button{
+    background:var(--blue);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-weight:700;font-size:13px;
+  }
+</style>
+</head>
+<body>
 
-      .slide-desc {
-        font-size: 0.95rem;
-        opacity: 0.9;
-        line-height: 1.4;
-      }
-
-      .onboarding-controls {
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-      }
-
-      .dots-container {
-        display: flex;
-        gap: 8px;
-      }
-
-      .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: #cbd5e1;
-        transition: all 0.3s ease;
-      }
-
-      .dot.active {
-        width: 26px;
-        border-radius: 6px;
-        background-color: var(--primary-blue);
-      }
-
-      .btn-onboarding {
-        width: 100%;
-        background-color: var(--primary-light-blue);
-        color: #ffffff;
-        border: none;
-        padding: 16px;
-        border-radius: 28px;
-        font-size: 1.05rem;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 4px 14px rgba(0, 102, 204, 0.3);
-      }
-
-      /* ==========================================
-         3. APPLICATION PRINCIPALE
-         ========================================== */
-      #main-app {
-        padding-bottom: 80px;
-      }
-
-      .app-header {
-        background-color: var(--primary-blue);
-        color: #ffffff;
-        padding: 24px 20px 32px 20px;
-        border-bottom-left-radius: 24px;
-        border-bottom-right-radius: 24px;
-      }
-
-      .brand-title {
-        font-size: 1.6rem;
-        font-weight: 800;
-        margin-bottom: 4px;
-      }
-
-      .brand-subtitle {
-        font-size: 0.9rem;
-        opacity: 0.9;
-      }
-
-      .main-container {
-        padding: 16px;
-        max-width: 500px;
-        margin: 0 auto;
-      }
-
-      .card {
-        background: var(--card-bg);
-        border-radius: var(--radius-md);
-        padding: 16px;
-        margin-bottom: 16px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      }
-
-      /* Note Institutionnelle */
-      .note-card {
-        display: flex;
-        gap: 12px;
-        background-color: #f0f7ff;
-        border-left: 4px solid var(--primary-blue);
-      }
-
-      .note-icon {
-        color: var(--primary-blue);
-        font-size: 1.2rem;
-        margin-top: 2px;
-      }
-
-      .note-text p {
-        font-size: 0.85rem;
-        line-height: 1.4;
-        color: #1e3a8a;
-      }
-
-      /* Barre de Recherche */
-      .search-section {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 16px;
-      }
-
-      .search-bar {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        background: #ffffff;
-        border-radius: 10px;
-        padding: 0 12px;
-        border: 1px solid var(--border-color);
-      }
-
-      .search-icon {
-        color: var(--text-muted);
-        margin-right: 8px;
-      }
-
-      .search-bar input {
-        border: none;
-        outline: none;
-        width: 100%;
-        padding: 12px 0;
-        font-size: 0.9rem;
-      }
-
-      .filter-btn {
-        background-color: var(--primary-blue);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        width: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        cursor: pointer;
-      }
-
-      /* Carte XP & Niveau */
-      .progress-header {
-        display: flex;
-        justify-content: space-between;
-        font-weight: 700;
-        color: var(--primary-blue);
-      }
-
-      .xp-subtext {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        margin: 2px 0 8px 0;
-      }
-
-      .progress-bar-container {
-        height: 10px;
-        background-color: #e2e8f0;
-        border-radius: 5px;
-        overflow: hidden;
-        margin-bottom: 10px;
-      }
-
-      .progress-bar-fill {
-        height: 100%;
-        background-color: var(--accent-yellow);
-      }
-
-      .xp-hint {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        font-weight: 600;
-      }
-
-      .star-icon {
-        color: var(--accent-yellow);
-      }
-
-      .section-title {
-        font-size: 1.25rem;
-        font-weight: 800;
-        margin: 20px 0 12px 0;
-        color: var(--text-dark);
-      }
-
-      /* Quiz */
-      .quiz-options {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin: 16px 0;
-      }
-
-      .option-btn {
-        padding: 8px 12px;
-        background: #f1f5f9;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-      }
-
-      .btn-validate {
-        width: 100%;
-        padding: 12px;
-        background-color: #ffffff;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
-      }
-
-      /* Profil */
-      .profile-card {
-        text-align: center;
-        padding: 20px 16px;
-      }
-
-      .avatar-icon {
-        font-size: 2rem;
-        color: #64748b;
-        margin-bottom: 8px;
-      }
-
-      .profile-name {
-        font-size: 1.1rem;
-        font-weight: 800;
-      }
-
-      .profile-school {
-        font-size: 0.85rem;
-        color: var(--text-muted);
-        margin: 4px 0 16px 0;
-      }
-
-      .btn-logout {
-        padding: 8px 16px;
-        background: #ffffff;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        font-size: 0.85rem;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      /* Bottom Navigation */
-      .bottom-nav {
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        height: 60px;
-        background: #ffffff;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        border-top: 1px solid #e2e8f0;
-        z-index: 1000;
-      }
-
-      .nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px;
-        text-decoration: none;
-        color: var(--text-muted);
-        font-size: 0.75rem;
-        font-weight: 600;
-      }
-
-      .nav-item.active {
-        color: var(--primary-blue);
-      }
-    </style>
-  </head>
-  <body>
-
-    <!-- 1. SPLASH SCREEN -->
-    <div id="splash-screen">
-      <img src="logoo.png" alt="Logo EDUC" class="splash-logo">
-      <div class="spinner"></div>
-    </div>
-
-    <!-- 2. ONBOARDING / SLIDER INTERACTIF -->
-    <div id="onboarding-screen" class="hidden">
-      <div class="slides-wrapper">
-        
-        <!-- Slide 1 -->
-        <div class="slide-card active">
-          <div class="slide-box bg-blue1">
-            <h2 class="slide-title">Bienvenue sur EDUC.nc</h2>
-            <p class="slide-desc">Apprenez partout et à tout moment grâce à une plateforme accessible et intuitive.</p>
-          </div>
-        </div>
-
-        <!-- Slide 2 -->
-        <div class="slide-card">
-          <div class="slide-box bg-grey">
-            <h2 class="slide-title">Apprenez avec des Quiz</h2>
-            <p class="slide-desc">Évaluez vos connaissances et progressez à votre rythme.</p>
-          </div>
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="slide-card">
-          <div class="slide-box bg-blue2">
-            <h2 class="slide-title">Progresser chaque jour</h2>
-            <p class="slide-desc">Devenir un bon citoyen informé et engagé.</p>
-          </div>
-        </div>
-
+<!-- ===================== HEADER (shared) ===================== -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-user">
+      <div class="avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
       </div>
+      <div>
+        <div class="welcome">Bienvenue 👋</div>
+        <div class="username" id="userNameDisplay">Manasse</div>
+      </div>
+    </div>
+    <div class="bell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+    </div>
+  </div>
+  <div class="app-title">EDUC National</div>
+  <div class="app-tagline">Apprenons, comprenons et bâtissons avec EDUC</div>
+</div>
 
-      <div class="onboarding-controls">
-        <div class="dots-container">
-          <span class="dot active"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
+<!-- ===================== SHARED CONTENT TOP ===================== -->
+<div class="content">
+  <div class="note">
+    <b>ℹ️ Note institutionnelle :</b> Plateforme officielle de suivi pédagogique, d'apprentissage et d'évaluation interactive placée sous le haut patronage du Ministère de l'Éducation Nationale et Nouvelle Citoyenneté de la RDC.
+  </div>
+
+  <div class="search-row">
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+      Rechercher un cours...
+    </div>
+    <div class="filter-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+    </div>
+  </div>
+
+  <div class="level-card">
+    <div class="level-top">
+      <div class="level-title">Niveau 1</div>
+      <div class="level-pct" id="levelPct">25%</div>
+    </div>
+    <div class="level-sub" id="levelXp">250 / 1000 XP</div>
+    <div class="bar"><div class="bar-fill" id="levelBar" style="width:25%"></div></div>
+    <div class="level-note">⭐ Gagnez de l'XP avec les quiz de Manassé IA</div>
+  </div>
+
+  <!-- ===================== ACCUEIL ===================== -->
+  <div class="view active" id="view-accueil">
+    <h2 class="section-title">Accès rapide</h2>
+    <div class="grid2">
+      <div class="prog-card">
+        <div class="prog-icon" style="background:var(--blue)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h9a3 3 0 013 3v13H7a3 3 0 01-3-3V4z"/><path d="M20 4h-4v13h4"/></svg>
         </div>
-        <button id="next-btn" class="btn-onboarding" onclick="handleNextSlide()">Suivant</button>
+        <div class="prog-name">Cours</div>
+        <div class="prog-sub link">Explorer →</div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon" style="background:#e0384c">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M12 16v-4M12 8h.01"/></svg>
+        </div>
+        <div class="prog-name">Quiz</div>
+        <div class="prog-sub link" style="color:#e0384c">Explorer →</div>
       </div>
     </div>
 
-    <!-- 3. MAIN APPLICATION SCREEN -->
-    <div id="main-app" class="hidden">
-      
-      <header class="app-header">
-        <h1 class="brand-title">EDUC National</h1>
-        <p class="brand-subtitle">Apprenons, comprenons et bâtissons avec EDUC</p>
-      </header>
-
-      <main class="main-container">
-
-        <!-- Note Institutionnelle -->
-        <section class="card note-card">
-          <div class="note-icon">
-            <i class="fa-solid fa-circle-info"></i>
-          </div>
-          <div class="note-text">
-            <p><strong>Note institutionnelle :</strong> Plateforme officielle de suivi pédagogique, d'apprentissage et d'évaluation interactive placée sous le haut patronage du Ministère de l'Éducation Nationale et Nouvelle Citoyenneté de la RDC.</p>
-          </div>
-        </section>
-
-        <!-- Recherche -->
-        <section class="search-section">
-          <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input type="text" placeholder="Rechercher un cours...">
-          </div>
-          <button class="filter-btn">
-            <i class="fa-solid fa-sliders"></i>
-          </button>
-        </section>
-
-        <!-- Progression / XP -->
-        <section class="card">
-          <div class="progress-header">
-            <span>Niveau 1</span>
-            <span>30%</span>
-          </div>
-          <div class="xp-subtext">300 / 1000 XP</div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" style="width: 30%;"></div>
-          </div>
-          <div class="xp-hint">
-            <i class="fa-solid fa-star star-icon"></i>
-            <span>Gagnez de l'XP avec les quiz de Manassé IA</span>
-          </div>
-        </section>
-
-        <!-- Section Actualités -->
-        <h2 class="section-title">Actualités en RDC</h2>
-
-        <article class="card">
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Actualité RDC</p>
-          <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;">En RDC, la guerre prive près d'un demi-million d'enfants d'école – RFI</h3>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">En RDC, la guerre prive près d'un demi-million d'enfants d'école RFI...</p>
-          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
-            <span><i class="fa-regular fa-clock"></i> 10/09/2026</span>
-            <a href="#" style="color: var(--primary-blue); text-decoration: none; font-weight: 600;">Lire l'article &rarr;</a>
-          </div>
-        </article>
-
-        <article class="card">
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Actualité RDC</p>
-          <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;">Réouverture et réhabilitation des infrastructures scolaires</h3>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Le Ministère de l'Éducation Nationale annonce de nouvelles mesures...</p>
-          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
-            <span><i class="fa-regular fa-clock"></i> 08/09/2026</span>
-            <a href="#" style="color: var(--primary-blue); text-decoration: none; font-weight: 600;">Lire l'article &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Section Quiz -->
-        <h2 class="section-title">Quiz de Civisme</h2>
-
-        <div class="card">
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Question 1 sur 5</p>
-          <h3 style="font-size: 0.95rem; font-weight: 700;">Quelle est la capitale de la République Démocratique du Congo ?</h3>
-          
-          <div class="quiz-options">
-            <button class="option-btn">A Kinshasa</button>
-            <button class="option-btn">B Lubumbashi</button>
-            <button class="option-btn">C Goma</button>
-            <button class="option-btn">D Kisangani</button>
-          </div>
-
-          <button class="btn-validate">Valider la réponse</button>
-        </div>
-
-        <!-- Section Profil -->
-        <h2 class="section-title">Mon Profil Apprenant</h2>
-
-        <div class="card profile-card">
-          <div class="avatar-icon">
-            <i class="fa-solid fa-user"></i>
-          </div>
-          <h3 class="profile-name">Manasse Ntambwa Lushiku</h3>
-          <p class="profile-school">Écoles: Ig2 | Kinshasa-Lukunga, Kinshasa</p>
-          <button class="btn-logout">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            Se déconnecter
-          </button>
-        </div>
-
-      </main>
-
-      <!-- Bottom Navigation -->
-      <nav class="bottom-nav">
-        <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i><span>Accueil</span></a>
-        <a href="#" class="nav-item"><i class="fa-solid fa-book-open"></i><span>Cours</span></a>
-        <a href="#" class="nav-item"><i class="fa-solid fa-circle-question"></i><span>Quiz</span></a>
-        <a href="#" class="nav-item"><i class="fa-solid fa-newspaper"></i><span>Actualités</span></a>
-        <a href="#" class="nav-item"><i class="fa-solid fa-user"></i><span>Profil</span></a>
-      </nav>
-
+    <h2 class="section-title">Cours en vedette</h2>
+    <div class="feature-card">
+      <div class="feature-img">
+        <!-- Remplacer par la photo réelle (voir README) -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+      </div>
+      <div class="feature-body">
+        <div class="tag">🚩 Valeurs Nationales</div>
+        <div class="feature-title">Éducation à la Nouvelle Citoyenneté</div>
+        <div class="feature-desc">Droits, devoirs et valeurs patriotiques fondamentales pour bâtir la RDC.</div>
+        <button class="btn-primary">Commencer le cours (+150 XP)</button>
+      </div>
     </div>
 
-    <!-- LOGIQUE JAVASCRIPT -->
-    <script>
-      let currentSlide = 0;
-      const slides = document.querySelectorAll('.slide-card');
-      const dots = document.querySelectorAll('.dot');
-      const nextBtn = document.getElementById('next-btn');
+    <h2 class="section-title">Chronologie et Histoire des Présidents de la RDC</h2>
+    <div class="timeline-card">
+      <div class="timeline-collage">
+        <div class="collage-cell" style="background:#3a3f4d">Kabila</div>
+        <div class="collage-cell" style="background:#5a5f6d">Kasa-Vubu</div>
+        <div class="collage-cell" style="background:#c98a2c">Mobutu</div>
+        <div class="collage-cell" style="background:#1a56db">Tshisekedi</div>
+      </div>
+      <div class="timeline-body">
+        <div class="tag" style="background:#eaf1fd">🧩 Frise Chronologique</div>
+        <div class="timeline-title">Histoire de tous les Présidents de la RDC</div>
+        <div class="timeline-desc">Cliquez ici pour accéder aux carrés chronologiques de tous les chefs d'État avec leurs photos et histoires en détail.</div>
+      </div>
+    </div>
 
-      // 1. Splash Screen pendant 2 secondes
-      setTimeout(() => {
-        document.getElementById('splash-screen').classList.add('hidden');
-        document.getElementById('onboarding-screen').classList.remove('hidden');
-      }, 2000);
+    <h2 class="section-title">Nos Autorités Actuelles</h2>
+    <div class="authority-card">
+      <div class="authority-photo" style="background:linear-gradient(135deg,#1a56db,#123f9e)">
+        <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+      </div>
+      <div class="authority-body">
+        <div class="tag">⭐ Présidence de la République</div>
+        <div class="authority-name">S.E. Félix Tshisekedi</div>
+        <div class="authority-role">Président de la République Démocratique du Congo</div>
+      </div>
+    </div>
 
-      // 2. Navigation pas à pas dans l'Onboarding
-      function handleNextSlide() {
-        if (currentSlide < slides.length - 1) {
-          slides[currentSlide].classList.remove('active');
-          dots[currentSlide].classList.remove('active');
-          
-          currentSlide++;
-          
-          slides[currentSlide].classList.add('active');
-          dots[currentSlide].classList.add('active');
+    <div class="primature-banner">
+      <div class="tag">🏛 Primature</div>
+      <div class="authority-name">Judith Suminwa Tuluka</div>
+      <div class="authority-role">Première Ministre, Cheffe du Gouvernement de la RDC</div>
+    </div>
+    <div class="authority-card">
+      <div class="authority-photo" style="background:linear-gradient(135deg,#123f9e,#0b2a6b)">
+        <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+      </div>
+      <div class="authority-body">
+        <div class="tag">🏛 Ministère de l'Éducation Nationale</div>
+        <div class="authority-name">Raïssa Malu</div>
+        <div class="authority-role">Ministre de l'Éducation Nationale et Nouvelle Citoyenneté</div>
+      </div>
+    </div>
+  </div>
 
-          if (currentSlide === slides.length - 1) {
-            nextBtn.textContent = "Accéder à l'application";
-          }
-        } else {
-          // Masquer le slider et afficher l'application
-          document.getElementById('onboarding-screen').classList.add('hidden');
-          document.getElementById('main-app').classList.remove('hidden');
-        }
-      }
-    </script>
-  </body>
+  <!-- ===================== COURS ===================== -->
+  <div class="view" id="view-cours">
+    <h2 class="section-title">Programme National</h2>
+    <div class="grid2">
+      <div class="prog-card">
+        <div class="prog-icon" style="background:var(--blue)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h9a3 3 0 013 3v13H7a3 3 0 01-3-3V4z"/><path d="M20 4h-4v13h4"/></svg>
+        </div>
+        <div class="prog-name">Éducation Civique &amp; Morale</div>
+        <div class="prog-sub">Document PDF</div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon" style="background:var(--green)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 8.5c0 4.5-8 11-8 11s-8-6.5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 8.5z"/></svg>
+        </div>
+        <div class="prog-name">Nouvelle Citoyenneté</div>
+        <div class="prog-sub">Document PDF</div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon" style="background:#c9711f">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-7h6v7"/></svg>
+        </div>
+        <div class="prog-name">Histoire de la RDC</div>
+        <div class="prog-sub">15 Modules</div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon" style="background:#7c3aed">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3-5 7-5s7 1.7 7 5"/><circle cx="17" cy="9" r="2.3"/><path d="M15.5 13.5c2.6.3 4.5 1.6 4.5 4"/></svg>
+        </div>
+        <div class="prog-name">Sociologie Africaine</div>
+        <div class="prog-sub">8 Modules</div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon" style="background:#1c8adb">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-6-4-9s1.5-6.4 4-9z"/></svg>
+        </div>
+        <div class="prog-name">Géographie de la RDC</div>
+        <div class="prog-sub">14 Modules</div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon" style="background:#e0384c">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3z"/></svg>
+        </div>
+        <div class="prog-name">Serment du citoyen</div>
+        <div class="prog-sub">Document PDF</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== QUIZ ===================== -->
+  <div class="view" id="view-quiz">
+    <h2 class="section-title">Manassé IA – Quiz Intelligent</h2>
+    <div class="quiz-card">
+      <div class="quiz-badge">🤖 Composé &amp; Corrigé par Manassé IA</div>
+      <div class="quiz-q">Quel est l'article de la Constitution de la RDC qui garantit le droit à l'éducation pour chaque citoyen ?</div>
+
+      <div class="quiz-opt" data-q="1">
+        <span>L'article 12 relatif à l'égalité de tous les Congolais devant la loi.</span>
+        <span class="radio"></span>
+      </div>
+      <div class="quiz-opt" data-q="1">
+        <span>L'article 20 sur la liberté de pensée et de conscience.</span>
+        <span class="radio"></span>
+      </div>
+      <div class="quiz-opt" data-q="1">
+        <span>L'article 43 qui stipule que l'éducation est un droit fondamental et gratuit au niveau primaire.</span>
+        <span class="radio"></span>
+      </div>
+      <div class="quiz-opt" data-q="1">
+        <span>L'article 51 relatif à la protection de la jeunesse.</span>
+        <span class="radio"></span>
+      </div>
+    </div>
+    <button class="btn-primary" id="quizValidate">Valider la réponse</button>
+  </div>
+
+  <!-- ===================== ACTUALITÉS ===================== -->
+  <div class="view" id="view-actualites">
+    <h2 class="section-title">Actualités en RDC</h2>
+
+    <div class="news-card">
+      <div class="news-tag">Actualité RDC</div>
+      <div class="news-title">RDC : Ebola fragilise l'éducation et accentue la vulnérabilité des communautés scolaires – Education International</div>
+      <div class="news-excerpt">RDC : Ebola fragilise l'éducation et accentue la vulnérabilité des communautés scolaires Education...</div>
+      <div class="news-foot"><span>🕐 22/09/2026</span><span class="read">Lire l'article →</span></div>
+    </div>
+
+    <div class="news-card">
+      <div class="news-tag">Actualité RDC</div>
+      <div class="news-title">En RDC, la guerre prive près d'un demi-million d'enfants d'école – RFI</div>
+      <div class="news-excerpt">En RDC, la guerre prive près d'un demi-million d'enfants d'école RFI...</div>
+      <div class="news-foot"><span>🕐 10/09/2026</span><span class="read">Lire l'article →</span></div>
+    </div>
+
+    <div class="news-card">
+      <div class="news-tag">Actualité RDC</div>
+      <div class="news-title">À l'ONU, la RDC met en avant ses investissements dans la santé et l'éducation, avec plus de 5 millions d'enfants bénéficiaires de la gratuité de l'enseignement – Actualite.cd</div>
+      <div class="news-excerpt">À l'ONU, la RDC met en avant ses investissements dans la santé et l'éducation...</div>
+      <div class="news-foot"><span>🕐 —</span><span class="read">Lire l'article →</span></div>
+    </div>
+  </div>
+
+  <!-- ===================== PROFIL ===================== -->
+  <div class="view" id="view-profil">
+    <h2 class="section-title">Mon Profil Apprenant</h2>
+    <div class="profile-card">
+      <div class="profile-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+      </div>
+      <div class="profile-name" id="profileName">Manasse Ntambwa Lushiku</div>
+      <div class="profile-sub" id="profileSchool">École: Ig2 | Kinshasa-Lukunga, Kinshasa</div>
+      <button class="btn-danger" id="logoutBtn">⏻ Se déconnecter</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== BOTTOM NAV ===================== -->
+<div class="tabbar">
+  <button class="tab-btn active" data-view="accueil">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+    Accueil
+  </button>
+  <button class="tab-btn" data-view="cours">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h9a3 3 0 013 3v13H7a3 3 0 01-3-3V4z"/><path d="M20 4h-4v13h4"/></svg>
+    Cours
+  </button>
+  <button class="tab-btn" data-view="quiz">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .5c0 1.7-2.5 1.8-2.5 3.5"/><path d="M12 17h.01"/></svg>
+    Quiz
+  </button>
+  <button class="tab-btn" data-view="actualites">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h13a3 3 0 013 3v13H7a3 3 0 01-3-3V4z"/><path d="M8 9h8M8 13h8M8 17h4"/></svg>
+    Actualités
+  </button>
+  <button class="tab-btn" data-view="profil">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+    Profil
+  </button>
+</div>
+
+<div class="install-banner" id="installBanner">
+  <span>Installer EDUC National sur cet appareil ?</span>
+  <button id="installBtn">Installer</button>
+</div>
+
+<script>
+  // ---- Tab switching ----
+  const tabs = document.querySelectorAll('.tab-btn');
+  const views = document.querySelectorAll('.view');
+  tabs.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      tabs.forEach(b=>b.classList.remove('active'));
+      views.forEach(v=>v.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('view-'+btn.dataset.view).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+
+  // ---- Quiz selection ----
+  document.querySelectorAll('.quiz-opt').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      document.querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
+  document.getElementById('quizValidate').addEventListener('click',()=>{
+    const selected = document.querySelector('.quiz-opt.selected');
+    if(!selected){alert('Choisissez une réponse.');return;}
+    alert('Réponse enregistrée !');
+  });
+
+  // ---- Logout (demo) ----
+  document.getElementById('logoutBtn').addEventListener('click',()=>{
+    alert('Déconnexion (à relier à votre backend).');
+  });
+
+  // ---- Service worker registration ----
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+      navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+    });
+  }
+
+  // ---- Install prompt ----
+  let deferredPrompt;
+  const banner = document.getElementById('installBanner');
+  window.addEventListener('beforeinstallprompt',(e)=>{
+    e.preventDefault();
+    deferredPrompt = e;
+    banner.style.display='flex';
+  });
+  document.getElementById('installBtn').addEventListener('click',async()=>{
+    banner.style.display='none';
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt=null;
+    }
+  });
+</script>
+</body>
 </html>
