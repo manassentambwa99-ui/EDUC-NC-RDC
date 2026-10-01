@@ -968,6 +968,63 @@
             #main-app [class]::after { animation: none !important; }
             #main-app .reveal-pending { opacity: 1; transform: none; filter: none; }
         }
+
+        /* ===== ALLÈGEMENT : mêmes effets, moins de calculs pour le téléphone ===== */
+        /* Fond : plus d'animation de fond plein écran ni de fond fixe (très coûteux) */
+        #main-app { animation: none; background-attachment: scroll; background-size: auto; }
+
+        /* Bulles : dégradé doux au lieu d'un gros flou, animées uniquement par déplacement */
+        .ambient-blob { filter: none; border-radius: 50%; will-change: transform; }
+        .ambient-blob.ab1 { background: radial-gradient(circle, rgba(26, 140, 255, 0.45), transparent 68%); animation: blobDrift1 18s ease-in-out infinite alternate; }
+        .ambient-blob.ab2 { background: radial-gradient(circle, rgba(255, 193, 7, 0.34), transparent 68%); animation: blobDrift2 21s ease-in-out infinite alternate; }
+        .ambient-blob.ab3 { background: radial-gradient(circle, rgba(0, 102, 204, 0.36), transparent 68%); animation: blobDrift1 24s ease-in-out infinite alternate-reverse; }
+
+        /* Reflet : animé par transform (fluide) et retiré des cartes d'actualités et du quiz */
+        #main-app .xp-card::after, #main-app .access-card::after, #main-app .book-card::after, #main-app .course-card::after {
+            left: 0;
+            transform: translateX(-200%) skewX(-20deg);
+            animation: glassSweepT 8s ease-in-out infinite;
+            will-change: transform;
+        }
+        #main-app .news-card::after, #main-app .quiz-container-box::after { display: none; }
+        @keyframes glassSweepT {
+            0%, 55% { transform: translateX(-200%) skewX(-20deg); }
+            100% { transform: translateX(300%) skewX(-20deg); }
+        }
+
+        /* Verre : flou plus léger, ombres plus légères */
+        #main-app .xp-card, #main-app .access-card, #main-app .book-card, #main-app .course-card,
+        #main-app .news-card, #main-app .quiz-container-box, #main-app .search-input-wrapper {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 16px rgba(0, 60, 130, 0.07);
+        }
+        #main-app .info-box-ministere { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: none; }
+        #main-app .authority-showcase { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        #main-app .authority-info { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255, 255, 255, 0.6); }
+        #main-app .bottom-nav { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        #main-app .app-header { backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 6px 18px rgba(0, 102, 204, 0.22); }
+
+        /* Animations continues qui forçaient le redessin permanent : arrêtées */
+        #main-app.active .app-header { animation: liquidRise 0.8s cubic-bezier(.2,.8,.2,1) 0.9s backwards; }
+        #main-app .header-user-avatar { animation: none; }
+        #main-app .progress-fill { animation: none; }
+        .btn-primary, .btn-phone, .course-btn, .next-question-btn { animation: none; }
+
+        /* Apparitions sans flou animé */
+        @keyframes liquidRise {
+            0% { opacity: 0; transform: translateY(40px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        #main-app .authority-showcase, #main-app .section-title {
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.2,.8,.2,1);
+        }
+        #main-app .reveal-pending { filter: none; }
+
+        /* Animation d'entrée : flous réduits */
+        #liquid-intro { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .liquid-blob { filter: blur(16px); border-radius: 50%; animation: liquidFloat 2s ease-in-out infinite; }
+        .liquid-center { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
     </style>
 </head>
 <body>
