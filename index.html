@@ -875,6 +875,99 @@
             #onboarding-screen.active, #auth-screen.active, #profile-screen.active,
             #main-app .tab-content.active, #main-app .tab-content.active * { animation: none; }
         }
+
+        /* ===== AJOUT : PLUS DE TRANSPARENCE ET DE FLUX (bulles, reflets, apparitions) ===== */
+        #main-app { isolation: isolate; }
+        .ambient-blob {
+            display: none;
+            position: fixed;
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(55px);
+            border-radius: 42% 58% 63% 37% / 45% 38% 62% 55%;
+        }
+        #main-app.active .ambient-blob { display: block; }
+        .ambient-blob.ab1 { width: 300px; height: 300px; top: 12%; left: -90px; background: rgba(26, 140, 255, 0.40); animation: liquidMorph 14s ease-in-out infinite, blobDrift1 18s ease-in-out infinite alternate; }
+        .ambient-blob.ab2 { width: 260px; height: 260px; top: 48%; right: -90px; background: rgba(255, 193, 7, 0.30); animation: liquidMorph 17s ease-in-out infinite, blobDrift2 21s ease-in-out infinite alternate; }
+        .ambient-blob.ab3 { width: 320px; height: 320px; bottom: -80px; left: 20%; background: rgba(0, 102, 204, 0.32); animation: liquidMorph 19s ease-in-out infinite, blobDrift1 24s ease-in-out infinite alternate-reverse; }
+        @keyframes blobDrift1 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(70px, -90px) scale(1.25); } }
+        @keyframes blobDrift2 { 0% { transform: translate(0, 0) scale(1.1); } 100% { transform: translate(-80px, 70px) scale(0.9); } }
+
+        /* Reflet de verre qui traverse les cartes */
+        #main-app .xp-card, #main-app .access-card, #main-app .book-card,
+        #main-app .course-card, #main-app .news-card, #main-app .quiz-container-box {
+            position: relative;
+            overflow: hidden;
+        }
+        #main-app .xp-card::after, #main-app .access-card::after, #main-app .book-card::after,
+        #main-app .course-card::after, #main-app .news-card::after, #main-app .quiz-container-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 55%;
+            height: 100%;
+            background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+            transform: skewX(-20deg);
+            pointer-events: none;
+            animation: glassSweep 8s ease-in-out infinite;
+        }
+        #main-app .access-card:nth-child(2n)::after, #main-app .book-card:nth-child(2n)::after { animation-delay: 2s; }
+        #main-app .access-card:nth-child(3n)::after, #main-app .book-card:nth-child(3n)::after { animation-delay: 4s; }
+        #main-app .course-card::after, #main-app .news-card::after { animation-delay: 3s; }
+        @keyframes glassSweep {
+            0%, 55% { left: -120%; }
+            100% { left: 160%; }
+        }
+
+        /* En-tête vivant */
+        #main-app .app-header {
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.96), rgba(26, 140, 255, 0.88), rgba(0, 102, 204, 0.96));
+            background-size: 200% 200%;
+        }
+        #main-app.active .app-header {
+            animation: liquidRise 0.8s cubic-bezier(.2,.8,.2,1) 0.9s backwards, headerFlow 12s ease-in-out 1.7s infinite alternate;
+        }
+        @keyframes headerFlow { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+        #main-app .header-user-avatar { animation: avatarRing 3s ease-in-out infinite; }
+        @keyframes avatarRing {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55); }
+            50% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
+        }
+
+        /* Barre XP brillante (reste jaune) */
+        #main-app .progress-fill {
+            background: linear-gradient(90deg, var(--accent-yellow), #ffd54f, var(--accent-yellow));
+            background-size: 200% 100%;
+            animation: barShine 2.5s linear infinite;
+        }
+        @keyframes barShine { 0% { background-position: 0% 0; } 100% { background-position: -200% 0; } }
+
+        /* Boutons avec halo doux */
+        .btn-primary, .btn-phone, .course-btn, .next-question-btn { animation: softGlow 3.2s ease-in-out infinite; transition: transform 0.2s ease; }
+        .btn-primary:active, .btn-phone:active, .course-btn:active, .next-question-btn:active { transform: scale(0.97); }
+        @keyframes softGlow {
+            0%, 100% { box-shadow: 0 4px 14px rgba(26, 140, 255, 0.30); }
+            50% { box-shadow: 0 6px 22px rgba(26, 140, 255, 0.55); }
+        }
+
+        /* Apparition au défilement (titres et cartes des autorités) */
+        #main-app .authority-showcase, #main-app .section-title {
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.8,.2,1), filter 0.7s ease;
+        }
+        #main-app .tab-content.active .authority-showcase { animation: none; }
+        #main-app .reveal-pending {
+            opacity: 0;
+            transform: translateY(34px) scale(0.97);
+            filter: blur(6px);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .ambient-blob, #main-app .header-user-avatar, #main-app .progress-fill,
+            #main-app .app-header, .btn-primary, .btn-phone, .course-btn, .next-question-btn,
+            #main-app [class]::after { animation: none !important; }
+            #main-app .reveal-pending { opacity: 1; transform: none; filter: none; }
+        }
     </style>
 </head>
 <body>
@@ -995,6 +1088,9 @@
     </div>
 
     <div id="main-app" class="screen">
+        <div class="ambient-blob ab1"></div>
+        <div class="ambient-blob ab2"></div>
+        <div class="ambient-blob ab3"></div>
         <div class="app-header">
             <div class="user-info-bar">
                 <div style="display: flex; align-items: center; gap: 12px;">
@@ -1147,7 +1243,7 @@
                 <!-- 1. Joseph Kasa-Vubu -->
                 <a href="Président_Joseph_kasa_vubu.pdf" target="_blank" class="book-card">
                     <div class="book-cover-icon">
-                        <imag scr="1.png" atl= joseph kasa vubu">
+                        <img src="1.png" alt="joseph kasa vubu">
                     </div>
                     <div class="book-title">Joseph Kasa Vubu</div>
                     <div class="book-sub">1er Président (1960-1965)</div>
@@ -1165,7 +1261,7 @@
                 <!-- 3. Laurent-Désiré Kabila -->
                 <a href="Président_Laurent_Désiré.pdf" target="_blank" class="book-card">
                     <div class="book-cover-icon">
-                        <img src="3.png" atl="laurent désiré kabila">
+                        <img src="3.png" alt="laurent désiré kabila">
                     </div>
                     <div class="book-title">Laurent-Désiré Kabila</div>
                     <div class="book-sub">3ème Président (1997-2001)</div>
@@ -1395,7 +1491,26 @@
         }
 
         // AJOUT : déclenche l'animation d'entrée (effet liquide + transparence)
+        function activerRevelationDefilement() {
+            if (!('IntersectionObserver' in window)) return;
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach((en) => {
+                    if (en.isIntersecting) {
+                        en.target.classList.remove('reveal-pending');
+                        io.unobserve(en.target);
+                    }
+                });
+            }, { threshold: 0.08 });
+            document.querySelectorAll('#main-app .authority-showcase, #main-app .section-title').forEach((el) => {
+                if (el.dataset.rv) return;
+                el.dataset.rv = '1';
+                el.classList.add('reveal-pending');
+                io.observe(el);
+            });
+        }
+
         function jouerAnimationLiquide() {
+            activerRevelationDefilement();
             const intro = document.getElementById('liquid-intro');
             if (!intro) return;
             intro.classList.remove('play');
