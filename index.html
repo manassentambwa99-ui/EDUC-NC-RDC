@@ -1025,6 +1025,97 @@
         #liquid-intro { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .liquid-blob { filter: blur(16px); border-radius: 50%; animation: liquidFloat 2s ease-in-out infinite; }
         .liquid-center { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+
+        /* ===== AJOUT : QUIZ PAR NIVEAUX (effets légers : transform et opacité seulement) ===== */
+        .quiz-levels { display: flex; gap: 8px; margin-bottom: 10px; }
+        .lvl-chip {
+            flex: 1; border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 14px; padding: 10px 6px;
+            background: rgba(232, 242, 255, 0.65); color: var(--primary-blue); font-weight: 800; font-size: 0.8rem;
+            cursor: pointer; transition: transform 0.2s ease, background 0.25s ease, color 0.25s ease;
+        }
+        .lvl-chip small { display: block; font-weight: 600; font-size: 0.65rem; opacity: 0.8; margin-top: 2px; }
+        .lvl-chip.on { background: var(--primary-blue); color: #ffffff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3); }
+        .lvl-chip:active { transform: scale(0.96); }
+        .quiz-meta { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
+        #tab-quiz .quiz-option-btn { animation: liquidRise 0.5s cubic-bezier(.2,.8,.2,1) backwards; }
+        #tab-quiz .quiz-option-btn:nth-child(2) { animation-delay: 0.06s; }
+        #tab-quiz .quiz-option-btn:nth-child(3) { animation-delay: 0.12s; }
+        #tab-quiz .quiz-option-btn:nth-child(4) { animation-delay: 0.18s; }
+        #tab-quiz .quiz-feedback-box.success, #tab-quiz .quiz-feedback-box.error { animation: liquidRise 0.4s ease backwards; }
+        .xp-pop {
+            position: fixed; left: 50%; top: 40%; z-index: 10001; pointer-events: none;
+            margin-left: -50px; width: 100px; text-align: center; padding: 8px 0; border-radius: 20px;
+            background: rgba(255, 193, 7, 0.9); color: #1e293b; font-weight: 800; font-size: 1.1rem;
+            animation: xpPop 1.1s ease-out forwards;
+        }
+        @keyframes xpPop {
+            0% { opacity: 0; transform: translateY(20px) scale(0.8); }
+            25% { opacity: 1; transform: translateY(0) scale(1.1); }
+            100% { opacity: 0; transform: translateY(-70px) scale(1); }
+        }
+
+        /* ===== AJOUT : NIVEAUX VERROUILLÉS, FÉLICITATIONS, EFFETS LÉGERS ===== */
+        .lvl-prog { height: 6px; border-radius: 4px; background: rgba(226, 232, 240, 0.8); overflow: hidden; margin-bottom: 8px; }
+        .lvl-prog i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent-yellow), #ffd54f); transform-origin: left; transform: scaleX(0); transition: transform 0.6s ease; }
+        .lvl-chip.lock { opacity: 0.55; }
+        .lvl-chip.shake { animation: chipShake 0.4s ease; }
+        @keyframes chipShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        .lvlup {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10002;
+            display: flex; align-items: center; justify-content: center; padding: 24px; overflow: hidden;
+            background: rgba(0, 40, 100, 0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            animation: lvlFade 0.35s ease backwards;
+        }
+        @keyframes lvlFade { 0% { opacity: 0; } 100% { opacity: 1; } }
+        .lvlup b { position: absolute; top: -20px; width: 8px; height: 14px; border-radius: 2px; animation: confFall 2.6s linear infinite; }
+        @keyframes confFall { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(110vh) rotate(540deg); opacity: 0.8; } }
+        .lvlup-card {
+            position: relative; width: 100%; max-width: 320px; text-align: center; padding: 30px 22px 24px;
+            border-radius: 24px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 16px 40px rgba(0, 40, 100, 0.35); animation: lvlPop 0.6s cubic-bezier(.2,.9,.3,1.3) backwards;
+        }
+        @keyframes lvlPop { 0% { opacity: 0; transform: scale(0.6) translateY(30px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .lvlup-card > i { font-size: 3rem; color: var(--accent-yellow); animation: iconFloat 2s ease-in-out infinite; }
+        .lvlup-ring { position: absolute; top: 22px; left: 50%; width: 70px; height: 70px; margin-left: -35px; border-radius: 50%; border: 3px solid var(--accent-yellow); animation: ringOut 1.8s ease-out infinite; }
+        @keyframes ringOut { 0% { transform: scale(0.6); opacity: 0.9; } 100% { transform: scale(2); opacity: 0; } }
+        .lvlup-card h2 { font-size: 1.5rem; font-weight: 800; color: var(--primary-blue); margin: 10px 0 8px; }
+        .lvlup-card p { font-size: 0.9rem; color: var(--text-dark); line-height: 1.5; margin-bottom: 16px; }
+        .lvlup-card p small { color: var(--text-muted); font-weight: 700; }
+        .lvlup-card button { width: 100%; border: none; padding: 14px; border-radius: var(--radius-md); background: var(--primary-light-blue); color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; }
+        #main-app .access-card > i { animation: iconFloat 4s ease-in-out infinite; }
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        #main-app .nav-item.active i { animation: navPop 0.45s cubic-bezier(.2,.8,.2,1); }
+        @keyframes navPop { 0% { transform: scale(0.7); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
+        @media (prefers-reduced-motion: reduce) { .lvlup b, .lvlup-ring, .lvlup-card > i, #main-app .access-card > i { animation: none; } }
+
+        /* ===== AJOUT : LUEURS ET LUMIÈRE (opacité et déplacement seulement, donc légers) ===== */
+        @keyframes glowBreath { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.85; } }
+        #main-app .quiz-container-box::before, #main-app .xp-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: inherit; pointer-events: none;
+            box-shadow: inset 0 0 26px rgba(26, 140, 255, 0.40); opacity: 0.3; animation: glowBreath 4.5s ease-in-out infinite;
+        }
+        #main-app .app-header { position: relative; overflow: hidden; }
+        #main-app .app-header::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 100%; pointer-events: none;
+            background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: translateX(-150%) skewX(-20deg); animation: headStreak 9s ease-in-out infinite;
+        }
+        @keyframes headStreak { 0%, 55% { transform: translateX(-150%) skewX(-20deg); } 100% { transform: translateX(380%) skewX(-20deg); } }
+        #main-app .bottom-nav::before {
+            content: ''; position: absolute; top: -1px; left: 10%; right: 10%; height: 2px; pointer-events: none;
+            background: linear-gradient(90deg, transparent, var(--primary-light-blue), transparent); animation: glowBreath 4.5s ease-in-out infinite;
+        }
+        .spark {
+            position: absolute; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; opacity: 0;
+            background: rgba(255, 193, 7, 0.95); box-shadow: 0 0 8px 2px rgba(255, 193, 7, 0.6); animation: sparkle 5s ease-in-out infinite;
+        }
+        @keyframes sparkle { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(-40px) scale(1.2); } }
+        #tab-quiz .section-title { background: linear-gradient(90deg, var(--primary-blue), var(--primary-light-blue)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .quiz-option-btn.correct { box-shadow: 0 0 14px rgba(16, 185, 129, 0.45); }
+        .quiz-option-btn.incorrect { box-shadow: 0 0 14px rgba(239, 68, 68, 0.35); }
+        .lvl-chip.on { box-shadow: 0 0 16px rgba(26, 140, 255, 0.55); }
+        .lvl-prog i { box-shadow: 0 0 10px rgba(255, 193, 7, 0.8); }
+        @media (prefers-reduced-motion: reduce) { .spark, #main-app .app-header::before, #main-app .bottom-nav::before, #main-app .quiz-container-box::before, #main-app .xp-card::before { animation: none; } }
     </style>
 </head>
 <body>
@@ -1464,44 +1555,7 @@
             "Tshuapa": ["Boende", "Befale", "Djolu", "Ikela", "Katalako"]
         };
 
-        const manasseQuestionBank = [
-            {
-                q: "Quel est l'article de la Constitution de la RDC qui garantit le droit à l'éducation pour chaque citoyen ?",
-                correct: "L'article 43 qui stipule que l'éducation est un droit fondamental et gratuit au niveau primaire.",
-                wrongs: [
-                    "L'article 12 relatif à l'égalité de tous les Congolais devant la loi.",
-                    "L'article 5 qui rappelle que la souveraineté nationale appartient au peuple.",
-                    "L'article 20 sur la liberté de pensée et de conscience."
-                ]
-            },
-            {
-                q: "Quelle est la signification exacte des couleurs du drapeau de la République Démocratique du Congo ?",
-                correct: "Le bleu ciel symbolise la paix, la bande rouge le sang des martyrs, le jaune le pays et l'étoile l'avenir radieux.",
-                wrongs: [
-                    "Le bleu représente le fleuve Congo, le rouge la terre minière et le jaune les richesses forestières.",
-                    "Le bleu symbolise l'unité nationale, le rouge la liberté politique et le jaune le climat tropical.",
-                    "Le bleu représente les lacs, le rouge l'armée et le jaune l'indépendance financière."
-                ]
-            },
-            {
-                q: "Que prône principalement le concept de la 'Nouvelle Citoyenneté' en RDC ?",
-                correct: "L'adoption de comportements civiques responsables, le civisme fiscal et le respect des biens publics.",
-                wrongs: [
-                    "L'obligation de parler uniquement les langues nationales dans les institutions.",
-                    "Le changement périodique des armoiries de la république.",
-                    "La suppression des examens d'État au cycle secondaire."
-                ]
-            },
-            {
-                q: "Quel ministère supervise directement les programmes scolaires et l'éducation de base en RDC ?",
-                correct: "Le Ministère de l'Éducation Nationale et Nouvelle Citoyenneté.",
-                wrongs: [
-                    "Le Ministère de la Jeunesse et Initiation à la Nouvelle Citoyenneté uniquement.",
-                    "Le Ministère de l'Enseignement supérieur et universitaire (ESU).",
-                    "Le Ministère de la Fonction Publique."
-                ]
-            }
-        ];
+        const manasseQuestionBank = [];
 
         let currentActiveQuestion = null;
 
@@ -1950,5 +2004,17 @@
         });
       }
     </script>
-</body>
-</html>
+    <script>
+(function () {
+  let seed = 11; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+  const sh = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const shR = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+  const mk = (q, c, pool, n = 3) => ({ q, c, w: sh(pool.filter(x => x !== c)).slice(0, n) });
+  const yn = (q, ok) => ({ q, c: ok ? 'Oui' : 'Non', w: [ok ? 'Non' : 'Oui'], fix: 1 });
+  const vf = (q, ok) => ({ q, c: ok ? 'Vrai' : 'Faux', w: [ok ? 'Faux' : 'Vrai'], fix: 1 });
+  const hw = (q, c, a, b, d) => ({ q, c, w: [a, b, d] });
+  const sp = s => s.split(',').map(x => x.split(':'));
+
+const EV = [["l'arrivée de Diogo Cão à l'embouchure du fleuve Congo", 1482], ["la création de l'État indépendant du Congo", 1885], ["la reprise du Congo par la Belgique", 1908], ["l'indépendance de la RDC", 1960], ["l'assassinat de Patrice Lumumba", 1961], ["la Constitution de Luluabourg", 1964], ["le coup d'État de Mobutu", 1965], ["le changement du nom du pays en Zaïre", 1971], ["la Conférence nationale souveraine", 1991], ["l'arrivée de Laurent-Désiré Kabila au pouvoir", 1997], ["l'assassinat de Laurent-Désiré Kabila", 2001], ["l'Accord global et inclusif de Pretoria", 2002], ["le référendum constitutionnel", 2005], ["la promulgation de la Constitution actuelle", 2006], ["la révision constitutionnelle", 2011], ["le découpage du pays en 26 provinces", 2015], ["la première alternance pacifique au sommet de l'État", 2019], ["la gratuité de l'enseignement primaire public", 2019], ["la réélection de Félix Tshisekedi", 2023], ["la nomination de la première femme Première ministre", 2024]];
+const CV = [["Vous voyez un bien public détérioré", "le signaler et le protéger", "l'ignorer ou l'abîmer davantage"], ["L'heure du cours approche", "arriver à l'heure", "arriver en retard sans raison"], ["Il est temps de payer vos impôts et taxes", "les payer honnêtement", "chercher à les éviter"], ["Un agent propose de régler un dossier contre un pot-de-vin", "refuser et dénoncer la corruption", "accepter pour aller plus vite"], ["Vous avez des déchets à jeter", "les mettre à la poubelle", "les jeter dans la rue ou le caniveau"], ["On lève le drapeau et on chante l'hymne national", "se tenir debout avec respect", "bavarder ou s'asseoir"], ["Une élection est organisée", "voter librement et pacifiquement", "vendre sa voix ou semer la violence"], ["Un camarade est en difficulté dans ses études", "l'aider avec solidarité", "se moquer de lui"], ["Le quartier organise le salongo (travail communautaire)", "y participer", "laisser les autres faire"], ["Un examen approche", "rester honnête et réviser", "copier sur le voisin"], ["Une personne âgée traverse difficilement la route", "l'aider avec respect", "passer sans s'arrêter"], ["Vous recevez une fausse information sur les réseaux sociaux", "vérifier avant de partager", "la partager sans vérifier"], ["Les murs de l'école sont propres", "les préserver", "y écrire ou y dessiner"], ["Vous êtes en désaccord avec un camarade", "dialoguer calmement", "recourir 
