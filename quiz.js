@@ -48,7 +48,15 @@ try {
   }
   window.generateInfiniteQuizQuestion = function () {
     const pool = POOL[niv];
-    if (!pool.length) { document.getElementById('quiz-q-text').innerText = 'Le fichier questions-' + niv + '.js ne s\'est pas chargé.'; document.getElementById('quiz-options-list').innerHTML = ''; return; }
+    if (!pool.length) {
+      const qt = document.getElementById('quiz-q-text'), f = 'questions-' + niv + '.js';
+      document.getElementById('quiz-options-list').innerHTML = '';
+      qt.innerText = 'Vérification du fichier ' + f + '…';
+      fetch(f, { cache: 'no-store' }).then(r => {
+        qt.innerText = r.ok ? 'Le fichier ' + f + ' est en ligne mais illisible ou ancien. Renvoyez-le sur GitHub, puis videz les données du site.' : 'Le fichier ' + f + ' est introuvable (erreur ' + r.status + '). Envoyez-le à la racine du dépôt GitHub, à côté de index.html.';
+      }).catch(() => { qt.innerText = 'Le fichier ' + f + ' ne peut pas être chargé (connexion ?).'; });
+      return;
+    }
     let libres = [];
     for (let k = 0; k < pool.length; k++) if (!vus[niv].has(k)) libres.push(k);
     if (!libres.length) { vus[niv].clear(); for (let k = 0; k < pool.length; k++) libres.push(k); }
