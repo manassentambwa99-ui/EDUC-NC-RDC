@@ -2,8 +2,16 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <script>
+      window.addEventListener('error', function (e) {
+        var qt = document.getElementById('quiz-q-text');
+        var ou = (e.filename || '').split('/').pop() + ':' + (e.lineno || '?');
+        if (qt && qt.innerText.indexOf('Chargement') === 0) qt.innerText = 'Erreur : ' + e.message + ' (' + ou + ')';
+      }, true);
+    </script>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://newsdata.io https://serpapi.com https://*.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+    <script src="config.js"></script>
     <script src="security.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EDUC National - République Démocratique du Congo</title>
@@ -1533,12 +1541,6 @@
     </div>
 
     <script>
-      window.addEventListener('error', function (e) {
-        var qt = document.getElementById('quiz-q-text');
-        if (qt && qt.innerText.indexOf('Chargement') === 0) qt.innerText = 'Erreur : ' + e.message;
-      });
-    </script>
-    <script>
         const onboardingImages = [
             { bg: "file_000000003a80820eac24bb81772048a3.png", btn: "Suivant" },
             { bg: "file_000000000550820e9501e448746b074a.png", btn: "Suivant" },
@@ -1971,7 +1973,7 @@
             const container = document.getElementById('live-news-container');
             
             // Intégration de l'API NewsData.io avec filtrage sur l'Éducation Nationale et la RDC
-            const apiKey = "pub_62359f4f2ca1443d93f73e189ddbd265";
+            const apiKey = (window.EDUC_CONFIG && window.EDUC_CONFIG.NEWSDATA_KEY) || "";
             const newsApiUrl = `https://newsdata.io/api/1/latest?apikey=${apiKey}&q=Education%20nationale%20Congo%20RDC&language=fr`;
             
             try {
@@ -2028,19 +2030,7 @@
       }
     </script>
     <script src="questions.js"></script>
-    <script>
-try {
-(function () {
-  const shR = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-  const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
-  if (!window.EDUC_QUESTIONS) throw new Error('fichier questions.js introuvable');
-  const POOL = window.EDUC_QUESTIONS, XPN = { facile: 10, difficile: 25, pro: 50 };
-  const ORDER = ['facile', 'difficile', 'pro'], SEUIL = 200, LABEL = { facile: 'Facile', difficile: 'Difficile', pro: 'Pro' };
-  const vus = { facile: new Set(), difficile: new Set(), pro: new Set() }; let niv = 'facile';
-  let prog = { facile: 0, difficile: 0, pro: 0 };
-  try {
-    const pg = JSON.parse(localStorage.getItem('educ_prog') || 'null'); if (pg) prog = Object.assign(prog, pg);
-    const vv = JSON.parse(localStorage.getItem('educ_vus2') || 'null'); if (vv) ORDER.forEach(n => { if (Array.isArray(vv[n])) vv[n].forEach(k => vus[n].add(k)); });
-  } catch (e) {}
-  const sauver = () => { try { localStorage.setItem('educ_prog', JSON.stringify(prog)); const o = {}; ORDER.forEach(n => o[n] = [...vus[n]]); localStorage.setItem('educ_vus2', JSON.stringify(o)); } catch (e) {} };
-  const debloque = n => { const k = ORDER.indexOf(n); return k === 0 || p
+    <script src="quiz.js"></script>
+    <script src="news.js"></script>
+</body>
+</html>
