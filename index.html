@@ -2,6 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://newsdata.io https://serpapi.com https://*.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <script src="security.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EDUC National - République Démocratique du Congo</title>
     
@@ -651,7 +654,7 @@
             cursor: pointer;
         }
 
-        /* ===== ANIMATION D'ENTRÉE "EFFET LIQUIDE" + TRANSPARENCE + DYNAMISME ===== */
+        /* ===== AJOUT : ANIMATION D'ENTRÉE "EFFET LIQUIDE" + TRANSPARENCE + DYNAMISME ===== */
         #liquid-intro {
             display: none;
             position: fixed;
@@ -740,7 +743,7 @@
             #main-app.active .access-card { animation: none; }
         }
 
-        /* ===== TRANSPARENCE PERMANENTE (effet verre sobre, style institutionnel) ===== */
+        /* ===== AJOUT : TRANSPARENCE PERMANENTE (effet verre sobre, style institutionnel) ===== */
         #main-app {
             background:
                 radial-gradient(circle at 12% 8%, rgba(26, 140, 255, 0.20), transparent 45%),
@@ -809,7 +812,7 @@
             #main-app { animation: none; }
         }
 
-        /* ===== TRANSPARENCE ET FLUX SUR TOUS LES ÉCRANS ===== */
+        /* ===== AJOUT : TRANSPARENCE ET FLUX SUR TOUS LES ÉCRANS ===== */
         @keyframes screenFlow {
             0% { opacity: 0; transform: translateY(18px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -876,7 +879,7 @@
             #main-app .tab-content.active, #main-app .tab-content.active * { animation: none; }
         }
 
-        /* ===== PLUS DE TRANSPARENCE ET DE FLUX (bulles, reflets, apparitions) ===== */
+        /* ===== AJOUT : PLUS DE TRANSPARENCE ET DE FLUX (bulles, reflets, apparitions) ===== */
         #main-app { isolation: isolate; }
         .ambient-blob {
             display: none;
@@ -935,7 +938,7 @@
             50% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
         }
 
-        /* Barre XP brillante */
+        /* Barre XP brillante (reste jaune) */
         #main-app .progress-fill {
             background: linear-gradient(90deg, var(--accent-yellow), #ffd54f, var(--accent-yellow));
             background-size: 200% 100%;
@@ -951,7 +954,7 @@
             50% { box-shadow: 0 6px 22px rgba(26, 140, 255, 0.55); }
         }
 
-        /* Apparition au défilement */
+        /* Apparition au défilement (titres et cartes des autorités) */
         #main-app .authority-showcase, #main-app .section-title {
             transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.8,.2,1), filter 0.7s ease;
         }
@@ -969,14 +972,17 @@
             #main-app .reveal-pending { opacity: 1; transform: none; filter: none; }
         }
 
-        /* ===== ALLÈGEMENT PERFORMANCE ===== */
+        /* ===== ALLÈGEMENT : mêmes effets, moins de calculs pour le téléphone ===== */
+        /* Fond : plus d'animation de fond plein écran ni de fond fixe (très coûteux) */
         #main-app { animation: none; background-attachment: scroll; background-size: auto; }
 
+        /* Bulles : dégradé doux au lieu d'un gros flou, animées uniquement par déplacement */
         .ambient-blob { filter: none; border-radius: 50%; will-change: transform; }
         .ambient-blob.ab1 { background: radial-gradient(circle, rgba(26, 140, 255, 0.45), transparent 68%); animation: blobDrift1 18s ease-in-out infinite alternate; }
         .ambient-blob.ab2 { background: radial-gradient(circle, rgba(255, 193, 7, 0.34), transparent 68%); animation: blobDrift2 21s ease-in-out infinite alternate; }
         .ambient-blob.ab3 { background: radial-gradient(circle, rgba(0, 102, 204, 0.36), transparent 68%); animation: blobDrift1 24s ease-in-out infinite alternate-reverse; }
 
+        /* Reflet : animé par transform (fluide) et retiré des cartes d'actualités et du quiz */
         #main-app .xp-card::after, #main-app .access-card::after, #main-app .book-card::after, #main-app .course-card::after {
             left: 0;
             transform: translateX(-200%) skewX(-20deg);
@@ -989,6 +995,7 @@
             100% { transform: translateX(300%) skewX(-20deg); }
         }
 
+        /* Verre : flou plus léger, ombres plus légères */
         #main-app .xp-card, #main-app .access-card, #main-app .book-card, #main-app .course-card,
         #main-app .news-card, #main-app .quiz-container-box, #main-app .search-input-wrapper {
             backdrop-filter: blur(8px);
@@ -1001,11 +1008,13 @@
         #main-app .bottom-nav { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
         #main-app .app-header { backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 6px 18px rgba(0, 102, 204, 0.22); }
 
+        /* Animations continues qui forçaient le redessin permanent : arrêtées */
         #main-app.active .app-header { animation: liquidRise 0.8s cubic-bezier(.2,.8,.2,1) 0.9s backwards; }
         #main-app .header-user-avatar { animation: none; }
         #main-app .progress-fill { animation: none; }
         .btn-primary, .btn-phone, .course-btn, .next-question-btn { animation: none; }
 
+        /* Apparitions sans flou animé */
         @keyframes liquidRise {
             0% { opacity: 0; transform: translateY(40px) scale(0.96); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -1015,11 +1024,12 @@
         }
         #main-app .reveal-pending { filter: none; }
 
+        /* Animation d'entrée : flous réduits */
         #liquid-intro { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .liquid-blob { filter: blur(16px); border-radius: 50%; animation: liquidFloat 2s ease-in-out infinite; }
         .liquid-center { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 
-        /* ===== QUIZ PAR NIVEAUX ===== */
+        /* ===== AJOUT : QUIZ PAR NIVEAUX (effets légers : transform et opacité seulement) ===== */
         .quiz-levels { display: flex; gap: 8px; margin-bottom: 10px; }
         .lvl-chip {
             flex: 1; border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 14px; padding: 10px 6px;
@@ -1047,7 +1057,7 @@
             100% { opacity: 0; transform: translateY(-70px) scale(1); }
         }
 
-        /* ===== NIVEAUX VERROUILLÉS ET FÉLICITATIONS ===== */
+        /* ===== AJOUT : NIVEAUX VERROUILLÉS, FÉLICITATIONS, EFFETS LÉGERS ===== */
         .lvl-prog { height: 6px; border-radius: 4px; background: rgba(226, 232, 240, 0.8); overflow: hidden; margin-bottom: 8px; }
         .lvl-prog i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent-yellow), #ffd54f); transform-origin: left; transform: scaleX(0); transition: transform 0.6s ease; }
         .lvl-chip.lock { opacity: 0.55; }
@@ -1081,7 +1091,7 @@
         @keyframes navPop { 0% { transform: scale(0.7); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
         @media (prefers-reduced-motion: reduce) { .lvlup b, .lvlup-ring, .lvlup-card > i, #main-app .access-card > i { animation: none; } }
 
-        /* ===== LUEURS ET LUMIÈRE ===== */
+        /* ===== AJOUT : LUEURS ET LUMIÈRE (opacité et déplacement seulement, donc légers) ===== */
         @keyframes glowBreath { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.85; } }
         #main-app .quiz-container-box::before, #main-app .xp-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: inherit; pointer-events: none;
@@ -1110,7 +1120,7 @@
         .lvl-prog i { box-shadow: 0 0 10px rgba(255, 193, 7, 0.8); }
         @media (prefers-reduced-motion: reduce) { .spark, #main-app .app-header::before, #main-app .bottom-nav::before, #main-app .quiz-container-box::before, #main-app .xp-card::before { animation: none; } }
 
-        /* ===== ACTUALITÉS ===== */
+        /* ===== AJOUT : ACTUALITÉS ===== */
         .news-chips { display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 12px; scrollbar-width: none; }
         .news-chips::-webkit-scrollbar { display: none; }
         .news-chip {
@@ -1132,7 +1142,7 @@
         <img id="lightbox-img" src="" alt="Agrandissement">
     </div>
 
-    <!-- Calque d'animation liquide à l'entrée -->
+    <!-- AJOUT : calque d'animation liquide à l'entrée -->
     <div id="liquid-intro">
         <div class="liquid-blob b1"></div>
         <div class="liquid-blob b2"></div>
@@ -1369,14 +1379,14 @@
                     <p style="font-size: 0.8rem; color: var(--text-muted);">Ministre de l'Éducation Nationale et Nouvelle Citoyenneté</p>
                 </div>
             </div>
-            <div class="authority-showcase">
+<div class="authority-showcase">
                 <img src="sec.png" alt="juvenal sanga" class="authority-img" onclick="openLightbox('sec.png')">
                 <div class="authority-info">
-                    <span class="course-badge" style="background: #e0f2fe; color: #0284c7; margin-bottom: 2px;"><i class="fa-solid fa-building-shield"></i> Secrétariat Général de l'Éducation</span>
-                    <h4 style="font-size: 1.15rem; font-weight: 800;">JUVENAL SANGA KAUBO</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Secrétaire Général de l'Éducation Nationale et Nouvelle Citoyenneté</p>
+                    <span class="course-badge" style="background: #e0f2fe; color: #0284c7; margin-bottom: 2px;"><i class="fa-solid fa-building-shield"></i> secrétariat général de l'education</span>
+                    <h4 style="font-size: 1.15rem; font-weight: 800;"> JUVENAL SANGA KAUBO</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);"> secrétaire général de l'éducation nationale et nouvelle citoyenneté</p>
                 </div>
-            </div>
+</div>
             <div class="authority-showcase" style="margin-bottom: 24px;">
                 <img src="directeur.png" alt="Monsieur Papy MANGOBE MOLEKA" class="authority-img" onclick="openLightbox('directeur.png')">
                 <div class="authority-info">
@@ -1568,48 +1578,7 @@
             "Tshuapa": ["Boende", "Befale", "Djolu", "Ikela", "Katalako"]
         };
 
-        const manasseQuestionBank = [
-            {
-                q: "En quelle année la République Démocratique du Congo a-t-elle obtenu son indépendance ?",
-                correct: "1960",
-                wrongs: ["1958", "1965", "1971"]
-            },
-            {
-                q: "Qui a été le premier Président de la RDC ?",
-                correct: "Joseph Kasa-Vubu",
-                wrongs: ["Patrice Lumumba", "Mobutu Sese Seko", "Laurent-Désiré Kabila"]
-            },
-            {
-                q: "Quelle est la capitale de la République Démocratique du Congo ?",
-                correct: "Kinshasa",
-                wrongs: ["Lubumbashi", "Kisangani", "Goma"]
-            },
-            {
-                q: "Combien de provinces compte la République Démocratique du Congo ?",
-                correct: "26 provinces",
-                wrongs: ["11 provinces", "18 provinces", "30 provinces"]
-            },
-            {
-                q: "Qui est le Premier Premier ministre de l'histoire de la RDC ?",
-                correct: "Patrice Emery Lumumba",
-                wrongs: ["Moïse Tshombe", "Cyrille Adoula", "Evariste Kimba"]
-            },
-            {
-                q: "Quelle est la devise nationale de la RDC ?",
-                correct: "Justice - Paix - Travail",
-                wrongs: ["Unité - Dignité - Travail", "Liberté - Égalité - Fraternité", "Discipline - Travail - Patrie"]
-            },
-            {
-                q: "Quel fleuve traverse l'ensemble du territoire congolais ?",
-                correct: "Le Fleuve Congo",
-                wrongs: ["Le Fleuve Nil", "Le Fleuve Niger", "Le Fleuve Zambèze"]
-            },
-            {
-                q: "En quelle année l'actuelle Constitution de la RDC a-t-elle été promulguée ?",
-                correct: "2006",
-                wrongs: ["1990", "2001", "2018"]
-            }
-        ];
+        const manasseQuestionBank = [];
 
         let currentActiveQuestion = null;
 
@@ -1651,9 +1620,11 @@
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            // AJOUT : animation liquide à l'entrée dans l'application
             if (id === 'main-app') { jouerAnimationLiquide(); }
         }
 
+        // AJOUT : déclenche l'animation d'entrée (effet liquide + transparence)
         function activerRevelationDefilement() {
             if (!('IntersectionObserver' in window)) return;
             const io = new IntersectionObserver((entries) => {
@@ -1746,6 +1717,8 @@
             }
         }
 
+        // CORRECTION : la photo est maintenant réduite/compressée avant d'être enregistrée,
+        // sinon elle dépassait la limite du localStorage et bloquait la validation.
         function previewAvatar(event) {
             const file = event.target.files[0];
             if (file) {
@@ -1809,6 +1782,7 @@
                 dateInscription: new Date().toISOString()
             };
 
+            // CORRECTION : sauvegarde protégée (try/catch) pour que l'inscription se valide toujours
             try {
                 let inscrits = JSON.parse(localStorage.getItem('educ_inscrits_rdc') || '[]');
                 inscrits.push(userData);
@@ -1905,22 +1879,6 @@
             }, intervalleRappelMS);
         }
 
-        function addXP(amount) {
-            userXP += amount;
-            updateXPBar();
-        }
-
-        function updateXPBar() {
-            const level = Math.floor(userXP / 1000) + 1;
-            const currentLevelXP = userXP % 1000;
-            const percent = Math.min(Math.round((currentLevelXP / 1000) * 100), 100);
-
-            document.getElementById('user-level').innerText = `Niveau ${level}`;
-            document.getElementById('user-xp-percent').innerText = `${percent}%`;
-            document.getElementById('user-xp-text').innerText = `${currentLevelXP} / 1000 XP`;
-            document.getElementById('xp-fill').style.width = `${percent}%`;
-        }
-
         function generateInfiniteQuizQuestion() {
             const baseItem = manasseQuestionBank[Math.floor(Math.random() * manasseQuestionBank.length)];
             let options = [baseItem.correct, ...baseItem.wrongs];
@@ -1940,90 +1898,149 @@
         }
 
         function renderQuizUI() {
-            if (!currentActiveQuestion) return;
-
             document.getElementById('quiz-q-text').innerText = currentActiveQuestion.question;
-            const optionsContainer = document.getElementById('quiz-options-list');
-            optionsContainer.innerHTML = '';
+            const container = document.getElementById('quiz-options-list');
+            container.innerHTML = '';
+            
+            document.getElementById('quiz-feedback').style.display = 'none';
+            document.getElementById('quiz-feedback').className = 'quiz-feedback-box';
+            document.getElementById('next-q-btn').style.display = 'none';
 
-            const feedbackBox = document.getElementById('quiz-feedback');
-            feedbackBox.className = 'quiz-feedback-box';
-            feedbackBox.style.display = 'none';
-
-            const nextBtn = document.getElementById('next-q-btn');
-            nextBtn.style.display = 'none';
-
-            currentActiveQuestion.options.forEach((opt) => {
+            currentActiveQuestion.options.forEach((optText) => {
                 const btn = document.createElement('button');
                 btn.className = 'quiz-option-btn';
-                btn.innerHTML = `<span>${opt}</span><i class="fa-regular fa-circle"></i>`;
-                btn.onclick = () => checkQuizAnswer(btn, opt);
-                optionsContainer.appendChild(btn);
+                btn.innerHTML = `<span>${optText}</span><i class="fa-regular fa-circle" style="color: var(--text-muted);"></i>`;
+                btn.onclick = () => validateAnswerChoice(btn, optText);
+                container.appendChild(btn);
             });
         }
 
-        function checkQuizAnswer(btnElement, selectedOpt) {
-            const allBtns = document.querySelectorAll('.quiz-option-btn');
-            allBtns.forEach(b => b.disabled = true);
+        function validateAnswerChoice(selectedButton, chosenText) {
+            const allButtons = document.querySelectorAll('.quiz-option-btn');
+            allButtons.forEach(b => b.disabled = true);
 
+            const isCorrect = (chosenText === currentActiveQuestion.correctAnswer);
             const feedbackBox = document.getElementById('quiz-feedback');
-            const nextBtn = document.getElementById('next-q-btn');
 
-            if (selectedOpt === currentActiveQuestion.correctAnswer) {
-                btnElement.classList.add('correct');
-                btnElement.querySelector('i').className = 'fa-solid fa-circle-check';
+            if (isCorrect) {
+                selectedButton.classList.add('correct');
+                selectedButton.querySelector('i').className = 'fa-solid fa-circle-check';
+                selectedButton.querySelector('i').style.color = 'var(--success-green)';
+                feedbackBox.innerText = "Excellente réponse ! Manassé IA valide. +50 XP";
                 feedbackBox.className = 'quiz-feedback-box success';
-                feedbackBox.innerText = 'Excellente réponse ! +50 XP gagnés.';
                 addXP(50);
             } else {
-                btnElement.classList.add('incorrect');
-                btnElement.querySelector('i').className = 'fa-solid fa-circle-xmark';
-                
-                allBtns.forEach(b => {
-                    if (b.innerText.trim() === currentActiveQuestion.correctAnswer) {
+                selectedButton.classList.add('incorrect');
+                selectedButton.querySelector('i').className = 'fa-solid fa-circle-xmark';
+                selectedButton.querySelector('i').style.color = 'var(--error-red)';
+
+                allButtons.forEach(b => {
+                    if (b.innerText.trim() === currentActiveQuestion.correctAnswer.trim()) {
                         b.classList.add('correct');
                         b.querySelector('i').className = 'fa-solid fa-circle-check';
+                        b.querySelector('i').style.color = 'var(--success-green)';
                     }
                 });
 
+                feedbackBox.innerText = "Incorrect. Manassé IA a mis en évidence la bonne réponse ci-dessus.";
                 feedbackBox.className = 'quiz-feedback-box error';
-                feedbackBox.innerText = `Réponse incorrecte. La bonne réponse était : ${currentActiveQuestion.correctAnswer}`;
             }
 
-            feedbackBox.style.display = 'block';
-            nextBtn.style.display = 'block';
+            document.getElementById('next-q-btn').style.display = 'block';
         }
 
         function loadNextInfiniteQuestion() {
             generateInfiniteQuizQuestion();
         }
 
-        function fetchLiveNewsRDC() {
-            const container = document.getElementById('live-news-container');
-            const articles = [
-                {
-                    title: "Ministère de l'Éducation Nationale : Lancement des programmes de Nouvelle Citoyenneté",
-                    desc: "Le Gouvernement intensifie la diffusion des modules civiques et moraux au sein des établissements secondaires de l'ensemble des 26 provinces.",
-                    date: "Aujourd'hui",
-                    img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80"
-                },
-                {
-                    title: "Digitalisation du système éducatif en RDC",
-                    desc: "Déploiement de nouveaux outils pédagogiques numériques interactifs pour favoriser le suivi et l'apprentissage des élèves.",
-                    date: "Hier",
-                    img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80"
-                }
-            ];
+        function addXP(amount) {
+            userXP += amount;
+            if (userXP > 1000) userXP = 1000;
+            updateXPBar();
+        }
 
-            container.innerHTML = articles.map(a => `
-                <div class="news-card">
-                    <img src="${a.img}" alt="News" class="news-card-img">
-                    <span class="course-badge"><i class="fa-solid fa-clock"></i> ${a.date}</span>
-                    <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-dark);">${a.title}</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">${a.desc}</p>
-                </div>
-            `).join('');
+        function updateXPBar() {
+            const maxXP = 1000;
+            const percentage = Math.round((userXP / maxXP) * 100);
+            document.getElementById('xp-fill').style.width = percentage + '%';
+            document.getElementById('user-xp-percent').innerText = percentage + '%';
+            document.getElementById('user-xp-text').innerText = `${userXP} / ${maxXP} XP`;
+        }
+
+        async function fetchLiveNewsRDC() {
+            const container = document.getElementById('live-news-container');
+            
+            // Intégration de l'API NewsData.io avec filtrage sur l'Éducation Nationale et la RDC
+            const apiKey = "pub_62359f4f2ca1443d93f73e189ddbd265";
+            const newsApiUrl = `https://newsdata.io/api/1/latest?apikey=${apiKey}&q=Education%20nationale%20Congo%20RDC&language=fr`;
+            
+            try {
+                const response = await fetch(newsApiUrl);
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.results && data.results.length > 0) {
+                    container.innerHTML = '';
+                    data.results.slice(0, 8).forEach((item) => {
+                        const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('fr-FR') : 'RDC News';
+                        
+                        // Image fallback si aucune n'est disponible
+                        const imageUrl = item.image_url ? item.image_url : 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80';
+                        
+                        const descriptionText = item.description ? item.description.substring(0, 110) + '...' : 'Actualité officielle concernant l\'Éducation nationale et la citoyenneté en RDC.';
+
+                        const card = `
+                            <div class="news-card">
+                                <img src="${escHtml(imageUrl)}" alt="${escHtml(item.title)}" class="news-card-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80';">
+                                <span style="font-size: 0.75rem; color: var(--primary-blue); font-weight: 700;"><i class="fa-solid fa-flag"></i> Éducation & Citoyenneté RDC</span>
+                                <h4 style="font-size: 0.95rem; font-weight: 700; margin: 4px 0; color: var(--text-dark);">${escHtml(item.title)}</h4>
+                                <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">${escHtml(descriptionText)}</p>
+                                <div style="display:flex; justify-content:space-between; align-items:center; font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">
+                                    <span><i class="fa-regular fa-clock"></i> ${date}</span>
+                                    <a href="${escHtml(item.link)}" target="_blank" style="color: var(--primary-blue); font-weight: 700; text-decoration: none;">Lire la suite →</a>
+                                </div>
+                            </div>
+                        `;
+                        container.innerHTML += card;
+                    });
+                } else {
+                    container.innerHTML = `<div class="news-card"><p style="font-size: 0.85rem; color: var(--text-muted);">Aucune nouvelle actualité disponible pour le moment.</p></div>`;
+                }
+            } catch (err) {
+                console.error("Erreur NewsData API :", err);
+                container.innerHTML = `
+                    <div class="news-card">
+                        <span style="font-size: 0.75rem; color: var(--primary-blue); font-weight: 700;">Éducation RDC</span>
+                        <h4 style="font-size: 0.95rem; font-weight: 700; margin: 4px 0;">Ministère de l'Éducation Nationale</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Suivez les activités récents et décisions du Ministère de l'Éducation Nationale et Nouvelle Citoyenneté de la RDC.</p>
+                    </div>
+                `;
+            }
         }
     </script>
-</body>
-</html>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker enregistré avec succès !', reg))
+            .catch(err => console.log('Erreur lors de l’enregistrement du Service Worker :', err));
+        });
+      }
+    </script>
+    <script src="questions.js"></script>
+    <script>
+try {
+(function () {
+  const shR = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+  if (!window.EDUC_QUESTIONS) throw new Error('fichier questions.js introuvable');
+  const POOL = window.EDUC_QUESTIONS, XPN = { facile: 10, difficile: 25, pro: 50 };
+  const ORDER = ['facile', 'difficile', 'pro'], SEUIL = 200, LABEL = { facile: 'Facile', difficile: 'Difficile', pro: 'Pro' };
+  const vus = { facile: new Set(), difficile: new Set(), pro: new Set() }; let niv = 'facile';
+  let prog = { facile: 0, difficile: 0, pro: 0 };
+  try {
+    const pg = JSON.parse(localStorage.getItem('educ_prog') || 'null'); if (pg) prog = Object.assign(prog, pg);
+    const vv = JSON.parse(localStorage.getItem('educ_vus2') || 'null'); if (vv) ORDER.forEach(n => { if (Array.isArray(vv[n])) vv[n].forEach(k => vus[n].add(k)); });
+  } catch (e) {}
+  const sauver = () => { try { localStorage.setItem('educ_prog', JSON.stringify(prog)); const o = {}; ORDER.forEach(n => o[n] = [...vus[n]]); localStorage.setItem('educ_vus2', JSON.stringify(o)); } catch (e) {} };
+  const debloque = n => { const k = ORDER.indexOf(n); return k === 0 || p
