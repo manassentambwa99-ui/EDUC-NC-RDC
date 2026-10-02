@@ -1,6 +1,6 @@
-here/* Service Worker - EDUC National
+/* Service Worker - EDUC National
    Changer VERSION à chaque mise à jour de l'application pour forcer le rafraîchissement. */
-const VERSION = 'v12';
+const VERSION = 'v13';
 const CACHE_STATIC = 'educ-static-' + VERSION;
 const CACHE_RUNTIME = 'educ-runtime-' + VERSION;
 
@@ -9,7 +9,9 @@ const PRECACHE = [
   './',
   'index.html',
   'manifest.json',
-  'questions.js',
+  'questions-facile.js',
+  'questions-difficile.js',
+  'questions-pro.js',
   'security.js',
   'config.js',
   'quiz.js',
