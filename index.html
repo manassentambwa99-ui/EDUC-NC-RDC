@@ -1516,6 +1516,12 @@
     </div>
 
     <script>
+      window.addEventListener('error', function (e) {
+        var qt = document.getElementById('quiz-q-text');
+        if (qt && qt.innerText.indexOf('Chargement') === 0) qt.innerText = 'Erreur : ' + e.message;
+      });
+    </script>
+    <script>
         const onboardingImages = [
             { bg: "file_000000003a80820eac24bb81772048a3.png", btn: "Suivant" },
             { bg: "file_000000000550820e9501e448746b074a.png", btn: "Suivant" },
@@ -2005,6 +2011,7 @@
       }
     </script>
     <script>
+try {
 (function () {
   let seed = 11; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
   const sh = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -2017,4 +2024,4 @@
   const sp = s => s.split(',').map(x => x.split(':'));
 
 const EV = [["l'arrivée de Diogo Cão à l'embouchure du fleuve Congo", 1482], ["la création de l'État indépendant du Congo", 1885], ["la reprise du Congo par la Belgique", 1908], ["l'indépendance de la RDC", 1960], ["l'assassinat de Patrice Lumumba", 1961], ["la Constitution de Luluabourg", 1964], ["le coup d'État de Mobutu", 1965], ["le changement du nom du pays en Zaïre", 1971], ["la Conférence nationale souveraine", 1991], ["l'arrivée de Laurent-Désiré Kabila au pouvoir", 1997], ["l'assassinat de Laurent-Désiré Kabila", 2001], ["l'Accord global et inclusif de Pretoria", 2002], ["le référendum constitutionnel", 2005], ["la promulgation de la Constitution actuelle", 2006], ["la révision constitutionnelle", 2011], ["le découpage du pays en 26 provinces", 2015], ["la première alternance pacifique au sommet de l'État", 2019], ["la gratuité de l'enseignement primaire public", 2019], ["la réélection de Félix Tshisekedi", 2023], ["la nomination de la première femme Première ministre", 2024]];
-const CV = [["Vous voyez un bien public détérioré", "le signaler et le protéger", "l'ignorer ou l'abîmer davantage"], ["L'heure du cours approche", "arriver à l'heure", "arriver en retard sans raison"], ["Il est temps de payer vos impôts et taxes", "les payer honnêtement", "chercher à les éviter"], ["Un agent propose de régler un dossier contre un pot-de-vin", "refuser et dénoncer la corruption", "accepter pour aller plus vite"], ["Vous avez des déchets à jeter", "les mettre à la poubelle", "les jeter dans la rue ou le caniveau"], ["On lève le drapeau et on chante l'hymne national", "se tenir debout avec respect", "bavarder ou s'asseoir"], ["Une élection est organisée", "voter librement et pacifiquement", "vendre sa voix ou semer la violence"], ["Un camarade est en difficulté dans ses études", "l'aider avec solidarité", "se moquer de lui"], ["Le quartier organise le salongo (travail communautaire)", "y participer", "laisser les autres faire"], ["Un examen approche", "rester honnête et réviser", "copier sur le voisin"], ["Une personne âgée traverse difficilement la route", "l'aider avec respect", "passer sans s'arrêter"], ["Vous recevez une fausse information sur les réseaux sociaux", "vérifier avant de partager", "la partager sans vérifier"], ["Les murs de l'école sont propres", "les préserver", "y écrire ou y dessiner"], ["Vous êtes en désaccord avec un camarade", "dialoguer calmement", "recourir 
+const CV = [["Vous voyez un bien public détérioré", "le signaler et le protéger", "l'ignorer ou l'abîmer davantage"], ["L'heure du cours approche", "arriver à l'heure", "arriver en retard sans raison"], ["Il est temps de payer vos impôts et taxes", "les payer honnêtement", "chercher à les éviter"], ["Un agent propose de régler un dossier contre un pot-de-vin", "refuser et dénoncer la corruption", "accepter pour aller plus vite"], ["Vous avez des déchets à jeter", "les mettre à la poubelle", "les jeter dans la rue ou le caniveau"], ["On lève le drapeau et on chante l'hymne national", "se tenir debout avec respect", "bavarder ou s'asseoir"], ["Une élection est organisée", "voter librement et pacifiquement", "vendre sa voix ou semer la violence"], ["Un camarade est en difficulté dans ses études", "l'aider avec solidarité", "se moquer de lui"], ["Le quartier organise le salongo (travail communautaire)", "y participer", "laisser les autres faire"], ["Un examen approche", "rester honnête et réviser", "copier sur le voisin"], ["Une personne âgée traverse difficilement la route", "l'aider avec respect", "passer sans s'arrêter"], ["Vous recevez une fausse in
