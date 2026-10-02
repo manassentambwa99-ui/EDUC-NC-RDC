@@ -2,8 +2,10 @@ try {
 (function () {
   const shR = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
-  if (!window.EDUC_QUESTIONS) throw new Error('fichier questions.js introuvable');
-  const POOL = window.EDUC_QUESTIONS, XPN = { facile: 10, difficile: 25, pro: 50 };
+  const QQ = window.EDUC_QUESTIONS || {};
+  const POOL = { facile: QQ.facile || [], difficile: QQ.difficile || [], pro: QQ.pro || [] };
+  if (!POOL.facile.length && !POOL.difficile.length && !POOL.pro.length) throw new Error('fichiers questions-facile.js, questions-difficile.js, questions-pro.js introuvables');
+  const XPN = { facile: 10, difficile: 25, pro: 50 };
   const ORDER = ['facile', 'difficile', 'pro'], SEUIL = 200, LABEL = { facile: 'Facile', difficile: 'Difficile', pro: 'Pro' };
   const vus = { facile: new Set(), difficile: new Set(), pro: new Set() }; let niv = 'facile';
   let prog = { facile: 0, difficile: 0, pro: 0 };
@@ -45,7 +47,9 @@ try {
     o.querySelector('button').onclick = () => { o.remove(); if (nx) { niv = nx; generateInfiniteQuizQuestion(); } };
   }
   window.generateInfiniteQuizQuestion = function () {
-    const pool = POOL[niv]; let libres = [];
+    const pool = POOL[niv];
+    if (!pool.length) { document.getElementById('quiz-q-text').innerText = 'Le fichier questions-' + niv + '.js ne s\'est pas chargé.'; document.getElementById('quiz-options-list').innerHTML = ''; return; }
+    let libres = [];
     for (let k = 0; k < pool.length; k++) if (!vus[niv].has(k)) libres.push(k);
     if (!libres.length) { vus[niv].clear(); for (let k = 0; k < pool.length; k++) libres.push(k); }
     const i = libres[Math.floor(Math.random() * libres.length)]; vus[niv].add(i);
