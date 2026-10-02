@@ -1,8 +1,8 @@
 /* Proxy des actualités (Cloudflare Worker, gratuit).
    Garde la clé API SECRÈTE côté serveur et ne l'interroge qu'une fois toutes les 3 heures pour TOUS les utilisateurs.
    Déploiement : Cloudflare > Workers > Créer > coller ce code, puis Settings > Variables :
-     SERPAPI_KEY    = votre clé (type "Secret")
-     ALLOWED_ORIGIN = https://votre-domaine.cd   (plusieurs : séparés par des virgules) */
+     SERPAPI_KEY    =b185e4e6a36c13ea94407dc45036d34bc32a2b976d606fcb3329f358403b4678(type "Secret")
+     ALLOWED_ORIGIN = https://manassentambwa99-ui.github.io/EDUC-NC-RDC/  (plusieurs : séparés par des virgules) */
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin') || '';
