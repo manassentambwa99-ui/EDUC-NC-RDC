@@ -2,8 +2,9 @@ try {
 (function () {
   const shR = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
-  const QQ = window.EDUC_QUESTIONS || {};
-  const POOL = { facile: QQ.facile || [], difficile: QQ.difficile || [], pro: QQ.pro || [] };
+  const QQ = window.EDUC_QUESTIONS || {}, QB = window.EDUC_QB || {};
+  const dec = k => { try { if (QQ[k]) return QQ[k]; if (!QB[k]) return []; const bin = atob(QB[k]), by = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) by[i] = bin.charCodeAt(i); return JSON.parse(new TextDecoder('utf-8').decode(by)); } catch (e) { return []; } };
+  const POOL = { facile: dec('facile'), difficile: dec('difficile'), pro: dec('pro') };
   if (!POOL.facile.length && !POOL.difficile.length && !POOL.pro.length) throw new Error('fichiers questions-facile.js, questions-difficile.js, questions-pro.js introuvables');
   const XPN = { facile: 10, difficile: 25, pro: 50 };
   const ORDER = ['facile', 'difficile', 'pro'], SEUIL = 200, LABEL = { facile: 'Facile', difficile: 'Difficile', pro: 'Pro' };
