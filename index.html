@@ -1141,6 +1141,35 @@
         .news-meta { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; padding: 0 20px 10px; }
         .news-source { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--primary-blue); font-weight: 700; }
         .news-source img { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; }
+
+        /* ===== AJOUT : ANIMATIONS DE RÉPONSE, EXPLICATION, FIN DE NIVEAU ===== */
+        .praise {
+            position: absolute; left: 50%; top: 34%; z-index: 6; pointer-events: none; white-space: nowrap;
+            transform: translate(-50%, -50%); padding: 10px 22px; border-radius: 30px; font-weight: 800; font-size: 1.5rem;
+            color: var(--primary-blue); background: rgba(255, 255, 255, 0.9); box-shadow: 0 0 26px rgba(255, 193, 7, 0.75);
+            animation: praisePop 1.3s ease-out forwards;
+        }
+        @keyframes praisePop {
+            0% { opacity: 0; transform: translate(-50%, -30%) scale(0.5); }
+            25% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+            75% { opacity: 1; transform: translate(-50%, -60%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -90%) scale(1); }
+        }
+        .praise-star { position: absolute; left: 50%; top: 34%; z-index: 5; pointer-events: none; color: var(--accent-yellow); font-size: 1rem; animation: starBurst 1.2s ease-out forwards; }
+        @keyframes starBurst { 0% { opacity: 1; transform: translate(-50%, -50%) scale(0.4); } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.3); } }
+        .quiz-option-btn.pulse-ok { animation: pulseOk 0.7s ease; }
+        @keyframes pulseOk { 0% { transform: scale(1); } 40% { transform: scale(1.04); box-shadow: 0 0 22px rgba(16, 185, 129, 0.7); } 100% { transform: scale(1); } }
+        .quiz-option-btn.shake-no { animation: chipShake 0.45s ease; }
+        .quiz-explain {
+            display: none; margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-md); font-size: 0.85rem; line-height: 1.5; font-weight: 600;
+            color: var(--text-dark); background: rgba(232, 242, 255, 0.75); border-left: 4px solid var(--accent-yellow); animation: liquidRise 0.5s ease backwards;
+        }
+        .fin-btn {
+            display: block; width: 100%; margin-bottom: 10px; padding: 14px; border: none; border-radius: var(--radius-md); cursor: pointer;
+            background: var(--primary-blue); color: #ffffff; font-weight: 700; font-size: 0.95rem; text-align: center;
+        }
+        .fin-btn.alt { background: rgba(232, 242, 255, 0.85); color: var(--primary-blue); border: 1px solid rgba(0, 102, 204, 0.25); }
+        .fin-btn:active { transform: scale(0.97); }
     </style>
 </head>
 <body>
@@ -2005,34 +2034,4 @@
                         container.innerHTML += card;
                     });
                 } else {
-                    container.innerHTML = `<div class="news-card"><p style="font-size: 0.85rem; color: var(--text-muted);">Aucune nouvelle actualité disponible pour le moment.</p></div>`;
-                }
-            } catch (err) {
-                console.error("Erreur NewsData API :", err);
-                container.innerHTML = `
-                    <div class="news-card">
-                        <span style="font-size: 0.75rem; color: var(--primary-blue); font-weight: 700;">Éducation RDC</span>
-                        <h4 style="font-size: 0.95rem; font-weight: 700; margin: 4px 0;">Ministère de l'Éducation Nationale</h4>
-                        <p style="font-size: 0.8rem; color: var(--text-muted);">Suivez les activités récents et décisions du Ministère de l'Éducation Nationale et Nouvelle Citoyenneté de la RDC.</p>
-                    </div>
-                `;
-            }
-        }
-    </script>
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker enregistré avec succès !', reg))
-            .catch(err => console.log('Erreur lors de l’enregistrement du Service Worker :', err));
-        });
-      }
-    </script>
-    <script src="questions-facile.js"></script>
-    <script src="questions-difficile.js"></script>
-    <script src="questions-pro.js"></script>
-    <script src="quiz.js"></script>
-    <script src="news.js"></script>
-</body>
-</html>
+                    container.innerHTML = `<div class="news-ca
