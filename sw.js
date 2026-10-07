@@ -1,6 +1,6 @@
 /* Service Worker - EDUC National
    Changer VERSION à chaque mise à jour de l'application pour forcer le rafraîchissement. */
-const VERSION = 'v15';
+const VERSION = 'v16';
 const CACHE_STATIC = 'educ-static-' + VERSION;
 const CACHE_RUNTIME = 'educ-runtime-' + VERSION;
 
