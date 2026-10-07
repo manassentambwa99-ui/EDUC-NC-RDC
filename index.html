@@ -2006,7 +2006,180 @@
             const newsApiUrl = `https://newsdata.io/api/1/latest?apikey=${apiKey}&q=Education%20nationale%20Congo%20RDC&language=fr`;
             
             try {
-                const response = await fetch(newsApiUrl);
+                const response = awainews-ca            // Sauvegarde de l'utilisateur dans le stockage local
+            try {
+                localStorage.setItem('educ_utilisateur_connecte', JSON.stringify(userData));
+            } catch (err) {
+                console.warn("Stockage local saturé ou indisponible, enregistrement sans image lourde.");
+                userData.photo = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';
+                localStorage.setItem('educ_utilisateur_connecte', JSON.stringify(userData));
+            }
+
+            restaurerSessionDashboard(userData);
+        }
+
+        function deconnecterUtilisateur() {
+            if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+                localStorage.removeItem('educ_utilisateur_connecte');
+                window.location.reload();
+            }
+        }
+
+        // GESTION DU SYSTÈME D'XP & DE NIVEAUX
+        function addXP(amount) {
+            userXP += amount;
+            updateXPBar();
+            
+            // Pop-up visuelle d'XP gagné
+            const pop = document.createElement('div');
+            pop.className = 'xp-pop';
+            pop.innerText = `+${amount} XP`;
+            document.body.appendChild(pop);
+            setTimeout(() => pop.remove(), 1200);
+        }
+
+        function updateXPBar() {
+            const level = Math.floor(userXP / 1000) + 1;
+            const currentLevelXP = userXP % 1000;
+            const percent = Math.min(Math.floor((currentLevelXP / 1000) * 100), 100);
+
+            document.getElementById('user-level').innerText = `Niveau ${level}`;
+            document.getElementById('user-xp-percent').innerText = `${percent}%`;
+            document.getElementById('user-xp-text').innerText = `${currentLevelXP} / 1000 XP`;
+            document.getElementById('xp-fill').style.width = `${percent}%`;
+        }
+
+        // GÉNÉRATEUR DE QUIZ (MANASSÉ IA)
+        const quizQuestions = [
+            {
+                q: "Quel est la devise officielle de la République Démocratique du Congo ?",
+                options: ["Paix - Justice - Travail", "Justice - Paix - Travail", "Démocratie - Justice - Unité", "Unité - Travail - Progrès"],
+                correct: 0,
+                explain: "La devise officielle inscrite dans la Constitution de 2006 est : Paix - Justice - Travail."
+            },
+            {
+                q: "En quelle année la RDC a-t-elle obtenu son indépendance ?",
+                options: ["1955", "1960", "1965", "1971"],
+                correct: 1,
+                explain: "La RDC a proclamé son indépendance le 30 juin 1960."
+            },
+            {
+                q: "Qui fut le tout premier Président de la République Démocratique du Congo ?",
+                options: ["Patrice Émery Lumumba", "Mobutu Sese Seko", "Joseph Kasa-Vubu", "Laurent-Désiré Kabila"],
+                correct: 2,
+                explain: "Joseph Kasa-Vubu fut le premier Président de 1960 à 1965, Lumumba étant le Premier Ministre."
+            },
+            {
+                q: "Combien de provinces compte la République Démocratique du Congo actuellement ?",
+                options: ["11", "21", "26", "30"],
+                correct: 2,
+                explain: "Depuis le découpage territorial prévu par la Constitution, la RDC compte 26 provinces (y compris Kinshasa)."
+            }
+        ];
+
+        let quizIndex = 0;
+
+        function generateInfiniteQuizQuestion() {
+            const q = quizQuestions[quizIndex % quizQuestions.length];
+            currentActiveQuestion = q;
+
+            document.getElementById('quiz-q-text').innerText = q.q;
+            const optionsList = document.getElementById('quiz-options-list');
+            optionsList.innerHTML = '';
+            
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.className = 'quiz-feedback-box';
+            feedback.style.display = 'none';
+            document.getElementById('next-q-btn').style.display = 'none';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkQuizAnswer(idx, btn);
+                optionsList.appendChild(btn);
+            });
+        }
+
+        function checkQuizAnswer(selectedIdx, btnElement) {
+            const allBtns = document.querySelectorAll('.quiz-option-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            const feedback = document.getElementById('quiz-feedback');
+            
+            if (selectedIdx === currentActiveQuestion.correct) {
+                btnElement.classList.add('correct');
+                feedback.className = 'quiz-feedback-box success';
+                feedback.innerText = `Bravo ! ${currentActiveQuestion.explain}`;
+                addXP(50);
+            } else {
+                btnElement.classList.add('incorrect');
+                allBtns[currentActiveQuestion.correct].classList.add('correct');
+                feedback.className = 'quiz-feedback-box error';
+                feedback.innerText = `Incorrect. ${currentActiveQuestion.explain}`;
+            }
+
+            document.getElementById('next-q-btn').style.display = 'block';
+        }
+
+        function loadNextInfiniteQuestion() {
+            quizIndex++;
+            generateInfiniteQuizQuestion();
+        }
+
+        // FLUX D'ACTUALITÉS EN DIRECT
+        function fetchLiveNewsRDC() {
+            const newsContainer = document.getElementById('live-news-container');
+            
+            // Simulé avec fallback en cas d'absence d'API distante
+            const newsData = [
+                {
+                    title: "Lancement officiel de la plateforme de suivi pédagogique EDUC National",
+                    date: "Aujourd'hui",
+                    desc: "Le Ministère de l'Éducation Nationale renforce la numérisation des contenus éducatifs pour toutes les provinces de la RDC."
+                },
+                {
+                    title: "Sensibilisation à la Nouvelle Citoyenneté dans les établissements scolaires",
+                    date: "Hier",
+                    desc: "Les programmes civiques visent à promouvoir le respect des symboles nationaux et les valeurs patriotiques."
+                }
+            ];
+
+            newsContainer.innerHTML = newsData.map(item => `
+                <div class="news-card">
+                    <span class="news-source"><i class="fa-solid fa-newspaper"></i> Éducation RDC</span>
+                    <h4 style="font-size: 1rem; font-weight: 800;">${item.title}</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">${item.desc}</p>
+                    <small style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">${item.date}</small>
+                </div>
+            `).join('');
+        }
+
+        function demanderPermissionNotifications() {
+            if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        alert("Rappels d'étude activés avec succès !");
+                    } else {
+                        alert("Les notifications ont été refusées.");
+                    }
+                });
+            } else {
+                alert("Votre navigateur ne supporte pas les notifications.");
+            }
+        }
+
+        function initialiserRappelsEtude() {
+            // Logique de rappels si nécessaire
+        }
+
+        function ouvrirPanneauCreateur() {
+            alert("EDUC National RDC - Conçu & Développé par Manassé.");
+        }
+    </script>
+</body>
+</html>
+(newsApiUrl);
                 const data = await response.json();
                 
                 if (data.status === 'success' && data.results && data.results.length > 0) {
