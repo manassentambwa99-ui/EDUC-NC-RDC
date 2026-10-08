@@ -18,14 +18,18 @@
     var store = { rdc: [], educ: [] }, cur = 'rdc', pending = {};
 
     function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-    function fdate(d) { var m = /(\d{2})\/(\d{2})\/(\d{4})/.exec(d || ''); return m ? m[2] + '/' + m[1] + '/' + m[3] : String(d || '').split(',')[0]; }
+    function fdate(d) {
+      var m = /(\d{2})\/(\d{2})\/(\d{4})/.exec(d || ''); if (m) return m[2] + '/' + m[1] + '/' + m[3];
+      var iso = /^(\d{4})-(\d{2})-(\d{2})/.exec(d || ''); if (iso) return iso[3] + '/' + iso[2] + '/' + iso[1];
+      return String(d || '').split(',')[0];
+    }
     function flat(list) {
       var out = [];
       list.forEach(function (r) {
         var arr = r.stories && r.stories.length ? r.stories : [r];
         arr.forEach(function (x) {
           if (!x || !x.title || !x.link) return;
-          out.push({ title: x.title, link: x.link, src: x.source && x.source.name, icon: x.source && x.source.icon, img: x.thumbnail, date: x.date, snip: x.snippet || '' });
+          out.push({ title: x.title, link: x.link, src: (x.source && x.source.name) || (typeof x.source === 'string' ? x.source : ''), icon: x.source && x.source.icon, img: x.thumbnail || x.image || x.image_url, date: x.date || x.iso_date, snip: x.snippet || x.description || '' });
         });
       });
       return out;
@@ -59,7 +63,7 @@
         throw new Error('connexion impossible (adresse du proxy ou ALLOWED_ORIGIN incorrect ?)');
       }).then(function (d) {
         if (d.error) throw new Error(d.error);
-        return flat(d.news_results || []);
+        return flat(Array.isArray(d) ? d : (d.news_results || d.articles || d.results || d.data || []));
       });
     }
     function charge(topic, force) {
@@ -78,7 +82,7 @@
         try { localStorage.setItem(ck, JSON.stringify({ t: Date.now(), items: store[topic] })); } catch (e) {}
         if (THEMES[cur].topic === topic) render();
       }).catch(function (e) {
-        if (!store[topic].length && THEMES[cur].topic === topic) render('Actualités indisponibles pour le moment.<br><small>Détail : ' + esc(e.message) + '</small>');
+        if (!store[topic].length && THEMES[cur].topic === topic) render(navigator.onLine ? 'Actualités indisponibles pour le moment.<br><small>Détail : ' + esc(e.message) + '</small>' : '📡 Vous êtes hors connexion. Les actualités reviendront dès que vous aurez Internet.');
       }).then(function () { pending[topic] = false; });
     }
     window.fetchLiveNewsRDC = function (force) { charge(THEMES[cur].topic, force); };
