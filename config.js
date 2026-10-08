@@ -9,5 +9,8 @@ window.EDUC_CONFIG = {
   NEWSDATA_KEY: '',
 
   // Domaines autorisés pour votre application (sans https://). Un clone sur un autre domaine sera bloqué.
+  // false = les trois niveaux sont ouverts dès le début ; true = Difficile et Pro s'ouvrent après 200 réponses du niveau précédent
+  VERROUILLER_NIVEAUX: false,
+
   ALLOWED_HOSTS: ['manassentambwa99-ui.github.io']
 };
