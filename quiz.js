@@ -1,4 +1,4 @@
-heretry {
+try {
 (function () {
   const shR = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
@@ -165,10 +165,11 @@ heretry {
 
   // Quand une personne s'inscrit ou se connecte, on charge SA progression (nouvelle identité = zéro)
   const orig = window.restaurerSessionDashboard;
-  if (typeof orig === 'function') window.restaurerSessionDashboard = function (u) { chargerEtat(u); const r = orig.apply(this, arguments); meta(); return r; };
+  if (typeof orig === 'function') window.restaurerSessionDashboard = function (u) { try { chargerEtat(u); } catch (e) {} const r = orig.apply(this, arguments); try { meta(); } catch (e) {} return r; };
 
   window.QUIZ_STATS = { facile: POOL.facile.length, difficile: POOL.difficile.length, pro: POOL.pro.length };
   chargerEtat(); meta();
+  try { const m = document.getElementById('main-app'); if (m && m.classList.contains('active')) { updateXPBar(); generateInfiniteQuizQuestion(); } } catch (e) {}
 })();
 } catch (err) {
   var qt = document.getElementById('quiz-q-text');
