@@ -26,7 +26,10 @@ try {
   const cle = n => n + '_' + uid;
   const sessionUser = () => { try { return JSON.parse(localStorage.getItem('educ_utilisateur_connecte') || 'null'); } catch (e) { return null; } };
   const uidDe = u => u ? encodeURIComponent((u.telephone || '') + '|' + (u.nomComplet || (u.nom || '') + ' ' + (u.postnom || '') + ' ' + (u.prenom || ''))).toLowerCase() : 'anonyme';
-  const debloque = n => { const k = ORDER.indexOf(n); return k === 0 || prog[ORDER[k - 1]] >= SEUIL; };
+  const VERROU = !!(window.EDUC_CONFIG && window.EDUC_CONFIG.VERROUILLER_NIVEAUX);
+  const debloque = n => { if (!VERROU) return true; const k = ORDER.indexOf(n); return k === 0 || prog[ORDER[k - 1]] >= SEUIL; };
+  const tousTermines = () => ORDER.every(n => POOL[n].length && vus[n].size >= POOL[n].length);
+  window.educProgression = () => { let done = 0, total = 0; ORDER.forEach(n => { done += vus[n].size; total += POOL[n].length; }); return { done: done, total: total, complet: total > 0 && tousTermines(), uid: uid }; };
   const sauver = () => {
     try {
       localStorage.setItem(cle('educ_prog'), JSON.stringify(prog));
@@ -45,8 +48,7 @@ try {
       const vv = JSON.parse(localStorage.getItem(cle('educ_vus3')) || 'null'); if (vv) ORDER.forEach(n => { if (Array.isArray(vv[n])) vv[n].forEach(k => vus[n].add(k)); });
       const x = parseInt(localStorage.getItem(cle('educ_xp'))); if (!isNaN(x)) userXP = x;
     } catch (e) {}
-    niv = 'facile';
-    ORDER.forEach(n => { if (debloque(n) && POOL[n].length && vus[n].size < POOL[n].length) niv = n; });
+    niv = ORDER.filter(n => debloque(n) && POOL[n].length && vus[n].size < POOL[n].length)[0] || ORDER.filter(n => POOL[n].length)[0] || 'facile';
   }
 
   window.updateXPBar = function () {
@@ -65,9 +67,9 @@ try {
 
   function meta() {
     const m = document.getElementById('quiz-meta'), k = ORDER.indexOf(niv), nx = ORDER[k + 1], n = vus[niv].size, t = POOL[niv].length;
-    if (m) { let s = 'Niveau ' + LABEL[niv] + ' · ' + n + '/' + t + ' questions répondues'; if (nx && !debloque(nx)) s += ' · encore ' + Math.max(SEUIL - prog[niv], 0) + ' pour débloquer ' + LABEL[nx]; m.innerText = s; }
+    if (m) { let s = 'Niveau ' + LABEL[niv] + ' · ' + n + '/' + t + ' questions répondues'; if (VERROU && nx && !debloque(nx)) s += ' · encore ' + Math.max(SEUIL - prog[niv], 0) + ' pour débloquer ' + LABEL[nx]; m.innerText = s; }
     const f = document.getElementById('lvl-fill'); if (f) f.style.transform = 'scaleX(' + (t ? Math.min(n / t, 1) : 0) + ')';
-    document.querySelectorAll('.lvl-chip').forEach(c => { const x = c.dataset.n, lk = !debloque(x); c.classList.toggle('lock', lk); c.classList.toggle('on', x === niv); c.querySelector('small').innerText = lk ? '🔒 verrouillé' : '+' + XPN[x] + ' XP'; });
+    document.querySelectorAll('.lvl-chip').forEach(c => { const x = c.dataset.n, lk = !debloque(x); c.classList.toggle('lock', lk); c.classList.toggle('on', x === niv); c.querySelector('small').innerText = !POOL[x].length ? '⚠ fichier manquant' : lk ? '🔒 verrouillé' : '+' + XPN[x] + ' XP'; });
   }
 
   function bravo(txt) {
@@ -86,6 +88,7 @@ try {
     g('quiz-q-text').innerText = 'Bravo ! Vous avez terminé toutes les questions du niveau ' + LABEL[niv] + '.';
     let h = '<button class="fin-btn" data-a="redo">↻ Recommencer ce niveau à zéro</button>';
     if (suiv && debloque(suiv)) h += '<button class="fin-btn alt" data-a="next">Passer au niveau ' + LABEL[suiv] + ' →</button>';
+    if (tousTermines()) h = '<button class="fin-btn" data-a="brevet">🏅 Voir mon brevet de patriotisme</button>' + h;
     if (!suiv) h += '<button class="fin-btn alt" data-a="all">Tout recommencer à zéro (tous les niveaux)</button>';
     g('quiz-options-list').innerHTML = h;
     g('quiz-feedback').style.display = 'none'; g('next-q-btn').style.display = 'none';
@@ -126,7 +129,8 @@ try {
     const ex = document.getElementById('quiz-explain'); if (ex && q.expl) { ex.innerText = '💡 ' + q.expl; ex.style.display = 'block'; }
     sauver(); updateXPBar(); meta();
     const nx = ORDER[ORDER.indexOf(q.niv) + 1];
-    if (nx && avant < SEUIL && prog[q.niv] >= SEUIL) setTimeout(() => levelUp(q.niv), 1500);
+    if (tousTermines()) setTimeout(() => { if (window.educBrevet) window.educBrevet(true); }, 1800);
+    else if (nx && avant < SEUIL && prog[q.niv] >= SEUIL) setTimeout(() => levelUp(q.niv), 1500);
     document.getElementById('next-q-btn').style.display = 'block';
   };
 
@@ -155,6 +159,7 @@ try {
     });
     document.getElementById('quiz-options-list').addEventListener('click', e => {
       const b = e.target.closest('.fin-btn'); if (!b) return; const a = b.dataset.a, k = ORDER.indexOf(niv);
+      if (a === 'brevet') { if (window.educBrevet) window.educBrevet(); return; }
       if (a === 'redo') { vus[niv].clear(); }
       else if (a === 'next') { niv = ORDER[k + 1]; }
       else if (a === 'all') { ORDER.forEach(n => vus[n].clear()); prog = { facile: 0, difficile: 0, pro: 0 }; userXP = 0; streak = 0; niv = 'facile'; }
