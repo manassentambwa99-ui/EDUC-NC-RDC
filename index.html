@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <script>window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); window.__dp = e; });</script>
     <script>
       /* Garde-fou : si l'écran du logo reste bloqué, on ouvre l'application quand même */
       (function () {
@@ -1915,6 +1916,8 @@
         }
 
         function initialiserRappelsEtude() {
+            if (window.educPlanifierRappels) { window.educPlanifierRappels(); }
+            return;
             const intervalleRappelMS = 4 * 60 * 60 * 1000;
             
             setInterval(() => {
@@ -2040,7 +2043,7 @@
                         const descriptionText = item.description ? item.description.substring(0, 110) + '...' : 'Actualité officielle concernant l\'Éducation nationale et la citoyenneté en RDC.';
 
                         const card = `
-                            <div class="news-card">
+                             <div class="news-card">
                                 <img src="${escHtml(imageUrl)}" alt="${escHtml(item.title)}" class="news-card-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80';">
                                 <span style="font-size: 0.75rem; color: var(--primary-blue); font-weight: 700;"><i class="fa-solid fa-flag"></i> Éducation & Citoyenneté RDC</span>
                                 <h4 style="font-size: 0.95rem; font-weight: 700; margin: 4px 0; color: var(--text-dark);">${escHtml(item.title)}</h4>
@@ -2081,7 +2084,7 @@
     <script>
       /* Chargement en arrière-plan (ordre garanti) : l'application s'ouvre sans attendre les questions ni les actualités */
       (function () {
-        ['questions-facile.js', 'questions-difficile.js', 'questions-pro.js', 'quiz.js', 'news.js'].forEach(function (src) {
+        ['questions-facile.js', 'questions-difficile.js', 'questions-pro.js', 'quiz.js', 'news.js', 'notifications.js'].forEach(function (src) {
           var el = document.createElement('script'); el.src = src; el.async = false; document.body.appendChild(el);
         });
       })();
