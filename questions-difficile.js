@@ -1,4 +1,4 @@
-here/* Questions niveau Difficile - EDUC National (258 questions reflechies). Fichier code en base64 (ASCII) : ne pas modifier a la main. */
+/* Questions niveau Difficile - EDUC National (258 questions reflechies). Fichier code en base64 (ASCII) : ne pas modifier a la main. */
 (window.EDUC_QB = window.EDUC_QB || {}).difficile = [
 "W3sicSI6IlVuIGFtaSB2ZXV0IHF1aXR0ZXIgbGUgcGF5cyBwb3VyIHRvdWpvdXJzLCBjb252YWluY3UgcXUnb24gbid5IHLDqXVz",
 "c2l0IGphbWFpcy4gUXVlbGxlIGF0dGl0dWRlIGhvbm9yZSBsZSBtaWV1eCBsZSBjaXRveWVuIGNvbmdvbGFpcyA/IiwiYyI6IlJl",
