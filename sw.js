@@ -1,6 +1,6 @@
 /* Service Worker - EDUC National
    Changer VERSION à chaque mise à jour de l'application pour forcer le rafraîchissement. */
-const VERSION = 'v16';
+const VERSION = 'v17';
 const CACHE_STATIC = 'educ-static-' + VERSION;
 const CACHE_RUNTIME = 'educ-runtime-' + VERSION;
 
@@ -52,8 +52,14 @@ self.addEventListener('message', (event) => {
 });
 
 // Réseau d'abord (toujours la dernière version), cache si hors connexion
+function avecDelai(p, ms) {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error('delai')), ms);
+    p.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
+  });
+}
 function networkFirst(request, cacheName) {
-  return fetch(request)
+  return avecDelai(fetch(request), 4000)
     .then((response) => {
       if (response && response.status === 200) {
         const copy = response.clone();
@@ -61,7 +67,7 @@ function networkFirst(request, cacheName) {
       }
       return response;
     })
-    .catch(() => caches.match(request).then((r) => r || caches.match('index.html')));
+    .catch(() => caches.match(request).then((r) => r || caches.match('index.html')).then((r) => r || fetch(request)));
 }
 
 // Cache d'abord (images, PDF), mise à jour discrète en arrière-plan
