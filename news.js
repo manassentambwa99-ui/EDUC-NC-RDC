@@ -96,5 +96,6 @@
         render(); charge(THEMES[cur].topic, false);
       });
     }
+    var m0 = document.getElementById('main-app'); if (m0 && m0.classList.contains('active')) window.fetchLiveNewsRDC();
   } catch (err) { console.error('Actualités :', err); }
 })();
