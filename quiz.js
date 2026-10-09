@@ -3,9 +3,12 @@ try {
   const shR = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
   const QQ = window.EDUC_QUESTIONS || {}, QB = window.EDUC_QB || {};
-  const dec = k => { try { if (QQ[k]) return QQ[k]; if (!QB[k]) return []; const bin = atob(QB[k]), by = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) by[i] = bin.charCodeAt(i); return JSON.parse(new TextDecoder('utf-8').decode(by)); } catch (e) { return []; } };
+  const MANQ = [], ATT = { facile: 92152, difficile: 103850, pro: 97822 };
+  const b64 = s => { const bin = atob(s), by = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) by[i] = bin.charCodeAt(i); return JSON.parse(new TextDecoder('utf-8').decode(by)); };
+  const dec = k => { try { if (QQ[k]) return QQ[k]; if (!QB[k]) { MANQ.push(k); return []; } return b64(QB[k]); } catch (e) { MANQ.push(k); return []; } };
   const POOL = { facile: dec('facile'), difficile: dec('difficile'), pro: dec('pro') };
   if (!POOL.facile.length && !POOL.difficile.length && !POOL.pro.length) throw new Error('fichiers questions-facile.js, questions-difficile.js, questions-pro.js introuvables');
+  if (MANQ.length) { try { console.warn('EDUC : fichiers de questions manquants ou abîmés :', MANQ.join(', ')); } catch (e) {} }
   const XPN = { facile: 10, difficile: 25, pro: 50 };
   const ORDER = ['facile', 'difficile', 'pro'], SEUIL = 200, LABEL = { facile: 'Facile', difficile: 'Difficile', pro: 'Pro' };
   const EXP = {
@@ -101,7 +104,7 @@ try {
     if (!pool.length) {
       const qt = g('quiz-q-text'), f = 'questions-' + niv + '.js'; g('quiz-options-list').innerHTML = '';
       qt.innerText = 'Vérification du fichier ' + f + '…';
-      fetch(f, { cache: 'no-store' }).then(r => { qt.innerText = r.ok ? 'Le fichier ' + f + ' est en ligne mais illisible ou ancien. Renvoyez-le sur GitHub, puis videz les données du site.' : 'Le fichier ' + f + ' est introuvable (erreur ' + r.status + '). Envoyez-le à la racine du dépôt GitHub, à côté de index.html.'; }).catch(() => { qt.innerText = 'Le fichier ' + f + ' ne peut pas être chargé (connexion ?).'; });
+      fetch(f + '?v=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.text().then(t => { qt.innerText = 'Le fichier ' + f + ' sur GitHub fait ' + t.length + ' octets, il devrait en faire ' + ATT[niv] + (t.length < ATT[niv] ? ' : il est INCOMPLET. Renvoyez-le entièrement.' : '. Renvoyez-le puis videz les données du site.'); }) : (qt.innerText = 'Le fichier ' + f + ' est introuvable (erreur ' + r.status + '). Envoyez-le à la racine du dépôt GitHub, à côté de index.html.')).catch(() => { qt.innerText = 'Le fichier ' + f + ' ne peut pas être chargé (connexion ?).'; });
       return;
     }
     if (vus[niv].size >= pool.length) { finCard(); return; }
