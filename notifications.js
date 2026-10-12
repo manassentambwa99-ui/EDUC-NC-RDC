@@ -145,7 +145,12 @@
 
     // Un cours PDF jamais ouvert ne peut pas s'afficher sans Internet : message clair au lieu d'une erreur
     document.addEventListener('click', function (e) {
-      var a = e.target.closest && e.target.closest('a[href$=".pdf"]'); if (!a || navigator.onLine) return;
+      var a = e.target.closest && e.target.closest('a[href$=".pdf"]'); if (!a) return;
+      // Téléphone Android : Chrome télécharge les PDF au lieu de les afficher -> lecteur PDF intégré en ligne
+      if (navigator.onLine) {
+        if (/Android/i.test(navigator.userAgent)) { e.preventDefault(); window.open('https://mozilla.github.io/pdf.js/web/viewer.html?file=' + encodeURIComponent(a.href), '_blank'); }
+        return;
+      }
       e.preventDefault();
       var lien = a.href;
       (window.caches ? caches.match(lien) : Promise.resolve(null)).then(function (r) {
