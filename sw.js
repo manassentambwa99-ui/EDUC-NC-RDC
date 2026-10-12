@@ -1,6 +1,6 @@
 /* Service Worker - EDUC National
    Changer VERSION à chaque mise à jour de l'application pour forcer le rafraîchissement. */
-const VERSION = 'v23';
+const VERSION = 'v24';
 const CACHE_STATIC = 'educ-static-' + VERSION;
 const CACHE_RUNTIME = 'educ-runtime-' + VERSION;
 const CACHE_META = 'educ-meta'; // réglages des rappels (conservés entre les versions)
@@ -80,6 +80,14 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) {
     if (/fonts\.googleapis\.com|fonts\.gstatic\.com|cdnjs\.cloudflare\.com/.test(url.hostname)) event.respondWith(cacheFirst(request, CACHE_RUNTIME));
     return; // actualités et autres services externes : jamais en mémoire
+  }
+  // PDF : aucun délai limite (un gros fichier sur réseau lent doit pouvoir finir de charger) ; copie gardée pour le hors-connexion
+  if (/\.pdf$/i.test(url.pathname)) {
+    event.respondWith(fetch(request).then((response) => {
+      if (response && response.status === 200) { const copy = response.clone(); caches.open(CACHE_RUNTIME).then((c) => c.put(request, copy)); }
+      return response;
+    }).catch(() => caches.match(request).then((r) => r || pageHorsLigne(request))));
+    return;
   }
   if (request.mode === 'navigate' || /\.(html|js|json|css)$/i.test(url.pathname) || url.pathname.endsWith('/')) {
     event.respondWith(networkFirst(request, CACHE_STATIC));
