@@ -3,9 +3,39 @@ try {
   const shR = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
   const QQ = window.EDUC_QUESTIONS || {}, QB = window.EDUC_QB || {};
-  const MANQ = [], ATT = { facile: 92152, difficile: 103850, pro: 97822 };
-  const b64 = s => { const bin = atob(s), by = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) by[i] = bin.charCodeAt(i); return JSON.parse(new TextDecoder('utf-8').decode(by)); };
-  const dec = k => { try { if (QQ[k]) return QQ[k]; if (!QB[k]) { MANQ.push(k); return []; } return b64(QB[k]); } catch (e) { MANQ.push(k); return []; } };
+  const MANQ = [], ATT = { facile: 92152, difficile: 103850, pro: 97822 }, NB = { facile: 240, difficile: 258, pro: 240 };
+  const QZ = window.EDUC_QZ || {};
+  const inflate = src => {
+    let pos = 0, bb = 0, bc = 0; const out = [];
+    const bits = n => { while (bc < n) { if (pos >= src.length) throw new Error('fin'); bb |= src[pos++] << bc; bc += 8; } const v = bb & ((1 << n) - 1); bb >>>= n; bc -= n; return v; };
+    const mk = L => { const count = new Array(16).fill(0), sym = []; L.forEach(l => count[l]++); count[0] = 0; const offs = [0, 0]; for (let i = 1; i < 15; i++) offs[i + 1] = offs[i] + count[i]; L.forEach((l, s) => { if (l) sym[offs[l]++] = s; }); return { count, sym }; };
+    const dc = h => { let code = 0, first = 0, idx = 0; for (let l = 1; l < 16; l++) { code |= bits(1); const c = h.count[l]; if (code - c < first) return h.sym[idx + (code - first)]; idx += c; first += c; first <<= 1; code <<= 1; } throw new Error('code'); };
+    const LB = [3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258], LE = [0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+    const DB = [1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577], DE = [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+    let fl, fd; const fix = () => { if (!fl) { const l = []; for (let i = 0; i < 288; i++) l.push(i < 144 ? 8 : i < 256 ? 9 : i < 280 ? 7 : 8); fl = mk(l); fd = mk(new Array(30).fill(5)); } };
+    let last;
+    do {
+      last = bits(1); const t = bits(2);
+      if (t === 0) { bb = 0; bc = 0; const len = src[pos] | (src[pos + 1] << 8); pos += 4; for (let i = 0; i < len; i++) out.push(src[pos++]); continue; }
+      let lt, dt;
+      if (t === 1) { fix(); lt = fl; dt = fd; }
+      else {
+        const nl = bits(5) + 257, nd = bits(5) + 1, nc = bits(4) + 4, ORD = [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15], cl = new Array(19).fill(0);
+        for (let i = 0; i < nc; i++) cl[ORD[i]] = bits(3);
+        const ch = mk(cl), L = [];
+        while (L.length < nl + nd) { const s = dc(ch); if (s < 16) L.push(s); else { let p = 0, r; if (s === 16) { p = L[L.length - 1]; r = 3 + bits(2); } else if (s === 17) r = 3 + bits(3); else r = 11 + bits(7); while (r--) L.push(p); } }
+        lt = mk(L.slice(0, nl)); dt = mk(L.slice(nl));
+      }
+      for (;;) {
+        let s = dc(lt); if (s < 256) out.push(s); else if (s === 256) break;
+        else { s -= 257; const len = LB[s] + bits(LE[s]), d = dc(dt), dist = DB[d] + bits(DE[d]); for (let i = 0; i < len; i++) out.push(out[out.length - dist]); }
+      }
+    } while (!last);
+    return new Uint8Array(out);
+  };
+  const bytes = s => { const bin = atob(s), by = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) by[i] = bin.charCodeAt(i); return by; };
+  const b64 = s => JSON.parse(new TextDecoder('utf-8').decode(bytes(s)));
+  const dec = k => { try { if (QQ[k]) return QQ[k]; let r = null; if (window.EDUC_QZ && window.EDUC_QZ[k]) r = JSON.parse(new TextDecoder('utf-8').decode(inflate(bytes(window.EDUC_QZ[k])))); else if (window.EDUC_QB && window.EDUC_QB[k]) r = b64(window.EDUC_QB[k]); if (!r || !r.length) { MANQ.push(k); return []; } return r; } catch (e) { MANQ.push(k); return []; } };
   const POOL = { facile: dec('facile'), difficile: dec('difficile'), pro: dec('pro') };
   if (!POOL.facile.length && !POOL.difficile.length && !POOL.pro.length) throw new Error('fichiers questions-facile.js, questions-difficile.js, questions-pro.js introuvables');
   if (MANQ.length) { try { console.warn('EDUC : fichiers de questions manquants ou abîmés :', MANQ.join(', ')); } catch (e) {} }
@@ -102,9 +132,15 @@ try {
   window.generateInfiniteQuizQuestion = function () {
     const pool = POOL[niv], g = id => document.getElementById(id);
     if (!pool.length) {
-      const qt = g('quiz-q-text'), f = 'questions-' + niv + '.js'; g('quiz-options-list').innerHTML = '';
-      qt.innerText = 'Vérification du fichier ' + f + '…';
-      fetch(f + '?v=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.text().then(t => { qt.innerText = 'Le fichier ' + f + ' sur GitHub fait ' + t.length + ' octets, il devrait en faire ' + ATT[niv] + (t.length < ATT[niv] ? ' : il est INCOMPLET. Renvoyez-le entièrement.' : '. Renvoyez-le puis videz les données du site.'); }) : (qt.innerText = 'Le fichier ' + f + ' est introuvable (erreur ' + r.status + '). Envoyez-le à la racine du dépôt GitHub, à côté de index.html.')).catch(() => { qt.innerText = 'Le fichier ' + f + ' ne peut pas être chargé (connexion ?).'; });
+      const qt = g('quiz-q-text'), f = 'questions-' + niv + '.js', nv = niv; g('quiz-options-list').innerHTML = '';
+      qt.innerText = 'Chargement des questions ' + LABEL[nv] + '…';
+      if (!window['_educRetry' + nv]) {
+        window['_educRetry' + nv] = 1; const sc = document.createElement('script'); sc.src = f + '?v=' + Date.now();
+        sc.onload = () => { POOL[nv] = dec(nv); if (niv === nv) generateInfiniteQuizQuestion(); }; sc.onerror = () => { window['_educRetry' + nv] = 0; if (niv === nv) qt.innerText = 'Le fichier ' + f + ' est introuvable. Envoyez-le à la racine du dépôt GitHub, à côté de index.html.'; };
+        document.head.appendChild(sc); return;
+      }
+      window['_educRetry' + nv] = 0;
+      fetch(f + '?v=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.text().then(t => { qt.innerText = 'Le fichier ' + f + ' sur GitHub fait ' + t.length + ' octets : il est incomplet ou ancien. Renvoyez la dernière version du fichier ' + f + ', puis videz les données du site.'; }) : (qt.innerText = 'Le fichier ' + f + ' est introuvable (erreur ' + r.status + ').')).catch(() => { qt.innerText = 'Le fichier ' + f + ' ne peut pas être chargé (connexion ?).'; });
       return;
     }
     if (vus[niv].size >= pool.length) { finCard(); return; }
