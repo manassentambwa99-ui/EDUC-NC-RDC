@@ -54,7 +54,10 @@
        ['Rappels d\'étude', 'Activer les notifications', 'rappel rappels notification heure alerte', 'fa-bell', function () { aller('tab-profil', 4); }],
        ['Histoire des présidents de la RDC', 'Frise chronologique et PDF', 'histoire presidents chronologie chefs etat', 'fa-timeline', function () { if (typeof ouvrirPagePresidents === 'function') ouvrirPagePresidents(); }]
       ].forEach(function (x) { L.push({ cat: 'Section', t: x[0], s: x[1], k: x[2], ic: x[3], go: x[4] }); });
-      document.querySelectorAll('#tab-cours .book-card').forEach(function (a) {
+      (window.educDossiers || []).forEach(function (d) {
+        L.push({ cat: 'Cours', t: d.titre, s: 'Dossier patriotique · lecture et quiz', k: 'dossier patriotisme patriote genocide crimes massacres memoire rwanda m23 agression vigilance desinformation biens publics hygiene ecole sante lavage mains cholera congo ' + d.court, ic: d.icone, bg: d.couleur, go: function () { if (typeof switchTab === 'function') switchTab('tab-cours', 1); window.educDossier(d.id); } });
+      });
+      document.querySelectorAll('#tab-cours .book-card:not([data-dossier])').forEach(function (a) {
         var i = a.querySelector('.book-cover-icon i'), bg = a.querySelector('.book-cover-icon');
         L.push({ cat: 'Cours', t: txt(a, '.book-title'), s: txt(a, '.book-sub'), k: 'cours pdf', ic: i ? i.className.replace('fa-solid ', '') : 'fa-book', bg: bg && bg.style.background, go: function () { ouvrir(a.getAttribute('href')); } });
       });
