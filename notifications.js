@@ -143,18 +143,33 @@
     }
     window.addEventListener('offline', reseau); window.addEventListener('online', reseau); if (!navigator.onLine) reseau();
 
-    // Un cours PDF jamais ouvert ne peut pas s'afficher sans Internet : message clair au lieu d'une erreur
+    // PDF : s'ouvrent à chaque clic. L'adresse est vérifiée (accents, majuscules) puis le PDF est affiché.
+    function variantes(href) {
+      var u = new URL(href, location.href), nom = decodeURIComponent(u.pathname.split('/').pop()), base = u.pathname.slice(0, u.pathname.lastIndexOf('/') + 1), v = [];
+      [nom, nom.normalize ? nom.normalize('NFC') : nom, nom.normalize ? nom.normalize('NFD') : nom].forEach(function (x) { var l = u.origin + base + encodeURIComponent(x); if (v.indexOf(l) < 0) v.push(l); });
+      return v;
+    }
+    function trouver(liste, i) {
+      if (i >= liste.length) return Promise.resolve(liste[0]);
+      return fetch(liste[i], { method: 'HEAD', cache: 'no-store' }).then(function (r) { return r.ok ? liste[i] : trouver(liste, i + 1); }).catch(function () { return trouver(liste, i + 1); });
+    }
     document.addEventListener('click', function (e) {
-      var a = e.target.closest && e.target.closest('a[href$=".pdf"]'); if (!a) return;
-      // Téléphone Android : Chrome télécharge les PDF au lieu de les afficher -> lecteur PDF intégré en ligne
-      if (navigator.onLine) {
-        if (/Android/i.test(navigator.userAgent)) { e.preventDefault(); window.open('https://mozilla.github.io/pdf.js/web/viewer.html?file=' + encodeURIComponent(a.href), '_blank'); }
+      var a = e.target.closest && e.target.closest('a[href$=".pdf"], a[href$=".PDF"]'); if (!a) return;
+      var lien = a.href;
+      if (!navigator.onLine) {
+        e.preventDefault();
+        (window.caches ? caches.match(lien) : Promise.resolve(null)).then(function (r) {
+          if (r) window.open(lien, '_blank'); else toast('📡 Ce cours n\'est pas encore sur ton téléphone. Ouvre-le une fois avec Internet : il sera ensuite disponible sans forfait.', 5500);
+        });
         return;
       }
       e.preventDefault();
-      var lien = a.href;
-      (window.caches ? caches.match(lien) : Promise.resolve(null)).then(function (r) {
-        if (r) window.open(lien, '_blank'); else toast('📡 Ce cours n\'est pas encore sur ton téléphone. Ouvre-le une fois avec Internet : il sera ensuite disponible sans forfait.', 5500);
+      var android = /Android/i.test(navigator.userAgent), w = null;
+      try { w = window.open('', '_blank'); } catch (x) {}
+      if (w && w.document) { try { w.document.write('<p style="font-family:sans-serif;padding:24px;color:#0066cc">Chargement du document…</p>'); } catch (x) {} }
+      trouver(variantes(lien), 0).then(function (ok) {
+        var cible = android ? 'https://mozilla.github.io/pdf.js/web/viewer.html?file=' + encodeURIComponent(ok) : ok;
+        if (w) w.location.href = cible; else window.location.href = cible;
       });
     }, true);
 
