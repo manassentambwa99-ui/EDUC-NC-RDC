@@ -3,75 +3,158 @@
   'use strict';
   try {
     var DATA = window.educUnz([
-"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"
+"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"
     ].join(""));
     var H = DATA.H, DOS = function () { return window.educDossiers || []; };
     var g = function (id) { return document.getElementById(id); };
@@ -86,23 +169,46 @@
     var xp = function (n) { try { if (typeof window.addXP === 'function') window.addXP(n); } catch (e) {} };
 
     /* ---------- Voix (synthèse vocale du téléphone, hors connexion si la voix est installée) ---------- */
-    var Voix = { actif: true, vitesse: 0.95, ok: !!(window.speechSynthesis && window.SpeechSynthesisUtterance), voix: null, minuteur: null };
-    function choisir() { try { var vs = speechSynthesis.getVoices() || []; Voix.voix = vs.filter(function (v) { return /^fr/i.test(v.lang); })[0] || null; } catch (e) {} }
-    if (Voix.ok) { choisir(); try { speechSynthesis.onvoiceschanged = choisir; } catch (e) {} }
-    Voix.stop = function () { clearTimeout(Voix.minuteur); if (Voix.ok) try { speechSynthesis.cancel(); } catch (e) {} };
-    Voix.dire = function (texte, fin) {
-      Voix.stop(); var fait = false, fini = function () { if (fait) return; fait = true; clearTimeout(Voix.minuteur); if (fin) fin(); };
-      if (!Voix.ok || !Voix.actif) { Voix.minuteur = setTimeout(fini, Math.max(2500, texte.length * 55)); return; }
+    var Voix = { actif: true, vitesse: 0.9, ok: !!(window.speechSynthesis && window.SpeechSynthesisUtterance), voix: null, minuteur: null, genre: 'h', jeton: 0 };
+    try { Voix.genre = localStorage.getItem('educ_voixg') || 'h'; } catch (e) {}
+    /* Choisit la meilleure voix française : naturelle/Google d'abord, puis masculine (ton de maître) ou féminine selon le choix */
+    function choisir() {
       try {
-        var u = new SpeechSynthesisUtterance(texte); u.lang = 'fr-FR'; u.rate = Voix.vitesse; if (Voix.voix) u.voice = Voix.voix;
-        u.onend = fini; u.onerror = fini; speechSynthesis.speak(u);
-        Voix.minuteur = setTimeout(fini, texte.length * 110 + 4000);
-      } catch (e) { Voix.minuteur = setTimeout(fini, 3000); }
+        var vs = (speechSynthesis.getVoices() || []).filter(function (v) { return /^fr/i.test(v.lang); }); if (!vs.length) return;
+        var H = /thomas|paul|henri|claude|antoine|nicolas|male|homme|rg|fr-fr-x-(frd|fre)|frd|fre/i, F = /amelie|amélie|hortense|julie|denise|female|femme|marie|audrey|fr-fr-x-(frc|afr)|frc|afr/i;
+        vs.forEach(function (v) { var n = (v.name || '') + ' ' + (v.voiceURI || ''); v._s = (/natural|neural|online|enhanced|premium/i.test(n) ? 4 : 0) + (/google/i.test(n) ? 3 : 0) + (/^fr[-_]FR/i.test(v.lang) ? 2 : 0) + (v.localService ? 1 : 0) + ((Voix.genre === 'h' ? H : F).test(n) ? 3 : 0) - ((Voix.genre === 'h' ? F : H).test(n) ? 3 : 0); });
+        vs.sort(function (x, y) { return y._s - x._s; }); Voix.voix = vs[0];
+      } catch (e) {}
+    }
+    if (Voix.ok) { choisir(); try { speechSynthesis.onvoiceschanged = choisir; } catch (e) {} }
+    Voix.basculer = function () { Voix.genre = Voix.genre === 'h' ? 'f' : 'h'; try { localStorage.setItem('educ_voixg', Voix.genre); } catch (e) {} choisir(); return Voix.genre; };
+    Voix.stop = function () { Voix.jeton++; clearTimeout(Voix.minuteur); if (Voix.ok) try { speechSynthesis.cancel(); } catch (e) {} };
+    /* Ton d'enseignant : phrase par phrase, débit posé, pauses aux virgules et aux points, voix plus grave, accent sur les questions */
+    Voix.dire = function (texte, fin) {
+      Voix.stop(); var mon = Voix.jeton, fait = false, fini = function () { if (fait || mon !== Voix.jeton) return; fait = true; clearTimeout(Voix.minuteur); if (fin) fin(); };
+      if (!Voix.ok || !Voix.actif) { Voix.minuteur = setTimeout(fini, Math.max(2500, texte.length * 55)); return; }
+      var t = String(texte).replace(/\s+/g, ' ').replace(/(\d)\s?%/g, '$1 pour cent').replace(/\bRDC\b/g, 'R D C').replace(/\bM23\b/g, 'M vingt-trois').replace(/\bONU\b/g, 'O N U').replace(/\bPDF\b/g, 'P D F');
+      var ph = t.match(/[^.!?…;:]+[.!?…;:]?/g) || [t]; ph = ph.map(function (s) { return s.trim(); }).filter(Boolean);
+      var base = Voix.genre === 'h' ? 0.82 : 0.98;
+      var dire = function (i) {
+        if (mon !== Voix.jeton) return; if (i >= ph.length) { fini(); return; }
+        var s = ph[i], fin1 = s.slice(-1), segs = s.split(/(?<=,)\s+/);
+        var jouer = function (j) {
+          if (mon !== Voix.jeton) return; if (j >= segs.length) { Voix.minuteur = setTimeout(function () { dire(i + 1); }, fin1 === '.' || fin1 === '…' ? 520 : fin1 === ':' || fin1 === ';' ? 420 : fin1 === '!' ? 480 : fin1 === '?' ? 560 : 300); return; }
+          var u = new SpeechSynthesisUtterance(segs[j]); u.lang = 'fr-FR'; if (Voix.voix) u.voice = Voix.voix;
+          u.rate = Math.max(0.5, Voix.vitesse * (i === 0 ? 0.94 : 1)); u.pitch = base + (fin1 === '?' && j === segs.length - 1 ? 0.12 : fin1 === '!' && j === segs.length - 1 ? 0.06 : 0) - (i === 0 ? 0.04 : 0); u.volume = 1;
+          u.onend = function () { Voix.minuteur = setTimeout(function () { jouer(j + 1); }, j < segs.length - 1 ? 180 : 0); }; u.onerror = function () { jouer(j + 1); };
+          speechSynthesis.speak(u);
+        };
+        jouer(0);
+      };
+      try { dire(0); } catch (e) { Voix.minuteur = setTimeout(fini, 3000); }
+      clearTimeout(Voix.garde); Voix.garde = setTimeout(fini, t.length * 140 + 6000);
     };
     window.educVoix = Voix;
 
-    /* ---------- Carte schématique du Congo (tracé simplifié) ---------- */
-    var CONTOUR = [[12.2,-6.0],[13.0,-5.85],[13.7,-5.85],[14.4,-4.95],[15.3,-4.3],[15.9,-3.1],[16.2,-2.0],[17.0,-1.4],[17.7,-0.3],[17.9,1.0],[18.0,2.0],[18.6,3.4],[20.4,4.5],[22.0,4.3],[23.4,4.8],[24.6,5.2],[26.0,5.6],[27.4,5.1],[28.9,4.5],[30.0,3.9],[30.8,3.6],[31.2,2.8],[30.9,2.1],[30.7,1.3],[30.2,0.7],[29.9,0.0],[29.6,-0.6],[29.6,-1.4],[29.1,-1.7],[29.0,-2.4],[29.2,-2.9],[29.2,-3.4],[29.4,-4.4],[29.6,-5.0],[29.5,-6.0],[29.8,-6.9],[30.4,-8.2],[29.0,-8.4],[28.6,-8.7],[28.7,-9.3],[28.4,-10.3],[28.6,-11.4],[29.0,-12.2],[28.0,-12.4],[27.0,-12.2],[26.0,-12.0],[25.2,-11.6],[24.4,-11.2],[24.0,-12.0],[23.9,-13.0],[22.9,-13.0],[22.0,-12.0],[22.0,-11.0],[21.9,-9.5],[21.8,-8.1],[20.4,-7.3],[19.4,-7.9],[18.4,-7.9],[17.6,-8.1],[16.8,-7.0],[16.6,-6.3],[15.6,-6.0],[13.9,-6.0],[13.2,-5.9]];
+    /* ---------- Carte de la RDC (frontières réelles, fleuve, lacs) ---------- */
+    var CONTOUR = [[30.83,3.51],[30.77,2.34],[31.17,2.20],[30.85,1.85],[30.47,1.58],[30.09,1.06],[29.88,0.60],[29.82,-0.21],[29.59,-0.59],[29.58,-1.34],[29.29,-1.62],[29.25,-2.22],[29.12,-2.29],[29.02,-2.84],[29.28,-3.29],[29.34,-4.50],[29.52,-5.42],[29.42,-5.94],[29.62,-6.52],[30.20,-7.08],[30.74,-8.34],[30.35,-8.24],[29.00,-8.41],[28.73,-8.53],[28.45,-9.16],[28.67,-9.61],[28.50,-10.79],[28.37,-11.79],[28.64,-11.97],[29.34,-12.36],[29.62,-12.18],[29.70,-13.26],[28.93,-13.25],[28.52,-12.70],[28.16,-12.27],[27.39,-12.13],[27.16,-11.61],[26.55,-11.92],[25.75,-11.78],[25.42,-11.33],[24.78,-11.24],[24.31,-11.26],[24.26,-10.95],[23.91,-10.93],[23.46,-10.87],[22.84,-11.02],[22.40,-10.99],[22.16,-11.08],[22.21,-9.89],[21.88,-9.52],[21.80,-8.91],[21.95,-8.31],[21.75,-7.92],[21.73,-7.29],[20.51,-7.30],[20.60,-6.94],[20.09,-6.94],[20.04,-7.12],[19.42,-7.16],[19.17,-7.74],[19.02,-7.99],[18.46,-7.85],[18.13,-7.99],[17.47,-8.07],[17.09,-7.55],[16.86,-7.22],[16.57,-6.62],[16.33,-5.88],[13.38,-5.86],[13.02,-5.98],[12.74,-5.97],[12.32,-6.10],[12.18,-5.79],[12.44,-5.68],[12.47,-5.25],[12.63,-4.99],[13.00,-4.78],[13.26,-4.88],[13.60,-4.50],[14.14,-4.51],[14.21,-4.79],[14.58,-4.97],[15.17,-4.34],[15.75,-3.86],[16.01,-3.54],[15.97,-2.71],[16.41,-1.74],[16.87,-1.23],[17.52,-0.74],[17.64,-0.42],[17.66,-0.06],[17.83,0.29],[17.77,0.86],[17.90,1.74],[18.09,2.37],[18.39,2.90],[18.45,3.50],[18.54,4.20],[18.93,4.71],[19.47,5.03],[20.29,4.69],[20.93,4.32],[21.66,4.22],[22.41,4.03],[22.70,4.63],[22.84,4.71],[23.30,4.61],[24.41,5.11],[24.81,4.90],[25.13,4.93],[25.28,5.17],[25.65,5.26],[26.40,5.15],[27.04,5.13],[27.37,5.23],[27.98,4.41],[28.43,4.29],[28.70,4.46],[29.16,4.39],[29.72,4.60],[29.95,4.17]];
     var LIEUX = {
       kinshasa: ['Kinshasa', 15.31, -4.32, 'La capitale, plus de 15 millions d\'habitants selon les estimations.'],
       goma: ['Goma', 29.22, -1.68, 'Capitale du Nord-Kivu, prise par le M23 le 27 janvier 2025.'],
@@ -122,15 +228,45 @@
     };
     var K = 19, X0 = 11.6, Y0 = 6.2;
     var px = function (lon) { return ((lon - X0) * K).toFixed(1); }, py = function (lat) { return ((Y0 - lat) * K).toFixed(1); };
+    /* Fleuve Congo, Kasaï, Lualaba, lacs : tracés d'après la géographie réelle (positions approximatives) */
+    var RIVIERES = [
+      [[26.7,-9.6],[26.2,-7.4],[26.6,-5.0],[26.0,-2.8],[25.4,-1.0],[25.2,0.5],[24.0,0.55],[22.4,1.2],[21.0,0.95],[19.4,0.9],[18.3,0.1],[17.9,-0.8],[17.0,-1.7],[16.4,-2.6],[16.1,-3.4],[15.5,-4.0],[15.3,-4.3],[14.6,-4.6],[13.9,-4.85],[13.45,-5.5],[12.4,-6.0]],
+      [[22.0,-9.9],[21.8,-8.0],[20.9,-6.6],[20.2,-5.6],[19.0,-4.6],[17.8,-3.7],[16.9,-3.3],[16.2,-3.2]],
+      [[26.0,-5.2],[24.5,-4.2],[22.6,-3.6],[20.6,-2.3],[18.8,-1.7],[18.0,-1.1]],
+      [[22.2,1.2],[24.0,2.2],[26.0,2.9],[27.4,3.5],[28.0,4.2]]
+    ];
+    var LACS = [
+      [[29.15,-3.4],[29.3,-4.6],[29.55,-5.7],[29.85,-6.8],[30.5,-8.1],[30.0,-8.35],[29.55,-7.1],[29.25,-6.0],[29.05,-4.6],[29.0,-3.55]],
+      [[28.95,-1.65],[29.2,-1.7],[29.15,-2.3],[28.95,-2.5],[28.85,-2.1]],
+      [[29.5,-0.15],[29.8,-0.25],[29.75,-0.6],[29.5,-0.5]],
+      [[30.3,1.45],[30.65,1.7],[30.9,2.2],[30.55,2.0],[30.35,1.75]],
+      [[28.6,-8.4],[28.9,-8.5],[28.85,-9.3],[28.55,-9.2],[28.45,-8.8]]
+    ];
+    var pl = function (a) { return a.map(function (p) { return px(p[0]) + ' ' + py(p[1]); }).join('L'); };
     function carte(cles, opt) {
-      opt = opt || {}; var d = 'M' + CONTOUR.map(function (p) { return px(p[0]) + ' ' + py(p[1]); }).join('L') + 'Z';
-      var s = '<svg viewBox="0 0 390 375" class="pat-map" role="img" aria-label="Carte schématique de la RDC"><defs><linearGradient id="pgm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a8cff"/><stop offset="1" stop-color="#0052a3"/></linearGradient></defs>';
-      s += '<path d="' + d + '" fill="url(#pgm)" stroke="#ffc107" stroke-width="2.4" stroke-linejoin="round"/>';
-      s += '<path d="' + d + '" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="6" stroke-linejoin="round" class="pat-glow"/>';
-      cles.forEach(function (k, i) {
-        var L = LIEUX[k]; if (!L) return; var x = px(L[1]), y = py(L[2]), lab = L[0], gauche = L[1] > 26;
+      opt = opt || {}; var d = 'M' + pl(CONTOUR) + 'Z';
+      var s = '<svg viewBox="0 0 390 375" class="pat-map" role="img" aria-label="Carte de la RDC"><defs>' +
+        '<linearGradient id="pgm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e7d32"/><stop offset=".38" stop-color="#3f8f3a"/><stop offset=".62" stop-color="#7aa63a"/><stop offset=".85" stop-color="#b5a14a"/><stop offset="1" stop-color="#a48a46"/></linearGradient>' +
+        '<radialGradient id="pgf" cx=".45" cy=".4" r=".55"><stop offset="0" stop-color="#14532d" stop-opacity=".55"/><stop offset="1" stop-color="#14532d" stop-opacity="0"/></radialGradient>' +
+        '<filter id="pgt" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".035 .05" numOctaves="4" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .1  0 0 0 0 .2  0 0 0 0 .05  0 0 0 .9 -.25"/></filter>' +
+        '<clipPath id="pgc"><path d="' + d + '"/></clipPath></defs>';
+      s += '<path d="' + d + '" fill="#0b3d2e" opacity=".35" transform="translate(3 5)"/>';
+      s += '<path d="' + d + '" fill="url(#pgm)"/>';
+      s += '<g clip-path="url(#pgc)"><rect width="390" height="375" fill="url(#pgf)"/><rect width="390" height="375" filter="url(#pgt)" opacity=".55"/>';
+      // hauts plateaux de l'Est (relief) et Katanga
+      s += '<ellipse cx="' + px(29.0) + '" cy="' + py(-2.5) + '" rx="22" ry="52" fill="#8d6e3f" opacity=".42"/><ellipse cx="' + px(27.5) + '" cy="' + py(-10.5) + '" rx="48" ry="22" fill="#9a7b43" opacity=".35"/>';
+      s += '<path d="M' + px(11) + ' ' + py(0) + 'L' + px(32) + ' ' + py(0) + '" stroke="#fff" stroke-opacity=".35" stroke-dasharray="4 5" stroke-width="1"/>';
+      LACS.forEach(function (l) { s += '<path d="M' + pl(l) + 'Z" fill="#5fb4ee" stroke="#2f86c9" stroke-width="1" stroke-linejoin="round"/>'; });
+      RIVIERES.forEach(function (r, i) { s += '<path d="M' + pl(r) + '" fill="none" stroke="#2f86c9" stroke-width="' + (i === 0 ? 3.2 : 1.8) + '" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/>'; });
+      s += '</g>';
+      s += '<path d="' + d + '" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/><path d="' + d + '" fill="none" stroke="#0b3d2e" stroke-width=".8" stroke-linejoin="round" opacity=".7"/>';
+      s += '<text x="' + px(21.5) + '" y="' + (+py(0) - 5) + '" font-size="9" fill="#fff" opacity=".7" text-anchor="middle">Équateur</text><text x="' + px(21.6) + '" y="' + (+py(-0.2) + 24) + '" font-size="10" font-style="italic" fill="#dff3ff" text-anchor="middle" opacity=".95">Fleuve Congo</text>';
+      var pris = [];
+      cles.slice().sort(function (a, b) { return (LIEUX[b] ? LIEUX[b][2] : 0) - (LIEUX[a] ? LIEUX[a][2] : 0); }).forEach(function (k, i) {
+        var L = LIEUX[k]; if (!L) return; var x = px(L[1]), y = py(L[2]), lab = L[0], gauche = L[1] > 26, ly = +y + 4, ok = false;
+        while (!ok) { ok = true; for (var q = 0; q < pris.length; q++) { if (pris[q].g === gauche && Math.abs(pris[q].y - ly) < 11 && Math.abs(pris[q].x - x) < 90) { ly = pris[q].y + 11; ok = false; break; } } } pris.push({ x: +x, y: ly, g: gauche });
         s += '<g class="pat-pt" data-k="' + k + '" style="animation-delay:' + (i * 0.35) + 's"><circle cx="' + x + '" cy="' + y + '" r="5" fill="#ef4444" stroke="#fff" stroke-width="1.5"/><circle cx="' + x + '" cy="' + y + '" r="5" fill="none" stroke="#ef4444" stroke-width="2"><animate attributeName="r" from="5" to="22" dur="1.8s" repeatCount="indefinite" begin="' + (i * 0.3) + 's"/><animate attributeName="opacity" from=".9" to="0" dur="1.8s" repeatCount="indefinite" begin="' + (i * 0.3) + 's"/></circle>';
-        s += '<text x="' + (gauche ? +x - 9 : +x + 9) + '" y="' + (+y + 4) + '" text-anchor="' + (gauche ? 'end' : 'start') + '" font-size="12" font-weight="700" fill="#fff" stroke="rgba(0,40,100,.85)" stroke-width="3" paint-order="stroke">' + lab + '</text></g>';
+        s += '<text x="' + (gauche ? +x - 9 : +x + 9) + '" y="' + ly + '" text-anchor="' + (gauche ? 'end' : 'start') + '" font-size="12" font-weight="700" fill="#fff" stroke="rgba(0,40,20,.9)" stroke-width="3" paint-order="stroke">' + lab + '</text></g>';
       });
       return s + '</svg>';
     }
@@ -164,6 +300,9 @@
       '.his-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-weight:700;font-size:.85rem;opacity:.95}',
       '.his-btn{border:0;border-radius:50px;padding:9px 14px;font:inherit;font-weight:800;font-size:.85rem;background:rgba(255,255,255,.18);color:#fff;cursor:pointer}.his-btn.y{background:#ffc107;color:#3b2a00}',
       '.his-vis{flex:1;display:flex;align-items:center;justify-content:center;min-height:240px;padding:8px 0}',
+      '.his-l{font-size:.8rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;text-align:center;color:#ffd54f;margin-top:4px}.his-r{margin:0 6px 14px;padding:10px 14px;border-radius:14px;background:rgba(255,193,7,.18);border:1px solid rgba(255,193,7,.55);font-weight:700;font-size:.98rem;text-align:center}.his-ret{list-style:none;margin:0;padding:0;width:100%}.his-ret li{background:rgba(255,255,255,.14);border-radius:14px;padding:10px 14px 10px 40px;margin:7px 4px;font-weight:700;position:relative;opacity:0;animation:patPop .5s ease forwards}.his-ret li:before{content:"✔";position:absolute;left:14px;color:#ffd54f}.his-fr{width:100%;border-left:3px solid #ffd54f;margin:0 0 0 14px;padding-left:16px}.his-fi{margin:9px 0;opacity:0;animation:patPop .5s ease forwards;position:relative}.his-fi:before{content:"";position:absolute;left:-23px;top:6px;width:11px;height:11px;border-radius:50%;background:#ffd54f}.his-fi b{display:block;color:#ffd54f;font-size:1.02rem}.his-fi span{font-size:.95rem;line-height:1.35}',
+      '.his-top{flex-wrap:nowrap!important;gap:6px}.his-top .his-btn{padding:8px 10px!important;min-width:0}.his-nom{font-size:.88rem;min-width:0}',
+      '.his-scene{position:relative}.his-ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s ease;border-radius:22px}.his-cap{position:absolute;left:0;right:0;bottom:0;padding:14px 10px 6px;font-size:10px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7));text-shadow:0 1px 2px #000}',
       '.his-scene{width:100%;border-radius:22px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.4);animation:patPop .5s ease}.his-scene svg{display:block;width:100%;height:auto}.scn{width:100%;height:100%}',
       '.his-emoji{font-size:7.5rem;line-height:1;animation:patPop .6s ease,patBob 2.6s ease-in-out .6s infinite;text-shadow:0 10px 30px rgba(0,0,0,.35)}',
       '.his-big{font-size:4.2rem;font-weight:900;color:#ffc107;text-align:center;line-height:1.05;text-shadow:0 6px 20px rgba(0,0,0,.35)}.his-big small{display:block;font-size:1rem;font-weight:700;color:#fff;margin-top:8px}',
@@ -191,10 +330,28 @@
     var his, hi = 0, hid = null, auto = true, hdos;
     function fermerHis() { Voix.stop(); window.educFilm = false; if (window.educMusique) window.educMusique.arreter(); if (his) his.classList.remove('on'); document.body.style.overflow = ''; }
     function nombre(n, dec) { return Number(n).toLocaleString('fr-FR', { minimumFractionDigits: dec || 0, maximumFractionDigits: dec || 0 }); }
+    /* Vraie photo (Wikimedia Commons) par-dessus la scène dessinée quand Internet est disponible ; la scène reste en secours hors connexion */
+    var PHOTOS = { drapeau: 'Flag of the Democratic Republic of the Congo', ecole: 'school children Democratic Republic of the Congo', unite: 'Congolese people crowd Kinshasa', paix: 'Kinshasa Congo River sunset', mains: 'handwashing children Africa', bougies: 'candles memorial vigil', justice: 'Palais de la Nation Kinshasa', fleuve: 'Congo River', livre: 'library books students Africa', ville: 'Kinshasa city' };
+    function photoScene(n, sc) {
+      var q = PHOTOS[n]; if (!q) return; var cle = 'educ_ph_' + n, c = null; try { c = JSON.parse(localStorage.getItem(cle) || 'null'); } catch (e) {}
+      var poser = function (it) { if (!sc.isConnected) return; var im = document.createElement('img'); im.className = 'his-ph'; im.alt = it.t; im.referrerPolicy = 'no-referrer'; im.onload = function () { im.style.opacity = 1; var cap = el('div', 'his-cap', 'Photo : ' + it.a + ' · ' + it.l + ' · Wikimedia Commons'); sc.appendChild(cap); }; im.onerror = function () { im.remove(); }; im.src = it.u; sc.appendChild(im); };
+      if (c && c.u && (!navigator.onLine || Math.random() < 0.6)) { poser(c); if (!navigator.onLine) return; }
+      if (!navigator.onLine) return;
+      var url = 'https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=' + encodeURIComponent(q + ' filetype:bitmap') + '&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url|extmetadata|size&iiurlwidth=800&format=json&origin=*';
+      fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+        var pages = j.query && j.query.pages ? Object.keys(j.query.pages).map(function (k) { return j.query.pages[k]; }) : [], items = [];
+        pages.forEach(function (p) { var ii = p.imageinfo && p.imageinfo[0]; if (!ii || !ii.thumburl || !/\.(jpe?g)$/i.test(ii.url) || ii.width < ii.height) return; var m = ii.extmetadata || {};
+          items.push({ u: ii.thumburl, t: nettoie(p.title.replace(/^File:/, '').replace(/\.[a-z]+$/i, '')) || q, a: nettoie(m.Artist && m.Artist.value) || 'auteur', l: nettoie(m.LicenseShortName && m.LicenseShortName.value) || 'licence libre' }); });
+        if (!items.length) return; var it = items[Math.floor(Math.random() * items.length)]; try { localStorage.setItem(cle, JSON.stringify(it)); } catch (e) {}
+        if (!sc.querySelector('.his-ph')) poser(it);
+      }).catch(function () {});
+    }
     function visuel(v, box) {
       box.innerHTML = '';
       if (v.v === 'emoji') box.appendChild(el('div', 'his-emoji', v.e));
-      else if (v.v === 'scene' && window.educScene) { var sc = el('div', 'his-scene'); sc.innerHTML = window.educScene(v.n); box.appendChild(sc); }
+      else if (v.v === 'scene' && window.educScene) { var sc = el('div', 'his-scene'); sc.innerHTML = window.educScene(v.n); box.appendChild(sc); photoScene(v.n, sc); }
+      else if (v.v === 'retenir') { var rl = el('ul', 'his-ret'); v.e.forEach(function (e, i) { var li = el('li', '', e); li.style.animationDelay = (i * 0.55) + 's'; rl.appendChild(li); }); box.appendChild(rl); }
+      else if (v.v === 'frise') { var fr = el('div', 'his-fr'); v.e.forEach(function (e, i) { var it = el('div', 'his-fi'); it.style.animationDelay = (i * 0.6) + 's'; it.appendChild(el('b', '', e[0])); it.appendChild(el('span', '', e[1])); fr.appendChild(it); }); box.appendChild(fr); }
       else if (v.v === 'etapes') { var w = el('div', 'his-steps'); v.e.forEach(function (e, i) { var s = el('span', '', e); s.style.animationDelay = (i * 0.45) + 's'; w.appendChild(s); }); box.appendChild(w); }
       else if (v.v === 'chiffre') {
         var b = el('div', 'his-big'), n = el('div', '', '0'), l = el('small', '', v.l); b.appendChild(n); b.appendChild(l); box.appendChild(b);
@@ -214,9 +371,11 @@
       var vis = his.querySelector('.his-vis'), t = his.querySelector('.his-t'), x = his.querySelector('.his-x'), fin = his.querySelector('.his-fin'), ctl = his.querySelector('.his-ctl');
       fin.innerHTML = ''; ctl.style.display = '';
       visuel(c.vis, vis); t.textContent = c.t; x.textContent = c.x;
+      var lab = his.querySelector('.his-l'); if (!lab) { lab = el('div', 'his-l'); t.parentNode.insertBefore(lab, vis); } lab.textContent = c.l || ''; lab.style.display = c.l ? '' : 'none';
+      var rr = his.querySelector('.his-r'); if (!rr) { rr = el('div', 'his-r'); x.parentNode.insertBefore(rr, x.nextSibling); } rr.textContent = c.r ? '📌 À retenir : ' + c.r : ''; rr.style.display = c.r ? '' : 'none';
       his.querySelector('.his-note').textContent = Voix.ok ? (Voix.actif ? '🔊 Lecture à voix haute' : '🔇 Voix coupée') : '🔇 Ton téléphone ne propose pas la voix : lis le texte';
       his.querySelector('[data-a=play]').textContent = auto ? '⏸' : '▶';
-      if (auto) Voix.dire(c.t + '. ' + c.x, function () { if (!auto) return; setTimeout(function () { if (auto) suivant(); }, 500); });
+      if (auto) Voix.dire(c.t + '. ' + c.x + (c.vis && c.vis.v === 'retenir' ? ' ' + c.vis.e.join('. ') + '.' : '') + (c.vis && c.vis.v === 'frise' ? ' ' + c.vis.e.map(function (f) { return f[0] + ' : ' + f[1]; }).join('. ') + '.' : '') + (c.r ? ' À retenir : ' + c.r : ''), function () { if (!auto) return; setTimeout(function () { if (auto) suivant(); }, 500); });
       else Voix.stop();
     }
     function suivant() { var d = H[hid]; if (hi < d.length - 1) { hi++; carteHis(); } else finHis(); }
@@ -241,7 +400,7 @@
       var d = DOS().filter(function (x) { return x.id === id; })[0] || { court: id };
       if (!his) {
         his = el('div'); his.id = 'pat-his';
-        his.innerHTML = '<div class="his-wrap"><div class="his-bars"></div><div class="his-top"><span class="his-nom"></span><span><button class="his-btn" data-a="voix">🔊</button> <button class="his-btn" data-a="mus">🎵</button> <button class="his-btn" data-a="vit">🐢/🐇</button> <button class="his-btn" data-a="x">✕</button></span></div><div class="his-vis"></div><div class="his-t"></div><div class="his-x"></div><div class="his-ctl"><button data-a="prev">⏮</button><button class="big" data-a="play">⏸</button><button data-a="next">⏭</button></div><div class="his-fin"></div><div class="his-note"></div></div>';
+        his.innerHTML = '<div class="his-wrap"><div class="his-bars"></div><div class="his-top"><span class="his-nom"></span><span><button class="his-btn" data-a="voix">🔊</button> <button class="his-btn" data-a="mus">🎵</button> <button class="his-btn" data-a="genre">👨‍🏫</button> <button class="his-btn" data-a="vit">🐢/🐇</button> <button class="his-btn" data-a="x">✕</button></span></div><div class="his-vis"></div><div class="his-t"></div><div class="his-x"></div><div class="his-ctl"><button data-a="prev">⏮</button><button class="big" data-a="play">⏸</button><button data-a="next">⏭</button></div><div class="his-fin"></div><div class="his-note"></div></div>';
         document.body.appendChild(his);
         his.addEventListener('click', function (e) {
           var b = e.target.closest && e.target.closest('[data-a]'); if (!b) return; var a = b.getAttribute('data-a');
@@ -250,6 +409,7 @@
           else if (a === 'play') { auto = !auto; carteHis(); }
           else if (a === 'voix') { Voix.actif = !Voix.actif; b.textContent = Voix.actif ? '🔊' : '🔇'; carteHis(); }
           else if (a === 'mus') { var Mu = window.educMusique; if (Mu) { if (Mu.on) { Mu.arreter(); try { localStorage.setItem('educ_mus', '0'); } catch (x) {} } else { Mu.demarrer(); try { localStorage.setItem('educ_mus', '1'); } catch (x) {} } b.style.opacity = Mu.on ? 1 : .5; } }
+          else if (a === 'genre') { b.textContent = Voix.basculer() === 'h' ? '👨‍🏫' : '👩‍🏫'; carteHis(); }
           else if (a === 'vit') { Voix.vitesse = Voix.vitesse > 0.8 ? 0.7 : 1.05; carteHis(); }
         });
       }
@@ -292,7 +452,7 @@
       b.appendChild(c3);
       // carte
       var c4 = el('div', 'esp-card'); c4.appendChild(el('h3', '', '🗺️ La carte vivante du Congo')); var cw = el('div'); cw.innerHTML = carte(['kinshasa', 'lubumbashi', 'kisangani', 'kananga', 'mbujimayi', 'goma', 'bukavu', 'uvira', 'bunia', 'kasika', 'makobola', 'rubaya', 'virunga', 'inga']); c4.appendChild(cw);
-      var ci = el('div', 'esp-fact', 'Touche un point pour découvrir son histoire. (Carte schématique)'); c4.appendChild(ci);
+      var ci = el('div', 'esp-fact', 'Touche un point pour découvrir son histoire.'); c4.appendChild(ci);
       cw.addEventListener('click', function (e) { var pt = e.target.closest && e.target.closest('.pat-pt'); if (!pt) return; var L = LIEUX[pt.getAttribute('data-k')]; ci.textContent = L[0] + ' : ' + L[3]; Voix.dire(L[0] + '. ' + L[3], null); }); b.appendChild(c4);
       // pensée + saviez-vous
       var c5 = el('div', 'esp-card'); c5.appendChild(el('h3', '', '💡 Le saviez-vous ?')); var sv = el('div', 'esp-fact', DATA.SAVIEZ[jnum() % DATA.SAVIEZ.length]); c5.appendChild(sv);
