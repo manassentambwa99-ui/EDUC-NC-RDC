@@ -7,11 +7,11 @@
       /* Garde-fou : si l'écran du logo reste bloqué, on ouvre l'application quand même */
       (function () {
         var n = 0, t = setInterval(function () {
-          n++; if (n < 5) return; if (n > 40) { clearInterval(t); return; }
+          n++; if (n < 12) return; if (n > 80) { clearInterval(t); return; }
           var sp = document.getElementById('splash-screen'); if (!sp) return;
           if (!sp.classList.contains('active')) { clearInterval(t); return; }
           var pret = typeof verifierSessionUtilisateur === 'function';
-          if (!pret && n < 12) return;
+          if (!pret && n < 24) return;
           clearInterval(t);
           try { if (pret) verifierSessionUtilisateur(); } catch (e) {}
           if (sp.classList.contains('active')) {
@@ -19,7 +19,7 @@
             try { if (localStorage.getItem('educ_utilisateur_connecte')) cible = 'main-app'; } catch (e) {}
             sp.classList.remove('active'); var c = document.getElementById(cible); if (c) c.classList.add('active');
           }
-        }, 1000);
+        }, 250);
       })();
     </script>
     <script>
@@ -1190,6 +1190,170 @@
         }
         .fin-btn.alt { background: rgba(232, 242, 255, 0.85); color: var(--primary-blue); border: 1px solid rgba(0, 102, 204, 0.25); }
         .fin-btn:active { transform: scale(0.97); }
+    
+        /* ===== AJOUT FINAL 1 : TOUT S'AFFICHE EN MÊME TEMPS ===== */
+        /* L'application reste invisible quelques instants, le temps que tous les éléments (cartes, dossiers, capsule, boutons) soient prêts, puis tout apparaît ensemble. */
+        #main-app { transition: opacity 0.6s ease; }
+        html.educ-attente #main-app.active { opacity: 0; animation: educSecours 0s linear 7s forwards; }
+        @keyframes educSecours { to { opacity: 1; } }
+        #main-app.active .app-header, #main-app.active .info-box-ministere,
+        #main-app.active .search-bar-container, #main-app.active .xp-card,
+        #main-app.active .access-card, #main-app.active .access-card:nth-child(n),
+        #main-app .tab-content.active .book-card:nth-child(n), #main-app .tab-content.active .news-card:nth-child(n),
+        #main-app .tab-content.active .course-card, #main-app .tab-content.active .quiz-container-box,
+        #main-app .tab-content.active .authority-showcase { animation-delay: 0s !important; }
+        #main-app .reveal-pending { opacity: 1 !important; transform: none !important; filter: none !important; }
+
+        /* ===== AJOUT FINAL 2 : TRANSPARENCE ET FLUX AU MAXIMUM ===== */
+        /* Aurore : grandes lumières colorées qui coulent derrière tout le contenu */
+        #main-app.active::before, #main-app.active::after {
+            content: ""; position: fixed; z-index: -1; pointer-events: none; inset: -25%; will-change: transform;
+        }
+        #main-app.active::before {
+            background:
+                radial-gradient(38% 38% at 22% 28%, rgba(26, 140, 255, 0.55), transparent 70%),
+                radial-gradient(34% 34% at 78% 22%, rgba(255, 193, 7, 0.45), transparent 70%),
+                radial-gradient(30% 30% at 55% 60%, rgba(0, 102, 204, 0.30), transparent 70%);
+            animation: auroreA 24s ease-in-out infinite alternate;
+        }
+        #main-app.active::after {
+            background:
+                radial-gradient(36% 36% at 74% 76%, rgba(239, 68, 68, 0.26), transparent 70%),
+                radial-gradient(40% 40% at 20% 82%, rgba(16, 185, 129, 0.34), transparent 70%),
+                radial-gradient(28% 28% at 88% 48%, rgba(26, 140, 255, 0.35), transparent 70%);
+            animation: auroreB 31s ease-in-out infinite alternate;
+        }
+        @keyframes auroreA { 0% { transform: translate3d(-6%, -4%, 0) rotate(0deg) scale(1); } 100% { transform: translate3d(8%, 6%, 0) rotate(14deg) scale(1.18); } }
+        @keyframes auroreB { 0% { transform: translate3d(7%, 5%, 0) rotate(0deg) scale(1.1); } 100% { transform: translate3d(-8%, -6%, 0) rotate(-16deg) scale(1); } }
+
+        /* Verre épais : toutes les cartes sont translucides, floues, avec reflet et liseré lumineux */
+        #main-app .xp-card, #main-app .access-card, #main-app .book-card, #main-app .course-card,
+        #main-app .news-card, #main-app .quiz-container-box, #main-app .search-input-wrapper,
+        #main-app .dos-card, #main-app .dos-home, #main-app .pat-fl, #main-app .authority-showcase {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.16)) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(200%); backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.7) !important;
+            box-shadow: 0 12px 36px rgba(0, 60, 130, 0.18), inset 0 1.5px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.25) !important;
+        }
+        #main-app .info-box-ministere {
+            background: linear-gradient(135deg, rgba(220, 238, 255, 0.55), rgba(255, 255, 255, 0.18)) !important;
+            -webkit-backdrop-filter: blur(22px) saturate(190%); backdrop-filter: blur(22px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 10px 30px rgba(0, 60, 130, 0.14), inset 0 1.5px 0 rgba(255, 255, 255, 0.9);
+        }
+        #main-app .app-header {
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.80), rgba(26, 140, 255, 0.58), rgba(0, 102, 204, 0.80)) !important;
+            background-size: 220% 220% !important;
+            -webkit-backdrop-filter: blur(26px) saturate(190%); backdrop-filter: blur(26px) saturate(190%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+            box-shadow: 0 14px 40px rgba(0, 102, 204, 0.32), inset 0 1.5px 0 rgba(255, 255, 255, 0.55);
+        }
+        #main-app .bottom-nav {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.50), rgba(255, 255, 255, 0.28)) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(210%); backdrop-filter: blur(30px) saturate(210%);
+            border-top: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 -10px 30px rgba(0, 60, 130, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+        #main-app .quiz-option-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.2)) !important;
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            box-shadow: 0 4px 14px rgba(0, 60, 130, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+        /* Reflets plus visibles, plus souvent */
+        #main-app .xp-card::after, #main-app .access-card::after, #main-app .book-card::after,
+        #main-app .course-card::after, #main-app .news-card::after, #main-app .quiz-container-box::after {
+            background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.85), transparent); animation-duration: 5.5s;
+        }
+
+        /* Bulles de verre qui montent doucement derrière l'application */
+        .glass-bubble { display: none; position: fixed; bottom: -90px; z-index: -1; pointer-events: none; border-radius: 50%; opacity: 0;
+            background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.14) 52%, rgba(26, 140, 255, 0.22));
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.7), 0 0 22px rgba(26, 140, 255, 0.22);
+            animation: bulleMonte linear infinite; will-change: transform; }
+        #main-app.active .glass-bubble { display: block; }
+        @keyframes bulleMonte {
+            0% { transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
+            12% { opacity: 0.95; }
+            88% { opacity: 0.7; }
+            100% { transform: translate3d(var(--dx, 40px), -118vh, 0) scale(1.15); opacity: 0; }
+        }
+
+        /* Fenêtres ajoutées (dossiers, Espace Patriote, capsule du jour) : même verre et même flux */
+        #dos-over, #pat-esp {
+            background:
+                radial-gradient(45% 35% at 15% 10%, rgba(26, 140, 255, 0.45), transparent 70%),
+                radial-gradient(40% 32% at 90% 30%, rgba(255, 193, 7, 0.38), transparent 70%),
+                radial-gradient(45% 35% at 30% 95%, rgba(16, 185, 129, 0.32), transparent 70%),
+                linear-gradient(180deg, #eaf3ff, #f6faff) !important;
+        }
+        .esp-card, .dos-s, .dos-fact, .dos-ret, .dos-intro, .dos-src {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.2)) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(190%); backdrop-filter: blur(20px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            box-shadow: 0 10px 30px rgba(0, 60, 130, 0.14), inset 0 1.5px 0 rgba(255, 255, 255, 0.95) !important;
+        }
+        #cap-pop { background: rgba(3, 15, 40, 0.45) !important; -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%); }
+        #cap-pop .cp { background: linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.55)) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(190%); backdrop-filter: blur(24px) saturate(190%); border: 1px solid rgba(255, 255, 255, 0.8); }
+        #pat-his { background: radial-gradient(60% 40% at 20% 10%, rgba(255, 193, 7, 0.30), transparent 70%), radial-gradient(60% 45% at 85% 70%, rgba(26, 140, 255, 0.55), transparent 70%), linear-gradient(180deg, #06255a, #0b4aa3 55%, #1a8cff) !important; }
+        #pat-his .his-btn, #pat-his .his-ctl button, #pat-his .his-ret li, #pat-his .his-r {
+            -webkit-backdrop-filter: blur(14px) saturate(180%); backdrop-filter: blur(14px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.35); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        #pat-fab { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+
+        /* Téléphones modestes : on garde le verre mais on allège les calculs */
+        html.educ-lite #main-app .xp-card, html.educ-lite #main-app .access-card, html.educ-lite #main-app .book-card,
+        html.educ-lite #main-app .course-card, html.educ-lite #main-app .news-card, html.educ-lite #main-app .quiz-container-box,
+        html.educ-lite #main-app .dos-card, html.educ-lite .esp-card, html.educ-lite .dos-s, html.educ-lite #main-app .app-header,
+        html.educ-lite #main-app .bottom-nav { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+        html.educ-lite .glass-bubble, html.educ-lite #main-app.active::after { display: none !important; }
+        @media (prefers-reduced-motion: reduce) {
+            #main-app.active::before, #main-app.active::after, .glass-bubble { animation: none !important; }
+        }
+    
+        /* ===== AJOUT FINAL 3 : ÉCRAN FLUIDE (prend la forme de n'importe quel écran, du téléphone au projecteur) ===== */
+        html { font-size: clamp(16px, 0.9vw + 8px, 44px); }
+        @media (min-width: 700px) {
+            #main-app .tab-content { width: min(100%, 56rem); margin-left: auto; margin-right: auto; }
+            #main-app > .info-box-ministere, #main-app > .search-bar-container, #main-app > .xp-card { width: min(calc(100% - 40px), 56rem); margin-left: auto; margin-right: auto; }
+            #main-app .app-header { padding-left: max(20px, calc((100% - 56rem) / 2 + 20px)); padding-right: max(20px, calc((100% - 56rem) / 2 + 20px)); }
+            #main-app .quick-access-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr)); }
+            #main-app .courses-grid-6 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+            #main-app .dos-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)) !important; }
+            #main-app .bottom-nav { justify-content: center; gap: clamp(28px, 7vw, 140px); }
+            #main-app .nav-item { font-size: 0.85rem; }
+            #splash-screen, #onboarding-screen, #auth-screen, #profile-screen { align-items: center; }
+            #onboarding-screen > *, #auth-screen > *, #profile-screen > * { width: 100%; max-width: 600px; }
+            #cap-pop .cp { max-width: clamp(440px, 36vw, 780px) !important; }
+        }
+        @media (min-width: 900px) {
+            .esp-body { max-width: min(62rem, 94vw) !important; columns: 2; column-gap: 18px; }
+            .esp-body > * { break-inside: avoid; }
+            .dos-wrap { max-width: min(48rem, 94vw) !important; }
+            #pat-his .his-wrap { max-width: min(70rem, 96vw) !important; display: grid !important; grid-template-columns: 1.15fr 1fr; column-gap: 44px; align-content: center; align-items: center; }
+            #pat-his .his-bars, #pat-his .his-top { grid-column: 1 / -1; }
+            #pat-his .his-vis { grid-column: 1; grid-row: 3 / 10; }
+            #pat-his .his-l { grid-column: 2; grid-row: 3; }
+            #pat-his .his-t { grid-column: 2; grid-row: 4; font-size: clamp(1.6rem, 2.1vw, 3.2rem) !important; text-align: left !important; }
+            #pat-his .his-x { grid-column: 2; grid-row: 5; font-size: clamp(1.1rem, 1.4vw, 2.1rem) !important; text-align: left !important; }
+            #pat-his .his-r { grid-column: 2; grid-row: 6; }
+            #pat-his .his-ctl { grid-column: 2; grid-row: 7; }
+            #pat-his .his-fin { grid-column: 2; grid-row: 8; }
+            #pat-his .his-note { grid-column: 2; grid-row: 9; }
+        }
+        @media (min-width: 1400px) {
+            #main-app .xp-card, #main-app .access-card { font-size: 1.05rem; }
+        }
+        /* Écran très large et bas (projecteur 16:9) : tout reste visible sans défiler inutilement */
+        @media (min-width: 900px) and (max-height: 760px) { #main-app .app-header { padding-top: 14px; padding-bottom: 28px; } }
+
+        /* ===== AJOUT FINAL 4 : LÉGÈRETÉ ===== */
+        html.educ-pause *, html.educ-pause *::before, html.educ-pause *::after { animation-play-state: paused !important; }
+        #main-app .tab-content:not(.active) { content-visibility: hidden; }
+        img { content-visibility: auto; }
     </style>
 </head>
 <body>
@@ -1635,7 +1799,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 verifierSessionUtilisateur();
-            }, 2500);
+            }, 1100);
         });
 
         function verifierSessionUtilisateur() {
@@ -1766,8 +1930,7 @@
                 });
             }
         }
-
-        // CORRECTION : la photo est maintenant réduite/compressée avant d'être enregistrée,
+// CORRECTION : la photo est maintenant réduite/compressée avant d'être enregistrée,
         // sinon elle dépassait la limite du localStorage et bloquait la validation.
         function previewAvatar(event) {
             const file = event.target.files[0];
@@ -2042,7 +2205,7 @@
                         const descriptionText = item.description ? item.description.substring(0, 110) + '...' : 'Actualité officielle concernant l\'Éducation nationale et la citoyenneté en RDC.';
 
                         const card = `
-                               <div class="news-card">
+                            <div class="news-card">
                                 <img src="${escHtml(imageUrl)}" alt="${escHtml(item.title)}" class="news-card-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80';">
                                 <span style="font-size: 0.75rem; color: var(--primary-blue); font-weight: 700;"><i class="fa-solid fa-flag"></i> Éducation & Citoyenneté RDC</span>
                                 <h4 style="font-size: 0.95rem; font-weight: 700; margin: 4px 0; color: var(--text-dark);">${escHtml(item.title)}</h4>
@@ -2081,9 +2244,42 @@
       }
     </script>
     <script>
-      /* Chargement en arrière-plan (ordre garanti) : l'application s'ouvre sans attendre les questions ni les actualités */
+      /* Chargement en arrière-plan (ordre garanti). L'application s'affiche d'un seul coup quand tous ses éléments sont prêts. */
       (function () {
-        ['questions-facile.js', 'questions-difficile.js', 'questions-pro.js', 'quiz.js', 'news.js', 'notifications.js', 'search.js', 'savoirs.js', 'scenes.js', 'patriote.js', 'quotidien.js', 'brevet.js'].forEach(function (src) {
+        var H = document.documentElement;
+        function pret() { if (H.classList.contains('educ-pret')) return; H.classList.add('educ-pret'); try { window.dispatchEvent(new Event('educ-pret')); } catch (e) {} }
+        window.educPret = pret;
+        /* Porte d'affichage : tant que l'application est ouverte mais que les cartes, dossiers et la capsule ne sont pas tous là, on attend (6 s maximum) */
+        var ta = 0, gi = setInterval(function () {
+          var a = document.getElementById('main-app'); if (!a) return;
+          var act = a.classList.contains('active'); if (act) ta++;
+          var manque = act && !(document.getElementById('dos-grid') && document.getElementById('pat-fl') && document.getElementById('cap-hero'));
+          H.classList.toggle('educ-attente', !!manque && ta < 60);
+          if (!manque && act && ta > 3) { pret(); }
+          if (ta >= 60) clearInterval(gi);
+        }, 100);
+        /* Appareil modeste : verre allégé. On le détecte par la mémoire, puis par la fluidité réelle (images par seconde). */
+        try { if (localStorage.getItem('educ_lite') === '1' || (navigator.deviceMemory && navigator.deviceMemory <= 2)) H.classList.add('educ-lite'); } catch (e) {}
+        window.addEventListener('educ-pret', function () {
+          try {
+            if (H.classList.contains('educ-lite') || !window.requestAnimationFrame) return; var n = 0, t0 = 0;
+            (function boucle(t) { if (!t0) t0 = t; n++; if (t - t0 < 1800) { requestAnimationFrame(boucle); return; } var fps = n / ((t - t0) / 1000);
+              if (fps < 38) { H.classList.add('educ-lite'); try { localStorage.setItem('educ_lite', '1'); } catch (e) {} } })(0);
+          } catch (e) {}
+        });
+        /* Économie : on met toutes les animations en pause quand l'application n'est pas visible */
+        document.addEventListener('visibilitychange', function () { H.classList.toggle('educ-pause', document.hidden); });
+        /* Bulles de verre */
+        try {
+          var app = document.getElementById('main-app');
+          if (app) for (var b = 0; b < 9; b++) {
+            var d = document.createElement('div'), s = 28 + Math.round(Math.random() * 70);
+            d.className = 'glass-bubble'; d.style.width = d.style.height = s + 'px'; d.style.left = Math.round(Math.random() * 92) + '%';
+            d.style.animationDuration = (16 + Math.random() * 18).toFixed(1) + 's'; d.style.animationDelay = '-' + (Math.random() * 20).toFixed(1) + 's';
+            d.style.setProperty('--dx', Math.round(-60 + Math.random() * 120) + 'px'); app.appendChild(d);
+          }
+        } catch (e) {}
+        ['questions-facile.js', 'questions-difficile.js', 'questions-pro.js', 'quiz.js', 'news.js', 'notifications.js', 'search.js', 'savoirs.js', 'scenes.js', 'patriote.js', 'quotidien.js', 'brevet.js', 'carte.js'].forEach(function (src) {
           var el = document.createElement('script'); el.src = src; el.async = false; document.body.appendChild(el);
         });
       })();
