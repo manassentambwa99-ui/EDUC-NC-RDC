@@ -243,6 +243,7 @@
       [[28.6,-8.4],[28.9,-8.5],[28.85,-9.3],[28.55,-9.2],[28.45,-8.8]]
     ];
     var pl = function (a) { return a.map(function (p) { return px(p[0]) + ' ' + py(p[1]); }).join('L'); };
+    window.educGeo = { CONTOUR: CONTOUR, RIVIERES: RIVIERES, LACS: LACS, px: px, py: py, pl: pl, W: 390, H: 375 };
     function carte(cles, opt) {
       opt = opt || {}; var d = 'M' + pl(CONTOUR) + 'Z';
       var s = '<svg viewBox="0 0 390 375" class="pat-map" role="img" aria-label="Carte de la RDC"><defs>' +
