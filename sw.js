@@ -1,6 +1,6 @@
 /* Service Worker - EDUC National
    Changer VERSION à chaque mise à jour de l'application pour forcer le rafraîchissement. */
-const VERSION = 'v28';
+const VERSION = 'v29';
 const CACHE_STATIC = 'educ-static-' + VERSION;
 const CACHE_RUNTIME = 'educ-runtime-' + VERSION;
 const CACHE_META = 'educ-meta'; // réglages des rappels (conservés entre les versions)
@@ -8,7 +8,7 @@ const CACHE_META = 'educ-meta'; // réglages des rappels (conservés entre les v
 // Tout ce qu'il faut pour OUVRIR l'application sans Internet
 const PRECACHE = [
   './', 'index.html', 'offline.html', 'manifest.json',
-  'config.js', 'security.js', 'quiz.js', 'news.js', 'notifications.js', 'search.js', 'savoirs.js', 'scenes.js', 'patriote.js', 'quotidien.js', 'brevet.js', 'Dossiers-Patriotiques-RDC.pdf',
+  'config.js', 'security.js', 'quiz.js', 'news.js', 'notifications.js', 'search.js', 'savoirs.js', 'scenes.js', 'patriote.js', 'quotidien.js', 'brevet.js', 'carte.js', 'Dossiers-Patriotiques-RDC.pdf',
   'questions-facile.js', 'questions-difficile.js', 'questions-pro.js',
   'logoo.png', 'histoire.png', 'Président.png', 'première_ ministre.png', 'ministre.png', 'sec.png', 'directeur.png',
   '1.png', '2.png', '3.png', '4.png',
