@@ -79,7 +79,7 @@
       DOS.forEach(function (d) { var n = etoiles(d, save); tot += n; if (n < 2) ok = false;
         var nd = el('div', 'par-n' + (n >= 2 ? ' ok' : '')), cc = el('div', 'c'); cc.style.background = d.couleur; cc.innerHTML = '<i class="fa-solid ' + d.icone + '"></i>'; nd.appendChild(cc); nd.appendChild(el('b', '', d.court)); nd.appendChild(el('i', '', '★★★'.slice(0, n) + '☆☆☆'.slice(0, 3 - n)));
         nd.addEventListener('click', function () { if (window.educHistoire) window.educHistoire(d.id); }); road.appendChild(nd); });
-      var fin = el('div', 'par-n par-brv' + (ok ? ' on' : '')), cf = el('div', 'c'); cf.style.background = '#ffc107'; cf.textContent = '🏅'; fin.appendChild(cf); fin.appendChild(el('b', '', 'Brevet du patriote')); fin.appendChild(el('i', '', ok ? 'Débloqué !' : '2★ partout')); fin.addEventListener('click', function () { if (ok) brevet(); else info.textContent = 'Pour débloquer ton brevet : regarde chaque histoire et obtiens au moins 2 étoiles (histoire vue + quiz réussi).'; }); road.appendChild(fin);
+      var fin = el('div', 'par-n par-brv' + (ok ? ' on' : '')), cf = el('div', 'c'); cf.style.background = '#ffc107'; cf.textContent = '🏅'; fin.appendChild(cf); fin.appendChild(el('b', '', 'Brevet du patriote')); fin.appendChild(el('i', '', ok ? 'Débloqué !' : '2★ partout')); fin.addEventListener('click', function () { if (window.educBrevets) { window.educBrevets.ouvrir('patriote'); return; } if (ok) brevet(); else info.textContent = 'Pour débloquer ton brevet : regarde chaque histoire et obtiens au moins 2 étoiles (histoire vue + quiz réussi).'; }); road.appendChild(fin);
       info.innerHTML = '<span class="par-tot">' + tot + ' / ' + max + ' ★</span> · Chaque dossier : ★ histoire vue, ★ quiz réussi, ★ quiz parfait.';
       var f = el('button', 'esp-btn y', '🎬 Lancer le film complet (voix + musique)'); f.addEventListener('click', function () { window.educFilm = true; if (window.educHistoire && DOS.length) window.educHistoire(DOS[0].id); }); c.appendChild(f);
       var cp = el('button', 'esp-btn', '📅 Revoir la capsule du jour'); cp.addEventListener('click', function () { ouvrirCapsule(true); }); c.appendChild(cp);
@@ -107,9 +107,9 @@
     var lance = false;
     function veille() {
       if (!appActive()) return; creerFab(); bandeau();
-      if (!lance) { lance = true; setTimeout(function () { if (!vue() && !surcouche() && appActive()) ouvrirCapsule(false); }, 2800); }
+      if (!lance) { lance = true; setTimeout(function () { if (!vue() && !surcouche() && appActive()) ouvrirCapsule(false); }, 1200); }
       majFab();
     }
-    setInterval(veille, 1000); veille();
+    setInterval(veille, 2000); veille(); try { var ma = g('main-app'); if (ma) new MutationObserver(veille).observe(ma, { attributes: true, attributeFilter: ['class'] }); } catch (e) {} window.addEventListener('educ-pret', veille); document.addEventListener('visibilitychange', veille);
   } catch (err) { console.error('Quotidien :', err); }
 })();
