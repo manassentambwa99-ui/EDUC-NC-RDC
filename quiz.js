@@ -62,7 +62,7 @@ try {
   const VERROU = !!(window.EDUC_CONFIG && window.EDUC_CONFIG.VERROUILLER_NIVEAUX);
   const debloque = n => { if (!VERROU) return true; const k = ORDER.indexOf(n); return k === 0 || prog[ORDER[k - 1]] >= SEUIL; };
   const tousTermines = () => ORDER.every(n => POOL[n].length && vus[n].size >= POOL[n].length);
-  window.educProgression = () => { let done = 0, total = 0; ORDER.forEach(n => { done += vus[n].size; total += POOL[n].length; }); return { done: done, total: total, complet: total > 0 && tousTermines(), uid: uid }; };
+  window.educProgression = () => { let done = 0, total = 0; const par = {}; ORDER.forEach(n => { done += vus[n].size; total += POOL[n].length; par[n] = { done: vus[n].size, total: POOL[n].length }; }); return { done: done, total: total, complet: total > 0 && tousTermines(), uid: uid, par: par }; };
   const sauver = () => {
     try {
       localStorage.setItem(cle('educ_prog'), JSON.stringify(prog));
@@ -121,7 +121,8 @@ try {
     g('quiz-q-text').innerText = 'Bravo ! Vous avez terminé toutes les questions du niveau ' + LABEL[niv] + '.';
     let h = '<button class="fin-btn" data-a="redo">↻ Recommencer ce niveau à zéro</button>';
     if (suiv && debloque(suiv)) h += '<button class="fin-btn alt" data-a="next">Passer au niveau ' + LABEL[suiv] + ' →</button>';
-    if (tousTermines()) h = '<button class="fin-btn" data-a="brevet">🏅 Voir mon brevet de patriotisme</button>' + h;
+    h = '<button class="fin-btn" data-a="brevet-niv">🏅 Voir mon brevet ' + ({ facile: 'Bronze', difficile: 'Argent', pro: 'Or' }[niv] || '') + ' (avec mon nom)</button>' + h;
+    if (tousTermines()) h = '<button class="fin-btn" data-a="brevet">💎 Voir mon Grand brevet national</button>' + h;
     if (!suiv) h += '<button class="fin-btn alt" data-a="all">Tout recommencer à zéro (tous les niveaux)</button>';
     g('quiz-options-list').innerHTML = h;
     g('quiz-feedback').style.display = 'none'; g('next-q-btn').style.display = 'none';
@@ -198,7 +199,8 @@ try {
     });
     document.getElementById('quiz-options-list').addEventListener('click', e => {
       const b = e.target.closest('.fin-btn'); if (!b) return; const a = b.dataset.a, k = ORDER.indexOf(niv);
-      if (a === 'brevet') { if (window.educBrevet) window.educBrevet(); return; }
+      if (a === 'brevet') { if (window.educBrevet) window.educBrevet({ niveau: 'grand', fete: true }); return; }
+      if (a === 'brevet-niv') { if (window.educBrevet) window.educBrevet({ niveau: niv, fete: true }); return; }
       if (a === 'redo') { vus[niv].clear(); }
       else if (a === 'next') { niv = ORDER[k + 1]; }
       else if (a === 'all') { ORDER.forEach(n => vus[n].clear()); prog = { facile: 0, difficile: 0, pro: 0 }; userXP = 0; streak = 0; niv = 'facile'; }
