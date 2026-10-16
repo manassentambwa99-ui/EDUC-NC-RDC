@@ -1,6 +1,6 @@
 /* Service Worker - EDUC National
    Changer VERSION à chaque mise à jour de l'application pour forcer le rafraîchissement. */
-const VERSION = 'v30';
+const VERSION = 'v31';
 const CACHE_STATIC = 'educ-static-' + VERSION;
 const CACHE_RUNTIME = 'educ-runtime-' + VERSION;
 const CACHE_META = 'educ-meta'; // réglages des rappels (conservés entre les versions)
