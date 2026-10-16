@@ -33,7 +33,11 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <script src="config.js"></script>
     <script src="security.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0057d9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>EDUC National - République Démocratique du Congo</title>
     
     <link rel="manifest" href="manifest.json">
@@ -1418,6 +1422,44 @@
         html.educ-lite #main-app .course-card, html.educ-lite #main-app .news-card, html.educ-lite #main-app .quiz-container-box,
         html.educ-lite #main-app .dos-card, html.educ-lite #main-app .app-header, html.educ-lite #main-app .bottom-nav,
         html.educ-lite #main-app .info-box-ministere { -webkit-backdrop-filter: none; backdrop-filter: none; }
+    
+        /* ===== AJOUT FINAL 6 : COULEURS QUI PIQUENT + PLEIN ÉCRAN ===== */
+        html, body { background: #2b8cff !important; min-height: 100%; }
+        #main-app {
+            background:
+                radial-gradient(60% 38% at 90% 6%, rgba(255, 213, 0, 0.55), transparent 70%),
+                radial-gradient(70% 40% at 8% 40%, rgba(0, 229, 255, 0.40), transparent 70%),
+                radial-gradient(60% 40% at 92% 80%, rgba(255, 255, 255, 0.35), transparent 70%),
+                linear-gradient(180deg, #62c1ff 0%, #2f95ff 38%, #0a6ae6 100%) !important;
+            background-attachment: scroll !important;
+        }
+        #main-app.active::before {
+            background:
+                radial-gradient(42% 42% at 20% 24%, rgba(0, 160, 255, 0.70), transparent 72%),
+                radial-gradient(36% 36% at 80% 20%, rgba(255, 214, 0, 0.60), transparent 72%),
+                radial-gradient(34% 34% at 55% 62%, rgba(0, 220, 255, 0.45), transparent 72%) !important;
+        }
+        #main-app .xp-card, #main-app .access-card, #main-app .book-card, #main-app .course-card,
+        #main-app .news-card, #main-app .quiz-container-box, #main-app .dos-card, #main-app .dos-home,
+        #main-app .pat-fl, #main-app .authority-showcase {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(214, 238, 255, 0.62) 60%, rgba(150, 210, 255, 0.55) 100%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 10px 24px rgba(0, 60, 180, 0.38), inset 0 2px 0 #fff, inset 0 -3px 0 rgba(0, 140, 255, 0.35) !important;
+        }
+        #main-app .info-box-ministere {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(190, 228, 255, 0.70)) !important;
+            border: 1.5px solid #fff; box-shadow: 0 10px 24px rgba(0, 60, 180, 0.35), inset 0 2px 0 #fff;
+        }
+        #main-app .search-input-wrapper { background: #fff !important; border: 2px solid #ffd500 !important; box-shadow: 0 8px 22px rgba(0, 50, 170, 0.35) !important; }
+        #main-app .filter-btn { background: linear-gradient(135deg, #ffd500, #ffab00) !important; color: #0a2a5e !important; box-shadow: 0 8px 20px rgba(255, 171, 0, 0.55), inset 0 2px 0 rgba(255, 255, 255, 0.7) !important; }
+        #main-app .app-header { background: linear-gradient(135deg, #0050d0, #0a7bff 55%, #00a2ff) !important; box-shadow: 0 12px 30px rgba(0, 40, 150, 0.5) !important; }
+        #main-app .bottom-nav { background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(205, 233, 255, 0.92)) !important; border-top: 2px solid #ffd500; box-shadow: 0 -8px 24px rgba(0, 50, 170, 0.35) !important; }
+        #main-app .section-title { color: #04215a; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55); }
+        /* Plein écran : l'en-tête passe sous la barre d'état, rien ne divise l'écran */
+        #main-app .app-header { padding-top: calc(24px + env(safe-area-inset-top, 0px)); }
+        #main-app .bottom-nav { padding-bottom: env(safe-area-inset-bottom, 0px); }
+        html, body { margin: 0; padding: 0; overscroll-behavior: none; }
+        @media all and (display-mode: standalone), all and (display-mode: fullscreen) { body { padding-top: 0; } }
     </style>
 </head>
 <body>
@@ -1565,7 +1607,7 @@
         <div class="search-bar-container">
             <div class="search-input-wrapper">
                 <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
-                <input type="text" placeholder="Rechercher un cours...">
+                <input type="text" placeholder="Rechercher : cours, actualités, leçons…">
             </div>
             <div class="filter-btn"><i class="fa-solid fa-sliders"></i></div>
         </div>
@@ -2349,5 +2391,17 @@
         });
       })();
     </script>
+<script>
+/* Plein écran : au premier toucher, si l'application n'est pas déjà installée en plein écran, on demande le mode plein écran */
+(function () {
+  try {
+    var dm = function (m) { return window.matchMedia && matchMedia('(display-mode: ' + m + ')').matches; };
+    if (dm('fullscreen') || dm('standalone')) return;
+    var de = document.documentElement, fait = false;
+    function pe() { if (fait) return; fait = true; var f = de.requestFullscreen || de.webkitRequestFullscreen; if (f) { try { var p = f.call(de, { navigationUI: 'hide' }); if (p && p.catch) p.catch(function () {}); } catch (e) {} } document.removeEventListener('pointerup', pe, true); }
+    document.addEventListener('pointerup', pe, true);
+  } catch (e) {}
+})();
+</script>
 </body>
 </html>
