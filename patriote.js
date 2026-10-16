@@ -249,11 +249,11 @@
       var s = '<svg viewBox="0 0 390 375" class="pat-map" role="img" aria-label="Carte de la RDC"><defs>' +
         '<linearGradient id="pgm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e7d32"/><stop offset=".38" stop-color="#3f8f3a"/><stop offset=".62" stop-color="#7aa63a"/><stop offset=".85" stop-color="#b5a14a"/><stop offset="1" stop-color="#a48a46"/></linearGradient>' +
         '<radialGradient id="pgf" cx=".45" cy=".4" r=".55"><stop offset="0" stop-color="#14532d" stop-opacity=".55"/><stop offset="1" stop-color="#14532d" stop-opacity="0"/></radialGradient>' +
-        '<filter id="pgt" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".035 .05" numOctaves="4" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .1  0 0 0 0 .2  0 0 0 0 .05  0 0 0 .9 -.25"/></filter>' +
+        '' +
         '<clipPath id="pgc"><path d="' + d + '"/></clipPath></defs>';
       s += '<path d="' + d + '" fill="#0b3d2e" opacity=".35" transform="translate(3 5)"/>';
       s += '<path d="' + d + '" fill="url(#pgm)"/>';
-      s += '<g clip-path="url(#pgc)"><rect width="390" height="375" fill="url(#pgf)"/><rect width="390" height="375" filter="url(#pgt)" opacity=".55"/>';
+      s += '<g clip-path="url(#pgc)"><rect width="390" height="375" fill="url(#pgf)"/>';
       // hauts plateaux de l'Est (relief) et Katanga
       s += '<ellipse cx="' + px(29.0) + '" cy="' + py(-2.5) + '" rx="22" ry="52" fill="#8d6e3f" opacity=".42"/><ellipse cx="' + px(27.5) + '" cy="' + py(-10.5) + '" rx="48" ry="22" fill="#9a7b43" opacity=".35"/>';
       s += '<path d="M' + px(11) + ' ' + py(0) + 'L' + px(32) + ' ' + py(0) + '" stroke="#fff" stroke-opacity=".35" stroke-dasharray="4 5" stroke-width="1"/>';
@@ -290,7 +290,7 @@
 
     /* ---------- Styles ---------- */
     var css = el('style'); css.textContent = [
-      '.pat-map{width:100%;max-width:420px;display:block;margin:0 auto;filter:drop-shadow(0 6px 14px rgba(0,50,120,.35))}.pat-pt{cursor:pointer}',
+      '.pat-map{width:100%;max-width:420px;display:block;margin:0 auto;}.pat-pt{cursor:pointer}',
       '@keyframes patPop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}@keyframes patBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}',
       '@keyframes patUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}',
       '#pat-his,#pat-esp{position:fixed;inset:0;z-index:9700;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;color:#0f172a}',
@@ -396,8 +396,8 @@
       if (Voix.ok && Voix.actif) Voix.dire('Bravo patriote ! Tu as terminé cette histoire.', null);
       if (window.educFilm) { if (nx) setTimeout(function () { if (window.educFilm) histoire(nx); }, 3500); else window.educFilm = false; }
     }
-    function histoire(id) {
-      if (!H[id]) return; hid = id; hi = 0; auto = true;
+    function histoire(id, debut) {
+      if (!H[id]) return; hid = id; hi = Math.max(0, Math.min((H[id].length || 1) - 1, debut | 0)); auto = true;
       var d = DOS().filter(function (x) { return x.id === id; })[0] || { court: id };
       if (!his) {
         his = el('div'); his.id = 'pat-his';
@@ -420,6 +420,7 @@
     }
     window.addEventListener('popstate', function () { if (his && his.classList.contains('on')) fermerHis(); if (esp && esp.classList.contains('on') && !(history.state && history.state.esp)) fermerEsp(); });
     window.educHistoire = histoire;
+    window.educHistoiresIndex = function () { return Object.keys(H).map(function (id) { var d = DOS().filter(function (x) { return x.id === id; })[0] || {}; return { id: id, titre: d.titre || d.court || id, icone: d.icone, couleur: d.couleur, cartes: (H[id] || []).map(function (c) { var e = c.e ? c.e.map(function (z) { return Array.isArray(z) ? z.join(' ') : z; }).join(' ') : ''; return { t: c.t || '', x: (c.x || '') + ' ' + (c.r || '') + ' ' + (c.l || '') + ' ' + e }; }) }; }); };
 
     /* ---------- Espace Patriote ---------- */
     var esp;
