@@ -3,11 +3,11 @@
     var CFG = window.EDUC_CONFIG || {};
     var KEY = CFG.SERPAPI_KEY || '';
     var PROXY = CFG.NEWS_PROXY || '';
-    var TTL = 6 * 60 * 60 * 1000;
+    var TTL = 30 * 60 * 1000;            // une vérification réseau au plus toutes les 30 minutes
+    var VERIF = 5 * 60 * 1000;           // l'application regarde toutes les 5 minutes s'il y a du nouveau
     var QUERIES = { rdc: 'République démocratique du Congo actualités', educ: 'éducation nationale RDC' };
     var IMG = 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80';
     var BASE = /éduc|educ|école|ecole|enseign|scolaire|élève|eleve|exetat|tenafep|citoyenn|epst|universit|étudiant|etudiant|rentrée|rentree/i;
-    // chip -> { topic, filtre }
     var THEMES = {
       rdc: { topic: 'rdc', re: null },
       educ: { topic: 'educ', re: null },
@@ -16,6 +16,12 @@
       ens: { topic: 'educ', re: /enseignant|professeur|instituteur|salaire|prime|grève|greve|paie/i }
     };
     var store = { rdc: [], educ: [] }, cur = 'rdc', pending = {};
+    window.educNewsAll = function () { var o = {}, r = []; ['rdc', 'educ'].forEach(function (k) { store[k].forEach(function (it) { if (!o[it.link]) { o[it.link] = 1; r.push(it); } }); }); return r; };
+
+    var st = document.createElement('style');
+    st.textContent = '.news-new{align-self:flex-start;font-size:.65rem;font-weight:800;padding:3px 9px;border-radius:10px;background:#ffc107;color:#1e293b;animation:glowBreath 2.5s ease-in-out infinite}' +
+      '.nav-item{position:relative}.nav-dot{position:absolute;top:-2px;right:calc(50% - 20px);width:10px;height:10px;border-radius:50%;background:#ffc107;box-shadow:0 0 8px rgba(255,193,7,.9);border:2px solid #fff}';
+    document.head.appendChild(st);
 
     function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function fdate(d) {
@@ -35,14 +41,34 @@
       return out;
     }
     function box() { return document.getElementById('live-news-container'); }
+    function tabActive() { var t = document.getElementById('tab-actu'); return !!(t && t.classList.contains('active')); }
+    function appActive() { var m = document.getElementById('main-app'); return !!(m && m.classList.contains('active')); }
+
+    // ----- Articles déjà vus (pour repérer les nouveautés) -----
+    function lireVus(topic) { try { var v = localStorage.getItem('educ_news_seen_' + topic); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+    function ecrireVus(topic) { var o = {}; store[topic].forEach(function (it) { o[it.link] = 1; }); try { localStorage.setItem('educ_news_seen_' + topic, JSON.stringify(o)); } catch (e) {} }
+    function nbNouveaux(topic) { var v = lireVus(topic); if (!v) return 0; return store[topic].filter(function (it) { return !v[it.link]; }).length; }
+    function badge() {
+      var n = nbNouveaux('rdc') + nbNouveaux('educ'), item = document.querySelectorAll('.bottom-nav .nav-item')[3]; if (!item) return;
+      var d = item.querySelector('.nav-dot');
+      if (n > 0 && !tabActive()) { if (!d) { d = document.createElement('span'); d.className = 'nav-dot'; item.appendChild(d); } } else if (d) d.remove();
+    }
+    var minuterie = null;
+    function marquerVusPlusTard() {
+      clearTimeout(minuterie);
+      minuterie = setTimeout(function () { if (tabActive()) { ecrireVus('rdc'); ecrireVus('educ'); badge(); } }, 4000);
+    }
+
     function render(msg) {
       var b = box(); if (!b) return;
-      var th = THEMES[cur], list = store[th.topic].filter(function (it) { return !th.re || th.re.test(it.title + ' ' + it.snip); });
+      var th = THEMES[cur], seen = lireVus(th.topic) || {}, premiere = !lireVus(th.topic);
+      var list = store[th.topic].filter(function (it) { return !th.re || th.re.test(it.title + ' ' + it.snip); }).map(function (it) { it._new = !premiere && !seen[it.link]; return it; });
+      list.sort(function (a, c) { return (c._new ? 1 : 0) - (a._new ? 1 : 0); }); // les nouveautés d'abord
       var titre = th.topic === 'rdc' ? 'actualité(s) de la République démocratique du Congo' : 'article(s) sur l\'éducation nationale en RDC';
       var meta = '<div class="news-meta"><i class="fa-regular fa-clock"></i> ' + list.length + ' ' + titre + '</div>';
       if (!list.length) { b.innerHTML = meta + '<div class="news-card"><p style="font-size:0.85rem;color:var(--text-muted);">' + (msg || 'Aucune actualité pour ce thème pour le moment.') + '</p></div>'; return; }
       b.innerHTML = meta + list.map(function (it) {
-        return '<div class="news-card">' +
+        return '<div class="news-card">' + (it._new ? '<span class="news-new">NOUVEAU</span>' : '') +
           '<img src="' + esc(it.img || IMG) + '" alt="" loading="lazy" class="news-card-img" onerror="this.onerror=null;this.src=\'' + IMG + '\';">' +
           '<span class="news-source">' + (it.icon ? '<img src="' + esc(it.icon) + '" alt="" onerror="this.style.display=\'none\'">' : '<i class="fa-solid fa-flag"></i>') + esc(it.src || 'RDC') + '</span>' +
           '<h4 style="font-size:0.95rem;font-weight:700;margin:4px 0;color:var(--text-dark);">' + esc(it.title) + '</h4>' +
@@ -51,7 +77,9 @@
           '<span><i class="fa-regular fa-clock"></i> ' + esc(fdate(it.date)) + '</span>' +
           '<a href="' + esc(it.link) + '" target="_blank" rel="noopener" style="color:var(--primary-blue);font-weight:700;text-decoration:none;">Lire la suite →</a></div></div>';
       }).join('');
+      if (tabActive()) marquerVusPlusTard();
     }
+
     function charger(topic) {
       if (!PROXY && !KEY) return Promise.reject(new Error('NEWS_PROXY est vide dans config.js'));
       var url = PROXY ? PROXY + (PROXY.indexOf('?') < 0 ? '?' : '&') + 't=' + topic
@@ -70,22 +98,32 @@
       var ck = 'educ_news_v3_' + topic, cache = null;
       try { cache = JSON.parse(localStorage.getItem(ck) || 'null'); } catch (e) {}
       var has = cache && cache.items && cache.items.length;
-      if (has) { store[topic] = cache.items; if (THEMES[cur].topic === topic) render(); }
+      if (has && !store[topic].length) { store[topic] = cache.items; if (!lireVus(topic)) ecrireVus(topic); if (THEMES[cur].topic === topic) render(); badge(); }
       if (has && !force && Date.now() - cache.t < TTL) return;
       if (!has && box() && THEMES[cur].topic === topic) box().innerHTML = '<div class="news-card"><p style="color:var(--text-muted);font-size:0.85rem;">Chargement des actualités en cours...</p></div>';
       if (pending[topic]) return; pending[topic] = true;
       charger(topic).then(function (all) {
         var seen = {}, uniq = all.filter(function (it) { if (seen[it.link]) return false; seen[it.link] = 1; return true; });
         if (topic === 'educ') { var rel = uniq.filter(function (it) { return BASE.test(it.title + ' ' + it.snip); }); if (rel.length >= 4) uniq = rel; }
+        var avant = {}; store[topic].forEach(function (it) { avant[it.link] = 1; });
+        var anciens = store[topic].length > 0;
         store[topic] = uniq.slice(0, 25);
         if (!store[topic].length) throw new Error('aucun article trouvé');
         try { localStorage.setItem(ck, JSON.stringify({ t: Date.now(), items: store[topic] })); } catch (e) {}
+        if (!lireVus(topic)) ecrireVus(topic); // première fois : rien n'est « nouveau »
+        var frais = store[topic].filter(function (it) { return !avant[it.link]; }).length;
         if (THEMES[cur].topic === topic) render();
+        badge();
+        if (anciens && frais > 0 && !tabActive() && typeof window.educToast === 'function') window.educToast('📰 ' + (frais > 1 ? frais + ' nouvelles actualités' : 'Nouvelle actualité') + ' sur la RDC', 4500);
       }).catch(function (e) {
         if (!store[topic].length && THEMES[cur].topic === topic) render(navigator.onLine ? 'Actualités indisponibles pour le moment.<br><small>Détail : ' + esc(e.message) + '</small>' : '📡 Vous êtes hors connexion. Les actualités reviendront dès que vous aurez Internet.');
       }).then(function () { pending[topic] = false; });
     }
-    window.fetchLiveNewsRDC = function (force) { charge(THEMES[cur].topic, force); };
+    function verifier() {
+      if (!appActive() || document.hidden || !navigator.onLine) return;
+      charge('rdc', false); if (THEMES[cur].topic === 'educ') charge('educ', false);
+    }
+    window.fetchLiveNewsRDC = function (force) { charge(THEMES[cur].topic, force); if (THEMES[cur].topic !== 'rdc') charge('rdc', force); };
 
     var tab = document.getElementById('tab-actu'), b0 = box();
     if (tab && b0) {
@@ -99,7 +137,13 @@
         cur = f; bar.querySelectorAll('.news-chip').forEach(function (x) { x.classList.toggle('on', x === b); });
         render(); charge(THEMES[cur].topic, false);
       });
+      // Quand on ouvre l'onglet Actualités : on affiche les nouveautés et on vérifie tout de suite
+      new MutationObserver(function () { if (tabActive()) { render(); badge(); charge(THEMES[cur].topic, false); } }).observe(tab, { attributes: true, attributeFilter: ['class'] });
     }
-    var m0 = document.getElementById('main-app'); if (m0 && m0.classList.contains('active')) window.fetchLiveNewsRDC();
+    // Actualisation automatique : toutes les 5 minutes, au retour dans l'application, et au retour d'Internet
+    setInterval(verifier, VERIF);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) verifier(); });
+    window.addEventListener('online', verifier);
+    if (appActive()) window.fetchLiveNewsRDC();
   } catch (err) { console.error('Actualités :', err); }
 })();
