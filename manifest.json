@@ -14,8 +14,8 @@ here{
   "theme_color": "#0057d9",
   "categories": ["education"],
   "icons": [
-    { "src": "logo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "logo-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "logoo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "logoo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "logoo-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
