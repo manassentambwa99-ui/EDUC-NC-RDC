@@ -1,475 +1,159 @@
-function restaurerSessionDashboard(user) {
-            document.getElementById('display-username').innerText = user.prenom;
-            document.getElementById('profile-full-name').innerText = `${user.prenom} ${user.nom} ${user.postnom}`;
-            document.getElementById('profile-details-disp').innerText = `École: ${user.ecole} | ${user.sousDivision}, ${user.province}`;
-            
-            if (user.photo) {
-                userPhotoUrl = user.photo;
-                document.getElementById('dash-avatar-img').src = userPhotoUrl;
-                document.getElementById('tab-user-avatar').src = userPhotoUrl;
-            }
+/* EDUC National - recherche dans l'application (cours, présidents, autorités, sections).
+   L'index est construit à partir de la page elle-même : tout nouveau cours ajouté dans index.html est trouvé automatiquement. */
+(function () {
+  try {
+    var input = document.querySelector('.search-input-wrapper input'), barre = document.querySelector('.search-bar-container');
+    if (!input || !barre) return;
+    var CAT_ORDER = { 'Cours': 0, 'Actualités': 1, 'Leçons': 2, 'Atlas': 3, 'Brevets': 4, 'Section': 5, 'Présidents': 6, 'Autorités': 7 };
+    var LIBS = { 'Cours': 'Cours', 'Actualités': 'Actualités', 'Leçons': 'Leçons', 'Atlas': 'Atlas', 'Brevets': 'Brevets', 'Section': 'Sections', 'Présidents': 'Présidents', 'Autorités': 'Autorités' };
+    var SUGG = ['hygiène', 'Génocost', 'Goma', 'drapeau', 'constitution', 'brevet', 'éducation', 'Lumumba', 'vigilance', 'Virunga'];
+    var cat = 'Tout', nav = false;
+    var ICO = { 'Cours': ['📚', 'Tous les cours et dossiers'], 'Actualités': ['📰', 'Dernières nouvelles'], 'Leçons': ['🎓', 'Leçons illustrées et voix'], 'Atlas': ['🗺️', 'Provinces, villes, parcs'], 'Brevets': ['🏅', 'Bronze, Argent, Or, Diamant'], 'Présidents': ['🏛️', 'Histoire des présidents'], 'Autorités': ['⭐', 'Gouvernement'], 'Section': ['🧭', 'Quiz, profil, rappels'] };
 
-            showScreen('main-app');
-            updateXPBar();
-            fetchLiveNewsRDC();
-            generateInfiniteQuizQuestion();
-            
-            initialiserRappelsEtude();
-        }
+    var st = document.createElement('style');
+    st.textContent =
+      '#search-results{display:none;margin:0 20px 16px;padding:10px;border-radius:20px;max-height:62vh;overflow-y:auto;background:linear-gradient(160deg,rgba(255,255,255,.97),rgba(214,234,255,.95));border:1px solid #fff;box-shadow:0 12px 30px rgba(0,95,220,.30),0 0 0 2px rgba(26,140,255,.35);animation:liquidRise .35s ease backwards}' +
+      '#search-results.show{display:block}' +
+      '.sr-head{display:flex;justify-content:space-between;align-items:center;padding:2px 6px 8px;font-size:.75rem;font-weight:700;color:var(--text-muted)}' +
+      '.sr-head button{border:none;background:none;color:var(--primary-blue);font-weight:700;font-size:.75rem;cursor:pointer}' +
+      '.sr-chips{display:flex;gap:6px;overflow-x:auto;padding:0 4px 8px;scrollbar-width:none}.sr-chips::-webkit-scrollbar{display:none}' +
+      '.sr-chip{flex:0 0 auto;border:none;border-radius:16px;padding:6px 12px;font-size:.72rem;font-weight:800;background:#d6eaff;color:#0066cc;cursor:pointer}.sr-chip b{font-weight:800;opacity:.7;margin-left:4px}' +
+      '.sr-chip.on{background:linear-gradient(135deg,#0066cc,#1a8cff);color:#fff;box-shadow:0 4px 12px rgba(0,102,204,.4)}.sr-x{position:absolute;right:46px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:none;border-radius:50%;background:#d6eaff;color:#0066cc;font-weight:900;cursor:pointer;display:none;line-height:1}.sr-x.on{display:block}.sr-sug{display:flex;flex-wrap:wrap;gap:6px;padding:2px 4px 6px}.sr-sug .sr-chip{background:#fff3c4;color:#8a6500}.sr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:2px 2px 6px}.sr-g{border:none;border-radius:16px;padding:12px 10px;text-align:left;cursor:pointer;color:#fff;background:linear-gradient(135deg,#0057d9,#1aa0ff);box-shadow:0 6px 16px rgba(0,87,217,.4)}.sr-g:nth-child(3n){background:linear-gradient(135deg,#ffab00,#ffd500);color:#0a2a5e;box-shadow:0 6px 16px rgba(255,171,0,.45)}.sr-g:nth-child(4n){background:linear-gradient(135deg,#00a86b,#2fe0a0);box-shadow:0 6px 16px rgba(0,168,107,.4)}.sr-g b{display:block;font-size:.85rem;font-weight:800}.sr-g small{font-size:.68rem;font-weight:600;opacity:.9}.sr-g i{font-style:normal;font-size:1.3rem;float:right}.sr-hint{padding:2px 6px 8px;font-size:.74rem;font-weight:700;color:#0066cc}' +
+      '.sr-item{display:flex;align-items:center;gap:12px;width:100%;padding:10px;border:none;border-radius:14px;background:transparent;text-align:left;cursor:pointer;transition:background .2s ease}' +
+      '.sr-item:active,.sr-item:hover{background:#e8f2ff}' +
+      '.sr-ic{flex:0 0 40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;background:var(--primary-blue);overflow:hidden}' +
+      '.sr-ic img{width:100%;height:100%;object-fit:cover}' +
+      '.sr-t{font-size:.9rem;font-weight:800;color:var(--text-dark);line-height:1.25}.sr-t mark{background:rgba(255,193,7,.55);color:inherit;border-radius:3px;padding:0 1px}' +
+      '.sr-s{font-size:.74rem;color:var(--text-muted);font-weight:600;margin-top:2px}' +
+      '.sr-tag{margin-left:auto;flex:0 0 auto;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:10px;background:#fff3c4;color:#8a6500}' +
+      '.sr-vide{padding:16px 8px;text-align:center;font-size:.85rem;color:var(--text-muted);line-height:1.5}' +
+      '.sr-flash{animation:srFlash 1.6s ease}@keyframes srFlash{0%,100%{box-shadow:0 8px 32px rgba(0,0,0,.05)}30%{box-shadow:0 0 0 4px rgba(255,193,7,.8)}}';
+    document.head.appendChild(st);
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            // AJOUT : animation liquide à l'entrée dans l'application
-            if (id === 'main-app') { jouerAnimationLiquide(); }
-        }
+    var wrap = input.closest('.search-input-wrapper') || input.parentNode; if (getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
+    var bx = document.createElement('button'); bx.type = 'button'; bx.className = 'sr-x'; bx.setAttribute('aria-label', 'Effacer'); bx.textContent = '×'; wrap.appendChild(bx);
+    var res = document.createElement('div'); res.id = 'search-results'; barre.parentNode.insertBefore(res, barre.nextSibling);
 
-        // AJOUT : déclenche l'animation d'entrée (effet liquide + transparence)
-        function activerRevelationDefilement() {
-            if (!('IntersectionObserver' in window)) return;
-            const io = new IntersectionObserver((entries) => {
-                entries.forEach((en) => {
-                    if (en.isIntersecting) {
-                        en.target.classList.remove('reveal-pending');
-                        io.unobserve(en.target);
-                    }
-                });
-            }, { threshold: 0.08 });
-            document.querySelectorAll('#main-app .authority-showcase, #main-app .section-title').forEach((el) => {
-                if (el.dataset.rv) return;
-                el.dataset.rv = '1';
-                el.classList.add('reveal-pending');
-                io.observe(el);
-            });
-        }
+    var norm = function (t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); };
+    var esc = function (t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+    var CLS = { a: 'aàâä', e: 'eéèêë', i: 'iîï', o: 'oôö', u: 'uùûü', c: 'cç', y: 'yÿ' };
+    function motif(tok) { return tok.split('').map(function (ch) { var l = norm(ch); return CLS[l] ? '[' + CLS[l] + CLS[l].toUpperCase() + ']' : ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join(''); }
+    function marque(texte, tokens) {
+      var s = esc(texte); if (!tokens.length) return s;
+      try { return s.replace(new RegExp('(' + tokens.map(motif).join('|') + ')', 'gi'), '<mark>$1</mark>'); } catch (e) { return s; }
+    }
+    function ouvrir(href) {
+      var a = document.createElement('a'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.style.display = 'none';
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+    function aller(tab, i) { if (typeof switchTab === 'function') switchTab(tab, i); }
+    function defiler(el) { if (!el) return; aller('tab-accueil', 0); setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('sr-flash'); setTimeout(function () { el.classList.remove('sr-flash'); }, 1700); }, 150); }
+    function txt(el, sel) { var x = el.querySelector(sel); return x ? x.textContent.trim() : ''; }
 
-        function jouerAnimationLiquide() {
-            activerRevelationDefilement();
-            const intro = document.getElementById('liquid-intro');
-            if (!intro) return;
-            intro.classList.remove('play');
-            void intro.offsetWidth;
-            intro.classList.add('play');
-            setTimeout(() => intro.classList.remove('play'), 2100);
-        }
-
-        function nextOnboarding() {
-            currentStep++;
-            if (currentStep >= onboardingImages.length) {
-                showScreen('auth-screen');
-            } else {
-                updateOnboarding();
-            }
-        }
-
-        function updateOnboarding() {
-            const data = onboardingImages[currentStep];
-            document.getElementById('onb-btn').innerText = data.btn;
-            document.getElementById('onboarding-bg').style.backgroundImage = `url('${data.bg}')`;
-            for(let i = 0; i < 3; i++) {
-                document.getElementById(`dot-${i}`).classList.toggle('active', i === currentStep);
-            }
-        }
-
-        function switchTab(tabId, index) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            if (index >= 0 && index < 5) {
-                document.querySelectorAll('.nav-item')[index].classList.add('active');
-            }
-            
-            if (tabId === 'tab-quiz') {
-                generateInfiniteQuizQuestion();
-            }
-            window.scrollTo(0, 0);
-        }
-
-        function ouvrirPagePresidents() {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-presidents-list').classList.add('active');
-            window.scrollTo(0, 0);
-        }
-
-        function openLightbox(imgSrc) {
-            document.getElementById('lightbox-img').src = imgSrc;
-            document.getElementById('lightbox-modal').classList.add('active');
-        }
-        function closeLightbox() {
-            document.getElementById('lightbox-modal').classList.remove('active');
-        }
-
-        function updateSubDivisions() {
-            const provinceSelect = document.getElementById('user-province');
-            const subDivSelect = document.getElementById('user-subdivision');
-            const selectedProvince = provinceSelect.value;
-
-            subDivSelect.innerHTML = '<option value="">Sélectionnez votre sous-division</option>';
-
-            if (subdivisionsData[selectedProvince]) {
-                subdivisionsData[selectedProvince].forEach(sub => {
-                    const opt = document.createElement('option');
-                    opt.value = sub;
-                    opt.textContent = sub;
-                    subDivSelect.appendChild(opt);
-                });
-            }
-        }
-
-        // CORRECTION : la photo est maintenant réduite/compressée avant d'être enregistrée,
-        // sinon elle dépassait la limite du localStorage et bloquait la validation.
-        function previewAvatar(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const maxSize = 300;
-                        let w = img.width, h = img.height;
-                        if (w > h) { if (w > maxSize) { h = Math.round(h * maxSize / w); w = maxSize; } }
-                        else { if (h > maxSize) { w = Math.round(w * maxSize / h); h = maxSize; } }
-                        const canvas = document.createElement('canvas');
-                        canvas.width = w;
-                        canvas.height = h;
-                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                        userPhotoUrl = canvas.toDataURL('image/jpeg', 0.7);
-                        document.getElementById('profile-avatar-img').src = userPhotoUrl;
-                    };
-                    img.onerror = function() {
-                        userPhotoUrl = e.target.result;
-                        document.getElementById('profile-avatar-img').src = userPhotoUrl;
-                    };
-                    img.src = e.target.result;
-                }
-                reader.onerror = function() {
-                    console.error("Erreur de chargement de l'image");
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function verifyPhoneRDC() {
-            const phone = document.getElementById('rdc-phone').value.trim();
-            if (phone.length < 9) {
-                alert("Veuillez saisir un numéro de téléphone RDC valide à 9 chiffres.");
-                return;
-            }
-            showScreen('profile-screen');
-        }
-
-        function finishProfile(e) {
-            e.preventDefault();
-            const nom = document.getElementById('user-name').value;
-            const postnom = document.getElementById('user-postnom').value;
-            const prenom = document.getElementById('user-firstname').value;
-            const ecole = document.getElementById('user-school').value;
-            const province = document.getElementById('user-province').value;
-            const subdivision = document.getElementById('user-subdivision').value;
-            const phone = document.getElementById('rdc-phone').value;
-
-            const userData = {
-                nom: nom,
-                postnom: postnom,
-                prenom: prenom,
-                nomComplet: `${nom} ${postnom} ${prenom}`,
-                ecole: ecole,
-                province: province,
-                sousDivision: subdivision,
-                telephone: `+243${phone}`,
-                photo: userPhotoUrl || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
-                dateInscription: new Date().toISOString()
-            };
-
-            // CORRECTION : sauvegarde protégée (try/catch) pour que l'inscription se valide toujours
-            try {
-                let inscrits = JSON.parse(localStorage.getItem('educ_inscrits_rdc') || '[]');
-                inscrits.push(userData);
-                localStorage.setItem('educ_inscrits_rdc', JSON.stringify(inscrits));
-            } catch (err) {
-                console.error("Stockage liste inscrits impossible :", err);
-            }
-
-            try {
-                localStorage.setItem('educ_utilisateur_connecte', JSON.stringify(userData));
-            } catch (err) {
-                console.error("Stockage session impossible, nouvel essai sans photo :", err);
-                try {
-                    const userSansPhoto = Object.assign({}, userData, { photo: '' });
-                    localStorage.setItem('educ_utilisateur_connecte', JSON.stringify(userSansPhoto));
-                } catch (err2) {
-                    console.error("Stockage session impossible :", err2);
-                }
-            }
-
-            restaurerSessionDashboard(userData);
-            
-            demanderPermissionNotifications();
-        }
-
-        function deconnecterUtilisateur() {
-            if (confirm("Voulez-vous vraiment vous déconnecter de votre compte ?")) {
-                localStorage.removeItem('educ_utilisateur_connecte');
-                location.reload();
-            }
-        }
-
-        function ouvrirPanneauCreateur() {
-            const code = prompt("Entrez le code secret créateur :");
-            if (code === "MNL") {
-                const inscrits = JSON.parse(localStorage.getItem('educ_inscrits_rdc') || '[]');
-                let listeStr = `=== UTILISATEURS INSCRITS (${inscrits.length}) ===\n\n`;
-                inscrits.forEach((u, i) => {
-                    listeStr += `${i+1}. ${u.nomComplet} | École: ${u.ecole} | Tél: ${u.telephone} | Province: ${u.province}\n`;
-                });
-                alert(listeStr);
-            } else if (code !== null) {
-                alert("Code erroné.");
-            }
-        }
-
-        function demanderPermissionNotifications() {
-            if (!("Notification" in window)) {
-                alert("Votre navigateur ne prend pas en charge les notifications.");
-                return;
-            }
-
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    alert("Super ! Les notifications de rappel pour la Nouvelle Citoyenneté et l'étude sont activées.");
-                    envoyerNotificationInstantanee("EDUC National", "Bien joué ! Vos rappels d'étude sont désormais configurés.");
-                } else {
-                    alert("Les notifications ont été refusées. Vous pouvez les réactiver dans les paramètres de votre navigateur.");
-                }
-            });
-        }
-
-        function envoyerNotificationInstantanee(titre, corps) {
-            if (Notification.permission === "granted") {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.ready.then(registration => {
-                        registration.showNotification(titre, {
-                            body: corps,
-                            icon: 'logoo.png',
-                            badge: 'logoo.png'
-                        });
-                    });
-                } else {
-                    new Notification(titre, {
-                        body: corps,
-                        icon: 'logoo.png'
-                    });
-                }
-            }
-        }
-
-        function initialiserRappelsEtude() {
-            if (window.educPlanifierRappels) { window.educPlanifierRappels(); }
-            return;
-            const intervalleRappelMS = 4 * 60 * 60 * 1000;
-            
-            setInterval(() => {
-                const messagesRappel = [
-                    "C'est l'heure d'étudier ! Révisez votre module de Nouvelle Citoyenneté pour gagner +150 XP 🇨🇩",
-                    "Manassé IA vous attend pour un nouveau quiz éducatif. Venez tester vos connaissances !",
-                    "Maintenez votre série d'apprentissage ! Ouvrez l'application EDUC National dès maintenant."
-                ];
-                const messageAleatoire = messagesRappel[Math.floor(Math.random() * messagesRappel.length)];
-                
-                envoyerNotificationInstantanee("Rappel d'Étude - EDUC National", messageAleatoire);
-            }, intervalleRappelMS);
-        }
-
-        function generateInfiniteQuizQuestion() {
-            if (!manasseQuestionBank.length) return;
-            const baseItem = manasseQuestionBank[Math.floor(Math.random() * manasseQuestionBank.length)];
-            let options = [baseItem.correct, ...baseItem.wrongs];
-            
-            for (let i = options.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [options[i], options[j]] = [options[j], options[i]];
-            }
-
-            currentActiveQuestion = {
-                question: baseItem.q,
-                options: options,
-                correctAnswer: baseItem.correct
-            };
-
-            renderQuizUI();
-        }
-
-        function renderQuizUI() {
-            document.getElementById('quiz-q-text').innerText = currentActiveQuestion.question;
-            const container = document.getElementById('quiz-options-list');
-            container.innerHTML = '';
-            
-            document.getElementById('quiz-feedback').style.display = 'none';
-            document.getElementById('quiz-feedback').className = 'quiz-feedback-box';
-            document.getElementById('next-q-btn').style.display = 'none';
-
-            currentActiveQuestion.options.forEach((optText) => {
-                const btn = document.createElement('button');
-                btn.className = 'quiz-option-btn';
-                btn.innerHTML = `<span>${optText}</span><i class="fa-regular fa-circle" style="color: var(--text-muted);"></i>`;
-                btn.onclick = () => validateAnswerChoice(btn, optText);
-                container.appendChild(btn);
-            });
-        }
-
-        function validateAnswerChoice(selectedButton, chosenText) {
-            const allButtons = document.querySelectorAll('.quiz-option-btn');
-            allButtons.forEach(b => b.disabled = true);
-
-            const isCorrect = (chosenText === currentActiveQuestion.correctAnswer);
-            const feedbackBox = document.getElementById('quiz-feedback');
-
-            if (isCorrect) {
-                selectedButton.classList.add('correct');
-                selectedButton.querySelector('i').className = 'fa-solid fa-circle-check';
-                selectedButton.querySelector('i').style.color = 'var(--success-green)';
-                feedbackBox.innerText = "Excellente réponse ! Manassé IA valide. +50 XP";
-                feedbackBox.className = 'quiz-feedback-box success';
-                addXP(50);
-            } else {
-                selectedButton.classList.add('incorrect');
-                selectedButton.querySelector('i').className = 'fa-solid fa-circle-xmark';
-                selectedButton.querySelector('i').style.color = 'var(--error-red)';
-
-                allButtons.forEach(b => {
-                    if (b.innerText.trim() === currentActiveQuestion.correctAnswer.trim()) {
-                        b.classList.add('correct');
-                        b.querySelector('i').className = 'fa-solid fa-circle-check';
-                        b.querySelector('i').style.color = 'var(--success-green)';
-                    }
-                });
-
-                feedbackBox.innerText = "Incorrect. Manassé IA a mis en évidence la bonne réponse ci-dessus.";
-                feedbackBox.className = 'quiz-feedback-box error';
-            }
-
-            document.getElementById('next-q-btn').style.display = 'block';
-        }
-
-        function loadNextInfiniteQuestion() {
-            generateInfiniteQuizQuestion();
-        }
-
-        function addXP(amount) {
-            userXP += amount;
-            if (userXP > 1000) userXP = 1000;
-            updateXPBar();
-        }
-
-        function updateXPBar() {
-            const maxXP = 1000;
-            const percentage = Math.round((userXP / maxXP) * 100);
-            document.getElementById('xp-fill').style.width = percentage + '%';
-            document.getElementById('user-xp-percent').innerText = percentage + '%';
-            document.getElementById('user-xp-text').innerText = `${userXP} / ${maxXP} XP`;
-        }
-
-        async function fetchLiveNewsRDC() {
-            const container = document.getElementById('live-news-container');
-            
-            // Intégration de l'API NewsData.io avec filtrage sur l'Éducation Nationale et la RDC
-            const apiKey = (window.EDUC_CONFIG && window.EDUC_CONFIG.NEWSDATA_KEY) || "";
-            const newsApiUrl = `https://newsdata.io/api/1/latest?apikey=${apiKey}&q=Education%20nationale%20Congo%20RDC&language=fr`;
-            
-            try {
-                const response = await fetch(newsApiUrl);
-                const data = await response.json();
-                
-                if (data.status === 'success' && data.results && data.results.length > 0) {
-                    container.innerHTML = '';
-                    data.results.slice(0, 8).forEach((item) => {
-                        const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('fr-FR') : 'RDC News';
-                        
-                        // Image fallback si aucune n'est disponible
-                        const imageUrl = item.image_url ? item.image_url : 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80';
-                        
-                        const descriptionText = item.description ? item.description.substring(0, 110) + '...' : 'Actualité officielle concernant l\'Éducation nationale et la citoyenneté en RDC.';
-
-                        const card = `
-                            <div class="news-card">
-                                <img src="${escHtml(imageUrl)}" alt="${escHtml(item.title)}" class="news-card-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80';">
-                                <span style="font-size: 0.75rem; color: var(--primary-blue); font-weight: 700;"><i class="fa-solid fa-flag"></i> Éducation & Citoyenneté RDC</span>
-                                <h4 style="font-size: 0.95rem; font-weight: 700; margin: 4px 0; color: var(--text-dark);">${escHtml(item.title)}</h4>
-                                <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">${escHtml(descriptionText)}</p>
-                                <div style="display:flex; justify-content:space-between; align-items:center; font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">
-                                    <span><i class="fa-regular fa-clock"></i> ${date}</span>
-                                    <a href="${escHtml(item.link)}" target="_blank" style="color: var(--primary-blue); font-weight: 700; text-decoration: none;">Lire la suite →</a>
-                                </div>
-                            </div>
-                        `;
-                        container.innerHTML += card;
-                    });
-                } else {
-                    container.innerHTML = `<div class="news-card"><p style="font-size: 0.85rem; color: var(--text-muted);">Aucune nouvelle actualité disponible pour le moment.</p></div>`;
-                }
-            } catch (err) {
-                console.error("Erreur NewsData API :", err);
-                container.innerHTML = `
-                    <div class="news-card">
-                        <span style="font-size: 0.75rem; color: var(--primary-blue); font-weight: 700;">Éducation RDC</span>
-                        <h4 style="font-size: 0.95rem; font-weight: 700; margin: 4px 0;">Ministère de l'Éducation Nationale</h4>
-                        <p style="font-size: 0.8rem; color: var(--text-muted);">Suivez les activités récents et décisions du Ministère de l'Éducation Nationale et Nouvelle Citoyenneté de la RDC.</p>
-                    </div>
-                `;
-            }
-        }
-    </script>
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker enregistré avec succès !', reg))
-            .catch(err => console.log('Erreur lors de l’enregistrement du Service Worker :', err));
+    function construire() {
+      var L = [];
+      [['Quiz Manassé IA', 'Questions de réflexion sur la citoyenneté et le patriotisme', 'quiz questions niveau facile difficile pro xp jeu manasse', 'fa-brain', function () { aller('tab-quiz', 2); }],
+       ['Actualités de la RDC', 'Éducation nationale et actualité du pays', 'actualite actualites news nouvelles information', 'fa-newspaper', function () { aller('tab-actu', 3); }],
+       ['Tous les cours', 'Programme national', 'cours programme pdf lecon', 'fa-book', function () { aller('tab-cours', 1); }],
+       ['Mon profil', 'Informations, rappels d\'étude, installation', 'profil compte rappel notification installer deconnecter', 'fa-user', function () { aller('tab-profil', 4); }],
+       ['Rappels d\'étude', 'Activer les notifications', 'rappel rappels notification heure alerte', 'fa-bell', function () { aller('tab-profil', 4); }],
+       ['Histoire des présidents de la RDC', 'Frise chronologique et PDF', 'histoire presidents chronologie chefs etat', 'fa-timeline', function () { if (typeof ouvrirPagePresidents === 'function') ouvrirPagePresidents(); }]
+      ].forEach(function (x) { L.push({ cat: 'Section', t: x[0], s: x[1], k: x[2], ic: x[3], go: x[4] }); });
+      (window.educDossiers || []).forEach(function (d) {
+        L.push({ cat: 'Cours', t: d.titre, s: 'Dossier patriotique · lecture et quiz', k: 'dossier patriotisme patriote genocide crimes massacres memoire rwanda m23 agression vigilance desinformation biens publics hygiene ecole sante lavage mains cholera congo ' + d.court, ic: d.icone, bg: d.couleur, go: function () { if (typeof switchTab === 'function') switchTab('tab-cours', 1); window.educDossier(d.id); } });
+      });
+      document.querySelectorAll('#tab-cours .book-card:not([data-dossier])').forEach(function (a) {
+        var i = a.querySelector('.book-cover-icon i'), bg = a.querySelector('.book-cover-icon');
+        L.push({ cat: 'Cours', t: txt(a, '.book-title'), s: txt(a, '.book-sub'), k: 'cours pdf', ic: i ? i.className.replace('fa-solid ', '') : 'fa-book', bg: bg && bg.style.background, go: function () { ouvrir(a.getAttribute('href')); } });
+      });
+      var vedette = document.querySelector('#tab-accueil .course-card .course-btn');
+      if (vedette) L.push({ cat: 'Cours', t: txt(vedette.closest('.course-card'), 'h4'), s: 'Cours en vedette', k: 'nouvelle citoyennete valeurs droits devoirs', ic: 'fa-flag', go: function () { ouvrir(vedette.getAttribute('href')); } });
+      var cst = document.querySelector('a.access-card[href$=".pdf"]');
+      if (cst) L.push({ cat: 'Cours', t: 'Constitution de la RDC', s: 'PDF officiel', k: 'constitution loi fondamentale article', ic: 'fa-gavel', go: function () { ouvrir(cst.getAttribute('href')); } });
+      document.querySelectorAll('#tab-presidents-list .book-card').forEach(function (a) {
+        var im = a.querySelector('img');
+        L.push({ cat: 'Présidents', t: txt(a, '.book-title'), s: txt(a, '.book-sub'), k: 'president histoire pdf', ic: 'fa-landmark', img: im && im.getAttribute('src'), go: function () { ouvrir(a.getAttribute('href')); } });
+      });
+      document.querySelectorAll('#tab-accueil .authority-showcase').forEach(function (el) {
+        var im = el.querySelector('img');
+        L.push({ cat: 'Autorités', t: txt(el, 'h4'), s: txt(el, 'p'), k: txt(el, '.course-badge') + ' autorite gouvernement ministre', ic: 'fa-star', img: im && im.getAttribute('src'), go: function () { defiler(el); } });
+      });
+      try {
+        var news = (typeof window.educNewsAll === 'function' ? window.educNewsAll() : []);
+        if (!news.length) ['rdc', 'educ'].forEach(function (k) { try { var c = JSON.parse(localStorage.getItem('educ_news_v3_' + k) || 'null'); if (c && c.items) news = news.concat(c.items); } catch (e) {} });
+        var vu = {};
+        news.forEach(function (n) { if (!n || !n.link || vu[n.link]) return; vu[n.link] = 1;
+          L.push({ cat: 'Actualités', t: n.title, s: (n.src || 'Actualité') + (n.date ? ' · ' + String(n.date).slice(0, 16) : ''), k: n.snip || '', ic: n.icon || 'fa-newspaper', img: n.img, go: (function (l) { return function () { ouvrir(l); }; })(n.link) }); });
+      } catch (e) {}
+      try {
+        (typeof window.educHistoiresIndex === 'function' ? window.educHistoiresIndex() : []).forEach(function (h) {
+          h.cartes.forEach(function (c, i) {
+            L.push({ cat: 'Leçons', t: c.t || h.titre, s: h.titre + ' · leçon ' + (i + 1) + '/' + h.cartes.length, k: c.x, ic: h.icone || 'fa-book-open', bg: h.couleur, go: (function (id, n) { return function () { if (window.educHistoire) window.educHistoire(id, n); }; })(h.id, i) });
+          });
         });
-      }
-    </script>
-    <script>
-      /* Chargement en arrière-plan (ordre garanti). L'application s'affiche d'un seul coup quand tous ses éléments sont prêts. */
-      (function () {
-        var H = document.documentElement;
-        function pret() { if (H.classList.contains('educ-pret')) return; H.classList.add('educ-pret'); try { window.dispatchEvent(new Event('educ-pret')); } catch (e) {} }
-        window.educPret = pret;
-        /* Porte d'affichage : tant que l'application est ouverte mais que les cartes, dossiers et la capsule ne sont pas tous là, on attend (6 s maximum) */
-        var ta = 0, gi = setInterval(function () {
-          var a = document.getElementById('main-app'); if (!a) return;
-          var act = a.classList.contains('active'); if (act) ta++;
-          var manque = act && !(document.getElementById('dos-grid') && document.getElementById('pat-fl') && document.getElementById('cap-hero'));
-          H.classList.toggle('educ-attente', !!manque && ta < 60);
-          if (!manque && act && ta > 3) { pret(); }
-          if (ta >= 60) clearInterval(gi);
-        }, 100);
-        /* Appareil modeste : verre allégé. On le détecte par la mémoire, puis par la fluidité réelle (images par seconde). */
-        try { if (localStorage.getItem('educ_lite') === '1' || (navigator.deviceMemory && navigator.deviceMemory <= 2)) H.classList.add('educ-lite'); } catch (e) {}
-        window.addEventListener('educ-pret', function () {
-          try {
-            if (H.classList.contains('educ-lite') || !window.requestAnimationFrame) return; var n = 0, t0 = 0;
-            (function boucle(t) { if (!t0) t0 = t; n++; if (t - t0 < 1800) { requestAnimationFrame(boucle); return; } var fps = n / ((t - t0) / 1000);
-              if (fps < 38) { H.classList.add('educ-lite'); try { localStorage.setItem('educ_lite', '1'); } catch (e) {} } })(0);
-          } catch (e) {}
+      } catch (e) {}
+      try {
+        (typeof window.educAtlasLieux === 'function' ? window.educAtlasLieux() : []).forEach(function (p) {
+          L.push({ cat: 'Atlas', t: p.nom, s: 'Atlas du Congo · ' + p.province, k: p.texte + ' carte province ville ' + p.cat, ic: 'fa-location-dot', go: (function (id) { return function () { if (window.educAtlas) window.educAtlas(id); }; })(p.id) });
         });
-        /* Économie : on met toutes les animations en pause quand l'application n'est pas visible */
-        document.addEventListener('visibilitychange', function () { H.classList.toggle('educ-pause', document.hidden); });
-        /* Bulles de verre */
-        try {
-          var app = document.getElementById('main-app');
-          if (app) for (var b = 0; b < 9; b++) {
-            var d = document.createElement('div'), s = 28 + Math.round(Math.random() * 70);
-            d.className = 'glass-bubble'; d.style.width = d.style.height = s + 'px'; d.style.left = Math.round(Math.random() * 92) + '%';
-            d.style.animationDuration = (16 + Math.random() * 18).toFixed(1) + 's'; d.style.animationDelay = '-' + (Math.random() * 20).toFixed(1) + 's';
-            d.style.setProperty('--dx', Math.round(-60 + Math.random() * 120) + 'px'); app.appendChild(d);
-          }
-        } catch (e) {}
-        ['questions-facile.js', 'questions-difficile.js', 'questions-pro.js', 'quiz.js', 'news.js', 'notifications.js', 'search.js', 'savoirs.js', 'scenes.js', 'patriote.js', 'quotidien.js', 'brevet.js', 'carte.js'].forEach(function (src) {
-          var el = document.createElement('script'); el.src = src; el.async = false; document.body.appendChild(el);
-        });
-      })();
-    </script>
-</body>
-</html>
+      } catch (e) {}
+      [['facile', 'Brevet Bronze · Jeune Patriote', '🥉'], ['difficile', 'Brevet Argent · Patriote Engagé', '🥈'], ['pro', "Brevet Or · Patriote d'Honneur", '🥇'], ['grand', 'Grand brevet Diamant · Grand Patriote National', '💎']].forEach(function (b) {
+        L.push({ cat: 'Brevets', t: b[1], s: 'Certificat avec ton nom, à débloquer par le quiz', k: 'brevet certificat diplome medaille bronze argent or diamant ' + b[0], ic: 'fa-award', go: function () { if (window.educBrevet) window.educBrevet({ niveau: b[0] }); } });
+      });
+      return L;
+    }
+
+    function chercher(q) {
+      var tokens = norm(q).split(/\s+/).filter(Boolean); if (!tokens.length) return { tokens: tokens, liste: [] };
+      var liste = construire().map(function (it) {
+        var titre = norm(it.t), tout = titre + ' ' + norm(it.s) + ' ' + norm(it.k), ok = tokens.every(function (tk) { return tout.indexOf(tk) >= 0; });
+        if (!ok) return null;
+        var score = tokens.reduce(function (a, tk) { return a + (titre.indexOf(tk) === 0 ? 3 : titre.indexOf(tk) > 0 ? 2 : 1); }, 0);
+        it.score = score; return it;
+      }).filter(Boolean);
+      liste.sort(function (a, b) { return b.score - a.score || CAT_ORDER[a.cat] - CAT_ORDER[b.cat]; });
+      return { tokens: tokens, liste: liste };
+    }
+
+    function afficher() {
+      var q = input.value.trim(), r, tokens = [];
+      if (q) nav = false;
+      bx.classList.toggle('on', !!q);
+      if (!q && !nav && res._grille) { var cn = {}; construire().forEach(function (x) { cn[x.cat] = (cn[x.cat] || 0) + 1; }); res.innerHTML = '<div class="sr-hint">Parcourir par catégorie</div><div class="sr-grid">' + Object.keys(CAT_ORDER).filter(function (c) { return cn[c]; }).map(function (c) { return '<button class="sr-g" data-g="' + c + '"><i>' + ICO[c][0] + '</i><b>' + LIBS[c] + '</b><small>' + cn[c] + ' · ' + ICO[c][1] + '</small></button>'; }).join('') + '</div>'; res._liste = []; res.classList.add('show'); return; }
+      if (!q && !nav) { if (document.activeElement === input) { res.innerHTML = '<div class="sr-hint">Que cherches-tu ? Un cours, une actualité, une leçon, un lieu, un brevet…</div><div class="sr-sug">' + SUGG.map(function (x) { return '<button class="sr-chip" data-q="' + x + '">' + x + '</button>'; }).join('') + '</div>'; res._liste = []; res.classList.add('show'); } else { res.classList.remove('show'); res.innerHTML = ''; } return; }
+      r = q ? chercher(q) : { tokens: [], liste: construire().sort(function (a, b) { return CAT_ORDER[a.cat] - CAT_ORDER[b.cat]; }) }; tokens = r.tokens;
+      var liste = cat === 'Tout' ? r.liste : r.liste.filter(function (x) { return x.cat === cat; });
+      if (!liste.length && r.liste.length && cat !== 'Tout') { cat = 'Tout'; liste = r.liste; }
+      var cnt = {}; r.liste.forEach(function (x) { cnt[x.cat] = (cnt[x.cat] || 0) + 1; });
+      var chips = '<button class="sr-chip' + (cat === 'Tout' ? ' on' : '') + '" data-c="Tout">Tout<b>' + r.liste.length + '</b></button>' + Object.keys(CAT_ORDER).filter(function (c) { return cnt[c]; }).map(function (c) { return '<button class="sr-chip' + (c === cat ? ' on' : '') + '" data-c="' + c + '">' + LIBS[c] + '<b>' + cnt[c] + '</b></button>'; }).join('');
+      var html = '<div class="sr-chips">' + chips + '</div><div class="sr-head"><span>' + liste.length + (q ? ' résultat(s)' : ' élément(s)') + '</span><button data-a="clear">Effacer</button></div>';
+      if (!liste.length) html += '<div class="sr-vide">Aucun résultat pour « ' + esc(q) + ' ».<br>Essayez :</div><div class="sr-sug">' + SUGG.slice(0, 6).map(function (x) { return '<button class="sr-chip" data-q="' + x + '">' + x + '</button>'; }).join('') + '</div>';
+      liste.slice(0, nav ? 80 : 30).forEach(function (it, i) {
+        var ic = it.img ? '<img src="' + esc(it.img) + '" alt="" onerror="this.parentNode.innerHTML=\'<i class=&quot;fa-solid ' + esc(it.ic) + '&quot;></i>\'">' : '<i class="fa-solid ' + esc(it.ic) + '"></i>';
+        html += '<button class="sr-item" data-i="' + i + '"><span class="sr-ic"' + (it.bg ? ' style="background:' + esc(it.bg) + '"' : '') + '>' + ic + '</span><span><div class="sr-t">' + marque(it.t, tokens) + '</div><div class="sr-s">' + marque(it.s, tokens) + '</div></span><span class="sr-tag">' + LIBS[it.cat] + '</span></button>';
+      });
+      res.innerHTML = html; res.classList.add('show'); res._liste = liste;
+      if (!res._vu) { res._vu = 1; setTimeout(function () { try { res.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {} res._vu = 0; }, 60); }
+    }
+    function fermer() { input.value = ''; res.classList.remove('show'); res.innerHTML = ''; cat = 'Tout'; nav = false; res._grille = false; bx.classList.remove('on'); }
+
+    var t = null;
+    input.addEventListener('input', function () { clearTimeout(t); t = setTimeout(afficher, 50); });
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); afficher(); var f = res._liste && res._liste[0]; if (f) { f.go(); fermer(); input.blur(); } } if (e.key === 'Escape') fermer(); });
+    res.addEventListener('click', function (e) {
+      var gg = e.target.closest('[data-g]'); if (gg) { cat = gg.getAttribute('data-g'); nav = true; res._grille = false; afficher(); return; }
+      var sq = e.target.closest('[data-q]'); if (sq) { input.value = sq.getAttribute('data-q'); cat = 'Tout'; afficher(); return; }
+      var c = e.target.closest('.sr-chip'); if (c) { cat = c.getAttribute('data-c'); afficher(); return; }
+      if (e.target.closest('[data-a="clear"]')) { fermer(); return; }
+      var b = e.target.closest('.sr-item'); if (!b) return;
+      var it = res._liste && res._liste[parseInt(b.getAttribute('data-i'), 10)]; if (it) { fermer(); it.go(); }
+    });
+    // Le bouton de filtre : ouvre les suggestions et les catégories
+    var f = document.querySelector('.filter-btn');
+    if (f) f.addEventListener('click', function () { if (res.classList.contains('show')) { fermer(); return; } nav = false; res._grille = true; afficher(); try { res.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {} });
+    input.addEventListener('focus', function () { if (!input.value.trim()) afficher(); });
+    bx.addEventListener('click', function () { fermer(); input.focus(); });
+    var nav = document.querySelector('.bottom-nav'); if (nav) nav.addEventListener('click', function () { if (res.classList.contains('show')) fermer(); });
+    input.setAttribute('autocomplete', 'off'); input.setAttribute('enterkeyhint', 'search');
+  } catch (err) { console.error('Recherche :', err); }
+})();
