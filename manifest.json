@@ -1,27 +1,21 @@
-{
+here{
+  "id": "/index.html",
   "name": "EDUC National",
-  "short_name": "EDUC National",
-  "description": "Apprenons, comprenons et bâtissons avec EDUC — Plateforme officielle de suivi pédagogique, d'apprentissage et d'évaluation interactive.",
+  "short_name": "EDUC",
+  "description": "Plateforme d'apprentissage civique et patriotique de la RDC, sous le haut patronage du Ministère de l'Éducation Nationale et Nouvelle Citoyenneté.",
+  "lang": "fr",
+  "dir": "ltr",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["fullscreen", "standalone"],
   "orientation": "portrait",
-  "background_color": "#f4f6fb",
-  "theme_color": "#1a56db",
-  "lang": "fr",
+  "background_color": "#0a6ae6",
+  "theme_color": "#0057d9",
+  "categories": ["education"],
   "icons": [
-    {
-      "src": "logoo.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "logoo.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "logo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "logo-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
-
