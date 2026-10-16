@@ -1354,6 +1354,70 @@
         html.educ-pause *, html.educ-pause *::before, html.educ-pause *::after { animation-play-state: paused !important; }
         #main-app .tab-content:not(.active) { content-visibility: hidden; }
         img { content-visibility: auto; }
+    
+        /* ===== AJOUT FINAL 5 : VERRE VIF (couleurs franches, transparence propre, sans bug d'affichage) ===== */
+        /* Aurore plus vive : le bleu et le jaune de l'application ressortent au lieu d'un voile blanc grisâtre */
+        #main-app.active::before {
+            background:
+                radial-gradient(42% 42% at 20% 24%, rgba(0, 119, 255, 0.78), transparent 72%),
+                radial-gradient(36% 36% at 80% 20%, rgba(255, 196, 0, 0.62), transparent 72%),
+                radial-gradient(34% 34% at 55% 62%, rgba(0, 90, 220, 0.50), transparent 72%) !important;
+        }
+        #main-app.active::after {
+            background:
+                radial-gradient(38% 38% at 76% 78%, rgba(255, 60, 60, 0.34), transparent 72%),
+                radial-gradient(40% 40% at 18% 84%, rgba(0, 200, 120, 0.42), transparent 72%),
+                radial-gradient(30% 30% at 88% 48%, rgba(0, 140, 255, 0.50), transparent 72%) !important;
+        }
+        /* Cartes : teinte bleue franche + reflet blanc léger, flou modéré, saturation haute */
+        #main-app .xp-card, #main-app .access-card, #main-app .book-card, #main-app .course-card,
+        #main-app .news-card, #main-app .quiz-container-box, #main-app .search-input-wrapper,
+        #main-app .dos-card, #main-app .dos-home, #main-app .pat-fl, #main-app .authority-showcase {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.62) 0%, rgba(190, 224, 255, 0.40) 55%, rgba(120, 190, 255, 0.34) 100%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(240%); backdrop-filter: blur(12px) saturate(240%);
+            border: 1px solid rgba(255, 255, 255, 0.85) !important;
+            box-shadow: 0 10px 26px rgba(0, 95, 220, 0.28), inset 0 1.5px 0 #fff, inset 0 -2px 0 rgba(0, 120, 255, 0.22) !important;
+        }
+        #main-app .info-box-ministere {
+            background: linear-gradient(135deg, rgba(0, 119, 255, 0.30), rgba(255, 255, 255, 0.40)) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(240%); backdrop-filter: blur(12px) saturate(240%);
+        }
+        #main-app .app-header {
+            background: linear-gradient(135deg, rgba(0, 92, 214, 0.93), rgba(20, 140, 255, 0.80), rgba(0, 92, 214, 0.93)) !important;
+            background-size: 220% 220% !important;
+            -webkit-backdrop-filter: blur(10px) saturate(220%); backdrop-filter: blur(10px) saturate(220%);
+        }
+        #main-app .bottom-nav {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(215, 236, 255, 0.62)) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(240%); backdrop-filter: blur(12px) saturate(240%);
+        }
+        #main-app .quiz-option-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(170, 215, 255, 0.45)) !important;
+            -webkit-backdrop-filter: none; backdrop-filter: none;
+        }
+        /* Fenêtres plein écran : AUCUN flou plein écran (c'est ce qui abîmait l'image sur Android) */
+        #cap-pop { background: rgba(2, 24, 74, 0.62) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+        #cap-pop .cp {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.97), rgba(226, 241, 255, 0.95)) !important;
+            -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+            border: 1px solid #fff; box-shadow: 0 24px 60px rgba(0, 40, 130, 0.55), 0 0 0 3px rgba(26, 140, 255, 0.35);
+        }
+        /* Verre imbriqué sans flou (un flou dans un flou = gris et bugs) : teinte bleue translucide seulement */
+        .esp-card, .dos-s, .dos-fact, .dos-ret, .dos-intro, .dos-src {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(205, 230, 255, 0.66)) !important;
+            -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+            border: 1px solid #fff; box-shadow: 0 8px 22px rgba(0, 95, 220, 0.22), inset 0 1.5px 0 #fff !important;
+        }
+        #pat-his .his-btn, #pat-his .his-ctl button, #pat-his .his-ret li, #pat-his .his-r, #pat-fab {
+            -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+        }
+        #pat-his .his-r, #pat-his .his-ret li { background: rgba(255, 255, 255, 0.20) !important; }
+        /* Pas de couche GPU inutile qui peut corrompre l'image sur certains téléphones */
+        .scn, .cp svg, #atl-over svg, #pat-his svg { transform: none; will-change: auto; }
+        html.educ-lite #main-app .xp-card, html.educ-lite #main-app .access-card, html.educ-lite #main-app .book-card,
+        html.educ-lite #main-app .course-card, html.educ-lite #main-app .news-card, html.educ-lite #main-app .quiz-container-box,
+        html.educ-lite #main-app .dos-card, html.educ-lite #main-app .app-header, html.educ-lite #main-app .bottom-nav,
+        html.educ-lite #main-app .info-box-ministere { -webkit-backdrop-filter: none; backdrop-filter: none; }
     </style>
 </head>
 <body>
@@ -1930,7 +1994,8 @@
                 });
             }
         }
-// CORRECTION : la photo est maintenant réduite/compressée avant d'être enregistrée,
+
+        // CORRECTION : la photo est maintenant réduite/compressée avant d'être enregistrée,
         // sinon elle dépassait la limite du localStorage et bloquait la validation.
         function previewAvatar(event) {
             const file = event.target.files[0];
