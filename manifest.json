@@ -1,21 +1,36 @@
-here{
-  "id": "/index.html",
+{
   "name": "EDUC National",
   "short_name": "EDUC",
   "description": "Plateforme d'apprentissage civique et patriotique de la RDC, sous le haut patronage du Ministère de l'Éducation Nationale et Nouvelle Citoyenneté.",
   "lang": "fr",
   "dir": "ltr",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["fullscreen", "standalone"],
   "orientation": "portrait",
   "background_color": "#0a6ae6",
   "theme_color": "#0057d9",
-  "categories": ["education"],
+  "categories": [
+    "education"
+  ],
   "icons": [
-    { "src": "logoo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "logoo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "logoo-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
