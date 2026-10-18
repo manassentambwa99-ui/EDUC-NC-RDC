@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build TWA APK
 
 on:
   workflow_dispatch:
@@ -7,12 +7,12 @@ permissions:
   contents: write
 
 jobs:
-  apk:
+  twa:
     runs-on: ubuntu-latest
     env:
-      SITE_URL: https://manassentambwa99-ui.github.io/EDUC-NC-RDC/
-      APP_ID: cd.educ.nationale.app
-      APP_NAME: EDUC National
+      HOST: manassentambwa99-ui.github.io
+      SITE: https://manassentambwa99-ui.github.io/EDUC-NC-RDC/
+      PACKAGE_ID: cd.educ.nationale.app
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,40 +28,79 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Install ImageMagick
-        run: sudo apt-get update && sudo apt-get install -y imagemagick
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
 
-      - name: Create Android project
-        run: |
-          mkdir -p build/www
-          cd build
-          npm init -y
-          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
-          echo '<!doctype html><meta charset="utf-8"><title>EDUC National</title><body>EDUC National</body>' > www/index.html
-          printf '{"appId":"%s","appName":"%s","webDir":"www","server":{"url":"%s","cleartext":false,"allowNavigation":["manassentambwa99-ui.github.io","*.workers.dev","newsdata.io","serpapi.com","commons.wikimedia.org","upload.wikimedia.org","cdnjs.cloudflare.com","fonts.googleapis.com","fonts.gstatic.com"]}}' "$APP_ID" "$APP_NAME" "$SITE_URL" > capacitor.config.json
-          npx cap add android
+      - name: Accept Android licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
 
-      - name: App icon
+      - name: Configure Bubblewrap
         run: |
-          cd build/android/app/src/main/res
-          rm -rf mipmap-anydpi-v26
-          for d in "mdpi 48" "hdpi 72" "xhdpi 96" "xxhdpi 144" "xxxhdpi 192"; do
-            set -- $d
-            mkdir -p mipmap-$1
-            convert "$GITHUB_WORKSPACE/logoo.png" -resize $2x$2 -background none -gravity center -extent $2x$2 mipmap-$1/ic_launcher.png
-            cp mipmap-$1/ic_launcher.png mipmap-$1/ic_launcher_round.png
-            rm -f mipmap-$1/ic_launcher_foreground.png
-          done
+          mkdir -p "$HOME/.bubblewrap"
+          printf '{"jdkPath":"%s","androidSdkPath":"%s"}' "$JAVA_HOME" "$ANDROID_HOME" > "$HOME/.bubblewrap/config.json"
+          cat "$HOME/.bubblewrap/config.json"
 
-      - name: Build APK
-        working-directory: build/android
+      - name: Create signing key
         run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
+          mkdir -p twa
+          keytool -genkeypair -v -keystore twa/android.keystore -alias educ -keyalg RSA -keysize 2048 -validity 10000 -storepass educ-National-2026 -keypass educ-National-2026 -dname "CN=EDUC National, OU=EDUC, O=EDUC, L=Kinshasa, C=CD"
+          keytool -list -v -keystore twa/android.keystore -alias educ -storepass educ-National-2026 | grep SHA256 | tee twa/sha256.txt
+
+      - name: Write TWA manifest
+        run: |
+          cat > twa/twa-manifest.json <<JSON
+          {
+            "packageId": "$PACKAGE_ID",
+            "host": "$HOST",
+            "name": "EDUC National",
+            "launcherName": "EDUC",
+            "display": "standalone",
+            "themeColor": "#0057d9",
+            "themeColorDark": "#0057d9",
+            "navigationColor": "#0057d9",
+            "navigationColorDark": "#0057d9",
+            "navigationDividerColor": "#0057d9",
+            "navigationDividerColorDark": "#0057d9",
+            "backgroundColor": "#0a6ae6",
+            "enableNotifications": true,
+            "startUrl": "/EDUC-NC-RDC/",
+            "iconUrl": "${SITE}logoo.png",
+            "maskableIconUrl": "${SITE}logoo.png",
+            "appVersion": "1",
+            "appVersionCode": 1,
+            "signingKey": { "path": "./android.keystore", "alias": "educ" },
+            "splashScreenFadeOutDuration": 300,
+            "enableSiteSettingsShortcut": true,
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "fullScopeUrl": "${SITE}",
+            "minSdkVersion": 21,
+            "orientation": "portrait",
+            "fallbackType": "customtabs",
+            "webManifestUrl": "${SITE}manifest-v2.json",
+            "features": {},
+            "shortcuts": [],
+            "generatorApp": "bubblewrap-cli"
+          }
+          JSON
+          cat twa/twa-manifest.json
+
+      - name: Generate Android project
+        working-directory: twa
+        run: bubblewrap update --skipVersionUpgrade --manifest=./twa-manifest.json
+
+      - name: Build
+        working-directory: twa
+        env:
+          BUBBLEWRAP_KEYSTORE_PASSWORD: educ-National-2026
+          BUBBLEWRAP_KEY_PASSWORD: educ-National-2026
+        run: bubblewrap build --skipPwaValidation
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp build/android/app/build/outputs/apk/debug/app-debug.apk EDUC-National.apk
-          gh release create "apk-${{ github.run_number }}" EDUC-National.apk --title "EDUC National Android ${{ github.run_number }}" --notes "Install EDUC-National.apk on an Android phone."
+          ls -la twa
+          cp twa/app-release-signed.apk EDUC-National-TWA.apk
+          cp twa/app-release-bundle.aab EDUC-National.aab || true
+          gh release create "twa-${{ github.run_number }}" EDUC-National-TWA.apk EDUC-National.aab --title "EDUC National TWA ${{ github.run_number }}" --notes "Install EDUC-National-TWA.apk. $(cat twa/sha256.txt)"
