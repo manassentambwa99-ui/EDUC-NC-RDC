@@ -1,7 +1,4 @@
-here# EDUC National : fabrique l'application Android (APK) directement depuis ton dépôt GitHub.
-# Lancement : onglet "Actions" > "Construire l'application Android" > "Run workflow".
-# Résultat : un fichier EDUC-National.apk dans l'onglet "Releases" du dépôt (lien public, installable sur n'importe quel téléphone).
-name: Construire l'application Android
+name: Build Android APK
 
 on:
   workflow_dispatch:
@@ -17,48 +14,34 @@ jobs:
       APP_ID: cd.educ.nationale.app
       APP_NAME: EDUC National
     steps:
-      - name: Récupérer le dépôt
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Installer Node et Java
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - uses: actions/setup-java@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Outils d'image
+      - name: Install ImageMagick
         run: sudo apt-get update && sudo apt-get install -y imagemagick
 
-      - name: Créer le projet Android
+      - name: Create Android project
         run: |
           mkdir -p build/www
           cd build
           npm init -y
           npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
-          cat > www/index.html <<'HTML'
-          <!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-          <body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#0a6ae6;color:#fff;font-family:sans-serif;text-align:center">
-          <div><h2>EDUC National</h2><p>Connexion requise pour la première ouverture.</p></div>
-          HTML
-          cat > capacitor.config.json <<JSON
-          {
-            "appId": "$APP_ID",
-            "appName": "$APP_NAME",
-            "webDir": "www",
-            "server": {
-              "url": "$SITE_URL",
-              "cleartext": false,
-              "allowNavigation": ["manassentambwa99-ui.github.io", "*.workers.dev", "newsdata.io", "serpapi.com", "commons.wikimedia.org", "upload.wikimedia.org", "cdnjs.cloudflare.com", "fonts.googleapis.com", "fonts.gstatic.com"]
-            },
-            "android": { "allowMixedContent": false }
-          }
-          JSON
+          echo '<!doctype html><meta charset="utf-8"><title>EDUC National</title><body>EDUC National</body>' > www/index.html
+          printf '{"appId":"%s","appName":"%s","webDir":"www","server":{"url":"%s","cleartext":false,"allowNavigation":["manassentambwa99-ui.github.io","*.workers.dev","newsdata.io","serpapi.com","commons.wikimedia.org","upload.wikimedia.org","cdnjs.cloudflare.com","fonts.googleapis.com","fonts.gstatic.com"]}}' "$APP_ID" "$APP_NAME" "$SITE_URL" > capacitor.config.json
           npx cap add android
 
-      - name: Icône de l'application (ton logo)
+      - name: App icon
         run: |
           cd build/android/app/src/main/res
           rm -rf mipmap-anydpi-v26
@@ -70,17 +53,15 @@ jobs:
             rm -f mipmap-$1/ic_launcher_foreground.png
           done
 
-      - name: Construire l'APK
+      - name: Build APK
         working-directory: build/android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
-      - name: Publier l'APK (lien téléchargeable)
+      - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cp build/android/app/build/outputs/apk/debug/app-debug.apk EDUC-National.apk
-          gh release create "apk-${{ github.run_number }}" EDUC-National.apk \
-            --title "EDUC National (Android) - version ${{ github.run_number }}" \
-            --notes "Installe EDUC-National.apk sur ton téléphone Android. L'application charge le site à jour à chaque ouverture."
+          gh release create "apk-${{ github.run_number }}" EDUC-National.apk --title "EDUC National Android ${{ github.run_number }}" --notes "Install EDUC-National.apk on an Android phone."
