@@ -169,19 +169,19 @@
     var xp = function (n) { try { if (typeof window.addXP === 'function') window.addXP(n); } catch (e) {} };
 
     /* ---------- Voix (synthèse vocale du téléphone, hors connexion si la voix est installée) ---------- */
-    var Voix = { actif: true, vitesse: 0.9, ok: !!(window.speechSynthesis && window.SpeechSynthesisUtterance), voix: null, minuteur: null, genre: 'h', jeton: 0 };
+    var Voix = { actif: true, vitesse: 0.94, ok: !!(window.speechSynthesis && window.SpeechSynthesisUtterance), voix: null, minuteur: null, genre: 'h', jeton: 0 };
     try { Voix.genre = localStorage.getItem('educ_voixg') || 'h'; } catch (e) {}
     /* Choisit la meilleure voix française : naturelle/Google d'abord, puis masculine (ton de maître) ou féminine selon le choix */
     function choisir() {
       try {
         var vs = (speechSynthesis.getVoices() || []).filter(function (v) { return /^fr/i.test(v.lang); }); if (!vs.length) return;
         var H = /thomas|paul|henri|claude|antoine|nicolas|male|homme|rg|fr-fr-x-(frd|fre)|frd|fre/i, F = /amelie|amélie|hortense|julie|denise|female|femme|marie|audrey|fr-fr-x-(frc|afr)|frc|afr/i;
-        vs.forEach(function (v) { var n = (v.name || '') + ' ' + (v.voiceURI || ''); v._s = (/natural|neural|online|enhanced|premium/i.test(n) ? 4 : 0) + (/google/i.test(n) ? 3 : 0) + (/^fr[-_]FR/i.test(v.lang) ? 2 : 0) + (v.localService ? 1 : 0) + ((Voix.genre === 'h' ? H : F).test(n) ? 3 : 0) - ((Voix.genre === 'h' ? F : H).test(n) ? 3 : 0); });
-        vs.sort(function (x, y) { return y._s - x._s; }); Voix.voix = vs[0];
+        vs.forEach(function (v) { var n = (v.name || '') + ' ' + (v.voiceURI || ''); v._s = (/natural|neural|online|enhanced|premium/i.test(n) ? 5 : 0) + (/google/i.test(n) ? 4 : 0) + (/^fr[-_]FR/i.test(v.lang) ? 2 : 0) + (v.localService ? 1 : 0) + ((Voix.genre === 'h' ? H : F).test(n) ? 3 : 0) - ((Voix.genre === 'h' ? F : H).test(n) ? 3 : 0); });
+        vs.sort(function (x, y) { return y._s - x._s; }); Voix.liste = vs; var sv = ''; try { sv = localStorage.getItem('educ_voixn') || ''; } catch (e) {} var pk = sv && vs.filter(function (v) { return v.name === sv; })[0]; Voix.voix = pk || vs[0];
       } catch (e) {}
     }
     if (Voix.ok) { choisir(); try { speechSynthesis.onvoiceschanged = choisir; } catch (e) {} }
-    Voix.basculer = function () { Voix.genre = Voix.genre === 'h' ? 'f' : 'h'; try { localStorage.setItem('educ_voixg', Voix.genre); } catch (e) {} choisir(); return Voix.genre; };
+    Voix.basculer = function () { var l = Voix.liste || []; if (l.length < 2) { Voix.genre = Voix.genre === 'h' ? 'f' : 'h'; try { localStorage.setItem('educ_voixg', Voix.genre); } catch (e) {} choisir(); return Voix.voix; } var i = Math.max(0, l.indexOf(Voix.voix)); Voix.voix = l[(i + 1) % l.length]; try { localStorage.setItem('educ_voixn', Voix.voix.name); } catch (e) {} return Voix.voix; };
     Voix.stop = function () { Voix.jeton++; clearTimeout(Voix.minuteur); if (Voix.ok) try { speechSynthesis.cancel(); } catch (e) {} };
     /* Ton d'enseignant : phrase par phrase, débit posé, pauses aux virgules et aux points, voix plus grave, accent sur les questions */
     Voix.dire = function (texte, fin) {
@@ -189,7 +189,7 @@
       if (!Voix.ok || !Voix.actif) { Voix.minuteur = setTimeout(fini, Math.max(2500, texte.length * 55)); return; }
       var t = String(texte).replace(/\s+/g, ' ').replace(/(\d)\s?%/g, '$1 pour cent').replace(/\bRDC\b/g, 'R D C').replace(/\bM23\b/g, 'M vingt-trois').replace(/\bONU\b/g, 'O N U').replace(/\bPDF\b/g, 'P D F');
       var ph = t.match(/[^.!?…;:]+[.!?…;:]?/g) || [t]; ph = ph.map(function (s) { return s.trim(); }).filter(Boolean);
-      var base = Voix.genre === 'h' ? 0.82 : 0.98;
+      var vn = Voix.voix ? (Voix.voix.name || '') : '', nat = /natural|neural|online|google|enhanced|premium/i.test(vn), base = nat ? 1 : (Voix.genre === 'h' ? 0.9 : 1);
       var dire = function (i) {
         if (mon !== Voix.jeton) return; if (i >= ph.length) { fini(); return; }
         var s = ph[i], fin1 = s.slice(-1), segs = s.split(/(?<=,)\s+/);
@@ -290,6 +290,7 @@
 
     /* ---------- Styles ---------- */
     var css = el('style'); css.textContent = [
+      '.his-toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:10100;background:rgba(2,24,74,.92);color:#fff;font-weight:800;font-size:.82rem;padding:10px 16px;border-radius:20px;box-shadow:0 8px 24px rgba(0,40,130,.5);max-width:86vw;text-align:center}',
       '.pat-map{width:100%;max-width:420px;display:block;margin:0 auto;}.pat-pt{cursor:pointer}',
       '@keyframes patPop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}@keyframes patBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}',
       '@keyframes patUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}',
@@ -334,17 +335,17 @@
     /* Vraie photo (Wikimedia Commons) par-dessus la scène dessinée quand Internet est disponible ; la scène reste en secours hors connexion */
     var PHOTOS = { drapeau: 'Flag of the Democratic Republic of the Congo', ecole: 'school children Democratic Republic of the Congo', unite: 'Congolese people crowd Kinshasa', paix: 'Kinshasa Congo River sunset', mains: 'handwashing children Africa', bougies: 'candles memorial vigil', justice: 'Palais de la Nation Kinshasa', fleuve: 'Congo River', livre: 'library books students Africa', ville: 'Kinshasa city' };
     function photoScene(n, sc) {
-      var q = PHOTOS[n]; if (!q) return; var cle = 'educ_ph_' + n, c = null; try { c = JSON.parse(localStorage.getItem(cle) || 'null'); } catch (e) {}
-      var poser = function (it) { if (!sc.isConnected) return; var im = document.createElement('img'); im.className = 'his-ph'; im.alt = it.t; im.referrerPolicy = 'no-referrer'; im.onload = function () { im.style.opacity = 1; var cap = el('div', 'his-cap', 'Photo : ' + it.a + ' · ' + it.l + ' · Wikimedia Commons'); sc.appendChild(cap); }; im.onerror = function () { im.remove(); }; im.src = it.u; sc.appendChild(im); };
+      var q = PHOTOS[n]; if (!q) return; var cle = 'educ_ph2_' + n, c = null; try { c = JSON.parse(localStorage.getItem(cle) || 'null'); } catch (e) {}
+      var poser = function (it, reste) { if (!sc.isConnected) return; var im = document.createElement('img'); im.className = 'his-ph'; im.alt = it.t; im.referrerPolicy = 'no-referrer'; im.onload = function () { im.style.opacity = 1; var cap = el('div', 'his-cap', 'Photo : ' + it.a + ' · ' + it.l + ' · Wikimedia Commons'); sc.appendChild(cap); }; im.onerror = function () { im.remove(); if (reste && reste.length) poser(reste[0], reste.slice(1)); }; im.src = it.u; sc.appendChild(im); };
       if (c && c.u && (!navigator.onLine || Math.random() < 0.6)) { poser(c); if (!navigator.onLine) return; }
       if (!navigator.onLine) return;
-      var url = 'https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=' + encodeURIComponent(q + ' filetype:bitmap') + '&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url|extmetadata|size&iiurlwidth=800&format=json&origin=*';
+      var url = 'https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=' + encodeURIComponent(q + ' filetype:bitmap') + '&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url|extmetadata|size&iiurlwidth=960&format=json&origin=*';
       fetch(url).then(function (r) { return r.json(); }).then(function (j) {
         var pages = j.query && j.query.pages ? Object.keys(j.query.pages).map(function (k) { return j.query.pages[k]; }) : [], items = [];
         pages.forEach(function (p) { var ii = p.imageinfo && p.imageinfo[0]; if (!ii || !ii.thumburl || !/\.(jpe?g)$/i.test(ii.url) || ii.width < ii.height) return; var m = ii.extmetadata || {};
           items.push({ u: ii.thumburl, t: nettoie(p.title.replace(/^File:/, '').replace(/\.[a-z]+$/i, '')) || q, a: nettoie(m.Artist && m.Artist.value) || 'auteur', l: nettoie(m.LicenseShortName && m.LicenseShortName.value) || 'licence libre' }); });
-        if (!items.length) return; var it = items[Math.floor(Math.random() * items.length)]; try { localStorage.setItem(cle, JSON.stringify(it)); } catch (e) {}
-        if (!sc.querySelector('.his-ph')) poser(it);
+        if (!items.length) return; items = items.sort(function () { return Math.random() - .5; }); var it = items[0]; try { localStorage.setItem(cle, JSON.stringify(it)); } catch (e) {}
+        if (!sc.querySelector('.his-ph')) poser(it, items.slice(1, 4));
       }).catch(function () {});
     }
     function visuel(v, box) {
@@ -401,7 +402,7 @@
       var d = DOS().filter(function (x) { return x.id === id; })[0] || { court: id };
       if (!his) {
         his = el('div'); his.id = 'pat-his';
-        his.innerHTML = '<div class="his-wrap"><div class="his-bars"></div><div class="his-top"><span class="his-nom"></span><span><button class="his-btn" data-a="voix">🔊</button> <button class="his-btn" data-a="mus">🎵</button> <button class="his-btn" data-a="genre">👨‍🏫</button> <button class="his-btn" data-a="vit">🐢/🐇</button> <button class="his-btn" data-a="x">✕</button></span></div><div class="his-vis"></div><div class="his-t"></div><div class="his-x"></div><div class="his-ctl"><button data-a="prev">⏮</button><button class="big" data-a="play">⏸</button><button data-a="next">⏭</button></div><div class="his-fin"></div><div class="his-note"></div></div>';
+        his.innerHTML = '<div class="his-wrap"><div class="his-bars"></div><div class="his-top"><span class="his-nom"></span><span><button class="his-btn" data-a="voix">🔊</button> <button class="his-btn" data-a="mus">🎵</button> <button class="his-btn" data-a="genre">🎙️</button> <button class="his-btn" data-a="vit">🐢/🐇</button> <button class="his-btn" data-a="x">✕</button></span></div><div class="his-vis"></div><div class="his-t"></div><div class="his-x"></div><div class="his-ctl"><button data-a="prev">⏮</button><button class="big" data-a="play">⏸</button><button data-a="next">⏭</button></div><div class="his-fin"></div><div class="his-note"></div></div>';
         document.body.appendChild(his);
         his.addEventListener('click', function (e) {
           var b = e.target.closest && e.target.closest('[data-a]'); if (!b) return; var a = b.getAttribute('data-a');
@@ -410,7 +411,7 @@
           else if (a === 'play') { auto = !auto; carteHis(); }
           else if (a === 'voix') { Voix.actif = !Voix.actif; b.textContent = Voix.actif ? '🔊' : '🔇'; carteHis(); }
           else if (a === 'mus') { var Mu = window.educMusique; if (Mu) { if (Mu.on) { Mu.arreter(); try { localStorage.setItem('educ_mus', '0'); } catch (x) {} } else { Mu.demarrer(); try { localStorage.setItem('educ_mus', '1'); } catch (x) {} } b.style.opacity = Mu.on ? 1 : .5; } }
-          else if (a === 'genre') { b.textContent = Voix.basculer() === 'h' ? '👨‍🏫' : '👩‍🏫'; carteHis(); }
+          else if (a === 'genre') { var nv = Voix.basculer(), nb = (Voix.liste || []).length; b.textContent = '🎙️'; var tt = document.createElement('div'); tt.className = 'his-toast'; tt.textContent = nv ? 'Voix ' + ((Voix.liste || []).indexOf(nv) + 1) + '/' + nb + ' : ' + String(nv.name).replace(/Microsoft |Google /, '') : 'Voix changée'; (his || document.body).appendChild(tt); setTimeout(function () { tt.remove(); }, 2200); carteHis(); }
           else if (a === 'vit') { Voix.vitesse = Voix.vitesse > 0.8 ? 0.7 : 1.05; carteHis(); }
         });
       }
@@ -511,16 +512,16 @@
       gc.textContent = 'Photos libres de droits, différentes à chaque visite.';
     }
     function galerie(gal, gc) {
-      var cache = null; try { cache = JSON.parse(localStorage.getItem('educ_gal') || 'null'); } catch (e) {}
+      var cache = null; try { cache = JSON.parse(localStorage.getItem('educ_gal2') || 'null'); } catch (e) {}
       var q = THEMES[Math.floor(Math.random() * THEMES.length)];
-      var url = 'https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=' + encodeURIComponent(q + ' filetype:bitmap') + '&gsrnamespace=6&gsrlimit=14&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=640&format=json&origin=*';
+      var url = 'https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=' + encodeURIComponent(q + ' filetype:bitmap') + '&gsrnamespace=6&gsrlimit=14&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=500&format=json&origin=*';
       if (!navigator.onLine) { if (cache && cache.items) afficherGal(gal, gc, cache.items); else gc.textContent = 'Connecte-toi à Internet pour voir les photos.'; return; }
       fetch(url).then(function (r) { return r.json(); }).then(function (j) {
         var pages = j.query && j.query.pages ? Object.keys(j.query.pages).map(function (k) { return j.query.pages[k]; }) : [], items = [];
         pages.forEach(function (p) { var ii = p.imageinfo && p.imageinfo[0]; if (!ii || !ii.thumburl || !/\.(jpe?g|png)$/i.test(ii.url)) return; var m = ii.extmetadata || {};
           items.push({ u: ii.thumburl, t: nettoie(p.title.replace(/^File:/, '').replace(/\.[a-z]+$/i, '')) || q, a: nettoie(m.Artist && m.Artist.value) || 'auteur', l: nettoie(m.LicenseShortName && m.LicenseShortName.value) || 'licence libre' }); });
         items = items.sort(function () { return Math.random() - .5; }).slice(0, 6); if (!items.length) throw new Error('vide');
-        try { localStorage.setItem('educ_gal', JSON.stringify({ items: items })); } catch (e) {} afficherGal(gal, gc, items);
+        try { localStorage.setItem('educ_gal2', JSON.stringify({ items: items })); } catch (e) {} afficherGal(gal, gc, items);
       }).catch(function () { if (cache && cache.items) afficherGal(gal, gc, cache.items); else gc.textContent = 'Les photos ne sont pas disponibles pour le moment.'; });
     }
 
